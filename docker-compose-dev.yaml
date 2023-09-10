@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+
+  web_ingresso:
+    container_name: therapy_scheduler
+    image: therapy_dev_img
+    build: .
+    tty: true
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
