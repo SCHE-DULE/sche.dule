@@ -10,10 +10,11 @@ default:
 build:
 	docker-compose -f docker-compose-dev.yaml --env-file=.env.dev up -d --build
 
-makemigrations:
-	docker exec -ti therapy_scheduler python manage.py makemigrations
+bash:
+	docker exec -ti therapy_scheduler bash
 
-migrate:
+makemigrations:
+	docker exec -ti therapy_scheduler python manage.py makemigrations --no-input
 	docker exec -ti therapy_scheduler python manage.py migrate
 
 createsuperuser:
