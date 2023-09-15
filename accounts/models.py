@@ -25,6 +25,9 @@ class BaseUser(models.Model):
     gender = models.CharField(
         max_length=1, choices=GENDER_CHOICES, verbose_name="Gênero"
     )
+    
+    def __str__(self):
+        return f"Name: {self.name}, Email: {self.email}, Birthday: {self.birthday}, Phone Number: {self.phone_number}, Gender: {self.get_gender_display()}"
 
     def save(self, *args, **kwargs):
         print(self)
