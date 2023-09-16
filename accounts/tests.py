@@ -1,27 +1,20 @@
 from django.test import TestCase
-from .models import BaseUser, SystemUser
+from .models import SystemUser
 
 class SystemUserCreationTestCase(TestCase):
 
     def test_create_system_user(self):
-        # Create a BaseUser object
-        base_user = BaseUser.objects.create(
-            name="John Doe",
-            #email="johndoe@example.com",
+        
+        system_user = SystemUser.objects.create(
+            name="John Doe",  
+            email="johndoe@example.com",
             birthday="1990-01-01",
             phone_number="1234567890",
             gender="M",
+            user_type="RECEPCIONISTA", 
         )
         
 
-        # Create a SystemUser object associated with the BaseUser
-        system_user = SystemUser.objects.create(
-            baseuser_ptr=base_user,
-            user_type="RECEPCIONISTA",
-        )
-        
-
-        print("Base", base_user)
         print("System", system_user)
 
         # Query the created SystemUser object

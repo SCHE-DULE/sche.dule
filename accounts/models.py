@@ -31,7 +31,6 @@ class BaseUser(models.Model):
         return f"Name: {self.name}, Email: {self.email}, Birthday: {self.birthday}, Phone Number: {self.phone_number}, Gender: {self.get_gender_display()}"
 
     def save(self, *args, **kwargs):
-        print(self)
         if not self.user:
             if (
                 not User.objects.filter(username=self.email).exists()
