@@ -28,7 +28,7 @@ class BaseUser(models.Model):
     )
 
     def __str__(self):
-        return f"Name: {self.name}, Email: {self.email}, Birthday: {self.birthday}, Phone Number: {self.phone_number}, Gender: {self.get_gender_display()}"
+        return f"Name: {self.name}, Email: {self.email}"
 
     def save(self, *args, **kwargs):
         if not self.user:
@@ -68,9 +68,7 @@ class Therapist(BaseUser):
     avaliability_days = models.CharField(
         max_length=100, verbose_name="Dias Disponíveis"
     )
-    hours = models.CharField(
-        max_length=100, verbose_name="Horário de Consulta"
-    )
+    hours = models.CharField(max_length=100, verbose_name="Horário de Consulta")
     rate = models.DecimalField(
         max_digits=10, decimal_places=2, verbose_name="Valor Cobrado"
     )
@@ -81,9 +79,7 @@ class Therapist(BaseUser):
         blank=True,
         null=True,
     )
-    photo = models.ImageField(
-        upload_to="terapeutas/", verbose_name="Foto do Terapeuta"
-    )
+    photo = models.ImageField(upload_to="terapeutas/", verbose_name="Foto do Terapeuta")
     contract_scan = models.FileField(
         upload_to="contratos/",
         verbose_name="Anexo do Contrato com o Terapeuta",
@@ -113,6 +109,7 @@ class Client(BaseUser):
     state = models.CharField(max_length=50, verbose_name="Estado")
     city = models.CharField(max_length=100, verbose_name="Cidade")
     neighborhood = models.CharField(max_length=100, verbose_name="Bairro")
+    zip_code = models.CharField(max_length=100, verbose_name="CEP")
     street_address = models.CharField(max_length=255, verbose_name="Endereço")
     number = models.CharField(max_length=10, verbose_name="Número")
     complement_address = models.CharField(
