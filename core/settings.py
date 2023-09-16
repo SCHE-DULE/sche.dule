@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     "perfil",
     "extrato",
     "planejamento",
-    "contas"
+    "contas",
+    "accounts",
 ]
 
 MIDDLEWARE = [
