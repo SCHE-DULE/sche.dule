@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class BaseUser(models.Model):
     GENDER_CHOICES = (
         ("M", "Masculino"),
@@ -25,7 +26,7 @@ class BaseUser(models.Model):
     gender = models.CharField(
         max_length=1, choices=GENDER_CHOICES, verbose_name="Gênero"
     )
-    
+
     def __str__(self):
         return f"Name: {self.name}, Email: {self.email}, Birthday: {self.birthday}, Phone Number: {self.phone_number}, Gender: {self.get_gender_display()}"
 
@@ -37,8 +38,7 @@ class BaseUser(models.Model):
                 or User.objects.filter(username=self.name).exists()
             ):
                 user = User.objects.create_user(
-                    username=self.name.lower().replace(" ", ""),
-                    email=self.email
+                    username=self.name.lower().replace(" ", ""), email=self.email
                 )
 
                 self.user = user
@@ -50,7 +50,6 @@ class BaseUser(models.Model):
 class SystemUser(BaseUser):
     USER_TYPE = (
         ("RECEPCIONISTA", "Recepcionista"),
-        ("TERAPEUTA", "Terapeuta"),
         ("GERENTE", "Gerente"),
         ("GERENTE_GERAL", "Gerente Geral"),
         ("ADMINISTRADOR", "Administrador"),
@@ -60,6 +59,45 @@ class SystemUser(BaseUser):
     user_type = models.CharField(
         max_length=13, choices=USER_TYPE, verbose_name="Tipo de Usuário"
     )
+
+
+class Terapeuta(BaseUser):
+    specialities = models.ManyToManyField("Speciality", verbose_name="Especialidades")
+    crm = models.CharField(
+        max_length=20, verbose_name="Cadastro do Órgão de Registro (ex: CRM)"
+    )
+    avaliability_days = models.CharField(
+        max_length=100, verbose_name="Dias Disponíveis"
+    )
+    horario_consulta = models.CharField(
+        max_length=100, verbose_name="Horário de Consulta"
+    )
+    valor_cobrado = models.DecimalField(
+        max_digits=10, decimal_places=2, verbose_name="Valor Cobrado"
+    )
+    taxa_administrativa = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        verbose_name="Taxa Administrativa (visível somente pelo gerente/administrador)",
+        blank=True,
+        null=True,
+    )
+    imagem_terapeuta = models.ImageField(
+        upload_to="terapeutas/", verbose_name="Foto do Terapeuta"
+    )
+    contrato_terapeuta = models.FileField(
+        upload_to="contratos/",
+        verbose_name="Anexo do Contrato com o Terapeuta",
+        blank=True,
+        null=True,
+    )
+
+    def __str__(self):
+        return f"Terapeuta: {self.name}, Especialidades: {', '.join([speciality.name for speciality in self.especialidades.all()])}, Registro: {self.registro_organ}"
+
+    class Meta:
+        verbose_name = "Terapeuta"
+        verbose_name_plural = "Terapeutas"
 
 
 class Client(BaseUser):
@@ -83,3 +121,18 @@ class Client(BaseUser):
     )
     observation = models.TextField(blank=True, null=True, verbose_name="Observação")
 
+
+class Speciality(models.Model):
+    name = models.CharField(
+        max_length=50,
+        verbose_name="Speciality Name",
+        blank=False,
+        null=False,
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Speciality"
+        verbose_name_plural = "Specialities"
