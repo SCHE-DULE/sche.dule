@@ -60,7 +60,7 @@ class SystemUser(BaseUser):
     )
 
 
-class Terapeuta(BaseUser):
+class Therapist(BaseUser):
     specialities = models.ManyToManyField("Speciality", verbose_name="Especialidades")
     crm = models.CharField(
         max_length=20, verbose_name="Cadastro do Órgão de Registro (ex: CRM)"
@@ -68,23 +68,23 @@ class Terapeuta(BaseUser):
     avaliability_days = models.CharField(
         max_length=100, verbose_name="Dias Disponíveis"
     )
-    horario_consulta = models.CharField(
+    hours = models.CharField(
         max_length=100, verbose_name="Horário de Consulta"
     )
-    valor_cobrado = models.DecimalField(
+    rate = models.DecimalField(
         max_digits=10, decimal_places=2, verbose_name="Valor Cobrado"
     )
-    taxa_administrativa = models.DecimalField(
+    fee = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         verbose_name="Taxa Administrativa (visível somente pelo gerente/administrador)",
         blank=True,
         null=True,
     )
-    imagem_terapeuta = models.ImageField(
+    photo = models.ImageField(
         upload_to="terapeutas/", verbose_name="Foto do Terapeuta"
     )
-    contrato_terapeuta = models.FileField(
+    contract_scan = models.FileField(
         upload_to="contratos/",
         verbose_name="Anexo do Contrato com o Terapeuta",
         blank=True,
@@ -92,7 +92,7 @@ class Terapeuta(BaseUser):
     )
 
     def __str__(self):
-        return f"Terapeuta: {self.name}, Especialidades: {', '.join([speciality.name for speciality in self.especialidades.all()])}, Registro: {self.registro_organ}"
+        return f"Terapeuta: {self.name}, Especialidades: {', '.join([speciality.name for speciality in self.specialities.all()])}, Registro: {self.crm}"
 
     class Meta:
         verbose_name = "Terapeuta"
