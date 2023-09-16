@@ -53,7 +53,7 @@ class Appointment(models.Model):
     notes = models.TextField(blank=True, null=True, verbose_name="Observações")
 
     def __str__(self):
-        return f"Atendimento para {self.client.name} com {self.therapist.name} ({self.service.name}) em {self.day_of_week} às {self.time_slot}"
+        return f"Atendimento para {self.client.name} com {self.therapist.name} ({self.service.name}) em {self.appointment_date_start} até {self.appointment_date_end}"
 
     class Meta:
         verbose_name = "Atendimento"
@@ -113,15 +113,15 @@ class TimeSlot(models.Model):
 
 
 class DayOfWeek(models.Model):
-    DAY_CHOICES = {
-        "Monday": "Segunda-feira",
-        "Tuesday": "Terça-feira",
-        "Wednesday": "Quarta-feira",
-        "Thursday": "Quinta-feira",
-        "Friday": "Sexta-feira",
-        "Saturday": "Sábado",
-        "Sunday": "Domingo",
-    }
+    DAY_CHOICES = [
+        ("Monday", "Segunda-feira"),
+        ("Tuesday", "Terça-feira"),
+        ("Wednesday", "Quarta-feira"),
+        ("Thursday", "Quinta-feira"),
+        ("Friday", "Sexta-feira"),
+        ("Saturday", "Sábado"),
+        ("Sunday", "Domingo"),
+    ]
 
     day = models.CharField(
         max_length=10, choices=DAY_CHOICES, unique=True, verbose_name="Dia da Semana"
