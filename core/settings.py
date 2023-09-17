@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     "planejamento",
     "contas",
     "appointments",
-    "accounts"
+    "accounts",
 ]
 
 MIDDLEWARE = [
