@@ -1,0 +1,46 @@
+
+{% load static %}
+
+{% block head %}
+    <!-- Add any additional CSS or head content here -->
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <br>
+        {% if therapists %}
+            <h2>List of Therapists</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Specialities</th>
+                        <!-- Add more columns as needed -->
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for therapist in therapists %}
+                        <tr>
+                            <td><a href="{% url 'therapist_detail' therapist.pk %}">{{ therapist.name }}</a>{{ therapist.name }}</td>
+                            <td>{{ therapist.email }}</td>
+                            <td>
+                                {% for speciality in therapist.specialities.all %}
+                                    {{ speciality.name }}
+                                    {% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            <!-- Add more columns as needed -->
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="3">No therapists available.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No therapists available.</p>
+        {% endif %}
+    </div>
+{% endblock %}

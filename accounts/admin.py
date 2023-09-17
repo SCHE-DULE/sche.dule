@@ -2,7 +2,7 @@ from django.contrib import admin, messages
 from django.contrib.auth.models import User
 
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Client, SystemUser, Therapist, Speciality
+from .models import Client, SystemUser, Therapist, Speciality, TimeSlot, DayOfWeek
 
 
 @admin.register(SystemUser)
@@ -38,8 +38,8 @@ class ClientAdmin(admin.ModelAdmin):
 
 @admin.register(Therapist)
 class TherapistAdmin(admin.ModelAdmin):
-    list_display = ["name", "crm", "avaliability_days", "hours", "rate"]
-    search_fields = ["name", "crm"]
+    list_display = ["name", "crm"]
+    search_fields = ["name", "crm", "specialities"]
     exclude = ["user"]
 
 
@@ -47,3 +47,13 @@ class TherapistAdmin(admin.ModelAdmin):
 class SpecialityAdmin(admin.ModelAdmin):
     list_display = ["name"]
     search_fields = ["name"]
+
+
+@admin.register(TimeSlot)
+class TimeSlotAdmin(admin.ModelAdmin):
+    list_display = ["start_time", "end_time"]
+
+
+@admin.register(DayOfWeek)
+class DayOfWeekAdmin(admin.ModelAdmin):
+    list_display = ["day"]
