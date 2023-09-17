@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "extrato",
     "planejamento",
     "contas",
+    "appointments",
     "accounts",
 ]
 
