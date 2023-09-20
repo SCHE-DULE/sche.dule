@@ -1,8 +1,10 @@
 
 {% load static %}
+{% block 'head' %}
 
-{% block head %}
-    <!-- Add any additional CSS or head content here -->
+    <link href="{% static 'perfil/css/home.css' %}" rel="stylesheet">
+    <link href="{% static 'perfil/css/gerenciar.css' %}" rel="stylesheet">
+
 {% endblock %}
 
 {% block body %}
@@ -30,7 +32,7 @@
                                     {% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             </td>
-                            <!-- Add more columns as needed -->
+                            <td><a href="{% url 'therapist_delete' therapist.pk %}">Delete Therapist</a></td>
                         </tr>
                     {% empty %}
                         <tr>
@@ -42,5 +44,6 @@
         {% else %}
             <p>No therapists available.</p>
         {% endif %}
+        <a href="{% url 'therapist_create' %}" class="btn btn-primary">Cadastrar Terapeuta</a>
     </div>
 {% endblock %}

@@ -10,6 +10,7 @@ class Command(BaseCommand):
         permissions = [
             ("can_create_client", "Pode cadastrar Cliente"),
             ("can_view_client_info", "Pode ver informações de Cliente"),
+            ("modify_patient_information", "Pode editar informações de Cliente"),
             # Add more permissions as needed
         ]
 

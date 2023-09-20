@@ -1,0 +1,24 @@
+
+{% load static %}
+
+{% block content %}
+    <h2>Client Details</h2>
+    <p><strong>Name:</strong> {{ client.name }}</p>
+    <p><strong>Email:</strong> {{ client.email }}</p>
+    <p><strong>Phone Number:</strong> {{ client.phone_number }}</p>
+    {% if perms.accounts.can_view_client_info %}
+        <p><strong>CPF:</strong> {{ client.cpf }}</p>
+        <p><strong>RG or RNE:</strong> {{ client.rg_or_rne }}</p>
+        <p><strong>Country:</strong> {{ client.country }}</p>
+        <p><strong>State:</strong> {{ client.state }}</p>
+        <p><strong>City:</strong> {{ client.city }}</p>
+        <p><strong>Neighborhood:</strong> {{ client.neighborhood }}</p>
+        <p><strong>ZIP Code:</strong> {{ client.zip_code }}</p>
+        <p><strong>Street Address:</strong> {{ client.street_address }}</p>
+        <p><strong>Number:</strong> {{ client.number }}</p>
+        <p><strong>Complement Address:</strong> {{ client.complement_address }}</p>
+    {% endif %}
+    <a href="{% url 'client_list' %}" class="btn btn-primary">Back to List</a>
+    <a href="{% url 'client_update' client.pk %}" class="btn btn-secondary">Edit</a>
+    <a href="{% url 'client_delete' client.pk %}" class="btn btn-danger">Delete</a>
+{% endblock %}
