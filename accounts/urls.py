@@ -5,6 +5,12 @@ from .views import (
     ClientUpdateView,
     ClientDeleteView,
     ClientDetailView,
+
+    SystemUserListView,
+    SystemUserCreateView,
+    SystemUserUpdateView,
+    SystemUserDeleteView,
+    SystemUserDetailView,
     
     TherapistCreateView,
     TherapistDeleteView,
@@ -20,6 +26,12 @@ urlpatterns = [
     path("clients/<int:pk>/", ClientDetailView.as_view(), name="client_detail"),
     path("clients/<int:pk>/update/", ClientUpdateView.as_view(), name="client_update"),
     path("clients/<int:pk>/delete/", ClientDeleteView.as_view(), name="client_delete"),
+
+    path('systemusers/', SystemUserListView.as_view(), name='systemuser_list'),
+    path('systemusers/create/', SystemUserCreateView.as_view(), name='systemuser_create'),
+    path('systemusers/<int:pk>/', SystemUserDetailView.as_view(), name='systemuser_detail'),
+    path('systemusers/<int:pk>/update/', SystemUserUpdateView.as_view(), name='systemuser_update'),
+    path('systemusers/<int:pk>/delete/', SystemUserDeleteView.as_view(), name='systemuser_delete'),
 
     path("therapist/", TherapistListView.as_view(), name="therapist_list"),
     path("therapist/<int:pk>/", TherapistDetailView.as_view(), name="therapist_detail"),

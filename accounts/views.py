@@ -7,8 +7,7 @@ from django.views.generic import (
     DeleteView,
     DetailView,
 )
-from .models import Client, Therapist
-from .forms import ClientEditForm
+from .models import Client, Therapist, SystemUser
 
 
 class ClientListView(ListView):
@@ -97,6 +96,52 @@ class ClientDetailView(DetailView):
     model = Client
     template_name = "client/client_detail.html"
     context_object_name = "client"
+
+
+class SystemUserListView(ListView):
+    model = SystemUser
+    template_name = "systemuser/systemuser_list.html"
+    context_object_name = "systemusers"
+
+
+class SystemUserCreateView(CreateView):
+    model = SystemUser
+    fields = [
+        "name",
+        "email",
+        "birthday",
+        "phone_number",
+        "gender",
+        "user_type",
+    ]
+    template_name = "systemuser/systemuser_form.html"
+    success_url = reverse_lazy("systemuser_list")
+
+
+class SystemUserUpdateView(UpdateView):
+    model = SystemUser
+    fields = [
+        "name",
+        "email",
+        "birthday",
+        "phone_number",
+        "gender",
+        "user_type",
+    ]
+    template_name = "systemuser/systemuser_form.html"
+    success_url = reverse_lazy("systemuser_list")
+
+
+class SystemUserDeleteView(DeleteView):
+    model = SystemUser
+    template_name = "systemuser/systemuser_delete.html"
+    success_url = reverse_lazy("systemuser_list")
+
+
+class SystemUserDetailView(DetailView):
+    model = SystemUser
+    template_name = "systemuser/systemuser_detail.html"
+    context_object_name = "systemuser"
 
 
 class TherapistListView(ListView):
