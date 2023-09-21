@@ -1,0 +1,13 @@
+
+
+{% block content %}
+  <h2>System Users</h2>
+  <ul>
+    {% for systemuser in systemusers %}
+      <li><a href="{% url 'systemuser_detail' systemuser.pk %}">{{ systemuser.name }}</a></li>
+    {% empty %}
+      <li>No system users available.</li>
+    {% endfor %}
+  </ul>
+  <a href="{% url 'systemuser_create' %}">Create New System User</a>
+{% endblock %}
