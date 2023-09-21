@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 from django.views.generic import (
     ListView,
@@ -11,13 +11,15 @@ from django.views.generic import (
 from .models import Client, Therapist, SystemUser
 
 
-class ClientListView(LoginRequiredMixin, ListView):
+class ClientListView(ListView, LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = "accounts.can_view_client_list"
     model = Client
     template_name = "client/client_list.html"
     context_object_name = "clients"
 
 
-class ClientCreateView(LoginRequiredMixin,CreateView):
+class ClientCreateView(CreateView, LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = "accounts.can_create_client"
     model = Client
     template_name = "client/client_form.html"
     fields = [
@@ -40,7 +42,8 @@ class ClientCreateView(LoginRequiredMixin,CreateView):
     success_url = reverse_lazy("client_list")
 
 
-class ClientUpdateView(LoginRequiredMixin,UpdateView):
+class ClientUpdateView(UpdateView, LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = "accounts.can_view_client_info"
     model = Client
     template_name = "client/client_form.html"
     fields = [
@@ -87,25 +90,29 @@ class ClientUpdateView(LoginRequiredMixin,UpdateView):
         return form
 
 
-class ClientDeleteView(LoginRequiredMixin,DeleteView):
+class ClientDeleteView(DeleteView, LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = "accounts.modify_patient_information"
     model = Client
     template_name = "client/client_confirm_delete.html"
     success_url = reverse_lazy("client_list")
 
 
-class ClientDetailView(LoginRequiredMixin,DetailView):
+class ClientDetailView(DetailView, LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = "accounts.can_view_client_info"
     model = Client
     template_name = "client/client_detail.html"
     context_object_name = "client"
 
 
-class SystemUserListView(LoginRequiredMixin,ListView):
+class SystemUserListView(ListView, LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = "accounts.manage_system_users"
     model = SystemUser
     template_name = "systemuser/systemuser_list.html"
     context_object_name = "systemusers"
 
 
-class SystemUserCreateView(LoginRequiredMixin,CreateView):
+class SystemUserCreateView(CreateView, LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = "accounts.manage_system_users"
     model = SystemUser
     fields = [
         "name",
@@ -119,7 +126,8 @@ class SystemUserCreateView(LoginRequiredMixin,CreateView):
     success_url = reverse_lazy("systemuser_list")
 
 
-class SystemUserUpdateView(LoginRequiredMixin,UpdateView):
+class SystemUserUpdateView(UpdateView, LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = "accounts.manage_system_users"
     model = SystemUser
     fields = [
         "name",
@@ -133,25 +141,29 @@ class SystemUserUpdateView(LoginRequiredMixin,UpdateView):
     success_url = reverse_lazy("systemuser_list")
 
 
-class SystemUserDeleteView(LoginRequiredMixin,DeleteView):
+class SystemUserDeleteView(DeleteView, LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = "accounts.manage_system_users"
     model = SystemUser
     template_name = "systemuser/systemuser_delete.html"
     success_url = reverse_lazy("systemuser_list")
 
 
-class SystemUserDetailView(LoginRequiredMixin,DetailView):
+class SystemUserDetailView(DetailView, LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = "accounts.manage_system_users"
     model = SystemUser
     template_name = "systemuser/systemuser_detail.html"
     context_object_name = "systemuser"
 
 
-class TherapistListView(LoginRequiredMixin,ListView):
+class TherapistListView(ListView, LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = "accounts.can_view_therapist_list"
     model = Therapist
     template_name = "therapist/therapist_list.html"
     context_object_name = "therapists"
 
 
-class TherapistCreateView(LoginRequiredMixin,CreateView):
+class TherapistCreateView(CreateView, LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = "accounts.can_create_therapist"
     model = Therapist
     fields = [
         "name",
@@ -172,7 +184,8 @@ class TherapistCreateView(LoginRequiredMixin,CreateView):
     success_url = reverse_lazy("therapist_list")
 
 
-class TherapistUpdateView(LoginRequiredMixin,UpdateView):
+class TherapistUpdateView(UpdateView, LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = "accounts.modify_therapist_information"
     model = Therapist
     fields = [
         "name",
@@ -193,13 +206,15 @@ class TherapistUpdateView(LoginRequiredMixin,UpdateView):
     success_url = reverse_lazy("therapist_list")
 
 
-class TherapistDeleteView(LoginRequiredMixin,DeleteView):
+class TherapistDeleteView(DeleteView, LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = "accounts.modify_therapist_information"
     model = Therapist
     template_name = "therapist/therapist_delete.html"
     success_url = reverse_lazy("therapist_list")
 
 
-class TherapistDetailView(LoginRequiredMixin,DetailView):
+class TherapistDetailView(DetailView, LoginRequiredMixin, PermissionRequiredMixin):
+    permission_required = "accounts.can_view_therapist_info"
     model = Therapist
     template_name = "therapist/therapist_detail.html"
     context_object_name = "therapist"
