@@ -1,0 +1,10 @@
+
+{% block content %}
+  <h2>{% if form.instance.pk %}Edit Appointment{% else %}Create Appointment{% endif %}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="{% if form.instance.pk %}{% url 'appointment-detail' form.instance.pk %}{% else %}{% url 'appointment-list' %}{% endif %}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}
