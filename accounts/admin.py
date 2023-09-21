@@ -19,8 +19,8 @@ class SystemUserAdmin(admin.ModelAdmin):
         'last_name',
         'is_staff',
         'is_active',
-#        'groups',
-#        'user_permissions'
+        'groups',
+        'user_permissions'
     )
 
     def save_model(self, request, obj, form, change):

@@ -55,7 +55,6 @@ class BaseUser(AbstractUser):
 class SystemUser(BaseUser):
     USER_TYPE = (
         ("RECEPTIONIST", "Recepcionista"),
-        ("THERAPIST", "Terapeuta"),
         ("MANAGER", "Gerente"),
         ("GENERAL_MANAGER", "Gerente Geral"),
         ("ADMINISTRATOR", "Administrador"),
@@ -93,7 +92,7 @@ class SystemUser(BaseUser):
 
 
 @receiver(post_save, sender=SystemUser)
-def assign_groups_and_permissions(sender, instance, created, **kwargs):
+def assign_groups_and_permissions_system_user(sender, instance, created, **kwargs):
     group, created = Group.objects.get_or_create(name=instance.user_type)
 
     print("Groups (Before Adding):", instance.groups.all())
@@ -135,9 +134,37 @@ class Therapist(BaseUser):
     def __str__(self):
         return f"Terapeuta: {self.name}, Especialidades: {', '.join([speciality.name for speciality in self.specialities.all()])}, Registro: {self.crm}"
 
+    def assign_permissions(self):
+        content_type = ContentType.objects.get_for_model(self)
+        existing_permissions = Permission.objects.filter(content_type=content_type)
+
+        for codename in PERMISSIONS_MAP.get("THERAPIST", []):
+            permission = existing_permissions.filter(codename=codename).first()
+
+            if permission is None:
+                permission = Permission.objects.create(
+                    codename=codename,
+                    content_type=content_type,
+                    name=f"Can {codename.replace('_', ' ')} {self._meta.verbose_name}",
+                )
+
+            self.user_permissions.add(permission)
+            
     class Meta:
         verbose_name = "Terapeuta"
         verbose_name_plural = "Terapeutas"
+
+@receiver(post_save, sender=Therapist)
+def assign_groups_and_permissions_therapist(sender, instance, created, **kwargs):
+    group, created = Group.objects.get_or_create(name="THERAPIST")
+
+    print("Groups (Before Adding):", instance.groups.all())
+    instance.groups.clear()
+    instance.groups.add(group)
+
+    print("Groups (After Adding):", instance.groups.all())
+
+    instance.assign_permissions()
 
 
 class Client(BaseUser):
