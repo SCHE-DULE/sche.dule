@@ -1,0 +1,14 @@
+
+{% block content %}
+  <h2>Appointment List</h2>
+  <ul>
+    {% for appointment in appointments %}
+      <li>
+        <a href="{% url 'appointment-detail' appointment.pk %}">{{ appointment }}</a>
+      </li>
+    {% empty %}
+      <p>No appointments available.</p>
+    {% endfor %}
+  </ul>
+  <a href="{% url 'appointment-create' %}" class="btn btn-primary">Create Appointment</a>
+{% endblock %}

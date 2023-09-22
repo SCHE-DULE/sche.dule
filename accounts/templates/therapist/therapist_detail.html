@@ -1,0 +1,81 @@
+
+{% block content %}
+  <h2>Therapist Details</h2>
+  <table class="table table-bordered">
+    <tbody>
+      <tr>
+        <th>Name</th>
+        <td>{{ therapist.name }}</td>
+      </tr>
+      <tr>
+        <th>Email</th>
+        <td>{{ therapist.email }}</td>
+      </tr>
+      <tr>
+        <th>Birthday</th>
+        <td>{{ therapist.birthday }}</td>
+      </tr>
+      <tr>
+        <th>Phone Number</th>
+        <td>{{ therapist.phone_number }}</td>
+      </tr>
+      <tr>
+        <th>Gender</th>
+        <td>{{ therapist.get_gender_display }}</td>
+      </tr>
+      <tr>
+        <th>Specialities</th>
+        <td>
+          {% for speciality in therapist.specialities.all %}
+            {{ speciality.name }}{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        </td>
+      </tr>
+      <tr>
+        <th>CRM</th>
+        <td>{{ therapist.crm }}</td>
+      </tr>
+      <tr>
+        <th>Availability Days</th>
+        <td>
+          {% for day in therapist.availability_days.all %}
+            {{ day.get_day_display }}{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        </td>
+      </tr>
+      <tr>
+        <th>Availability Hours</th>
+        <td>
+          {% for hour in therapist.availability_hours.all %}
+            {{ hour.start_time|time:"H:i" }} - {{ hour.end_time|time:"H:i" }}{% if not forloop.last %}, {% endif %}
+          {% endfor %}
+        </td>
+      </tr>
+      <tr>
+        <th>Rate</th>
+        <td>{{ therapist.rate }}</td>
+      </tr>
+      <tr>
+        <th>Fee</th>
+        <td>{{ therapist.fee }}</td>
+      </tr>
+      <tr>
+        <th>Photo</th>
+        <td><img src="{{ therapist.photo.url }}" alt="Therapist Photo"></td>
+      </tr>
+      <tr>
+        <th>Contract Scan</th>
+        <td>
+          {% if therapist.contract_scan %}
+            <a href="{{ therapist.contract_scan.url }}" target="_blank">View Contract</a>
+          {% else %}
+            N/A
+          {% endif %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <a href="{% url 'therapist_list' %}" class="btn btn-primary">Back to List</a>
+  <a href="{% url 'therapist_update' therapist.pk %}" class="btn btn-secondary">Edit</a>
+  <a href="{% url 'therapist_delete' therapist.pk %}" class="btn btn-danger">Delete</a>
+{% endblock %}

@@ -1,0 +1,13 @@
+
+{% block content %}
+  <h2>System User Details</h2>
+  <p>Name: {{ systemuser.name }}</p>
+  <p>Email: {{ systemuser.email }}</p>
+  <p>Birthday: {{ systemuser.birthday }}</p>
+  <p>Phone Number: {{ systemuser.phone_number }}</p>
+  <p>Gender: {{ systemuser.get_gender_display }}</p>
+  <p>User Type: {{ systemuser.get_user_type_display }}</p>
+  <a href="{% url 'systemuser_list' %}">Back to System Users</a>
+  <a href="{% url 'systemuser_update' systemuser.pk %}" class="btn btn-secondary">Edit</a>
+  <a href="{% url 'systemuser_delete' systemuser.pk %}" class="btn btn-danger">Delete</a>
+{% endblock %}

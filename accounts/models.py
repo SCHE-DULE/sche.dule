@@ -109,10 +109,20 @@ class Therapist(BaseUser):
     crm = models.CharField(
         max_length=20, verbose_name="Cadastro do Órgão de Registro (ex: CRM)"
     )
-    avaliability_days = models.CharField(
-        max_length=100, verbose_name="Dias Disponíveis"
+
+    availability_hours = models.ManyToManyField(
+        "TimeSlot",
+        verbose_name="Horários de Consulta",
+        blank=True,
+        default=None,
     )
-    hours = models.CharField(max_length=100, verbose_name="Horário de Consulta")
+    availability_days = models.ManyToManyField(
+        "DayOfWeek",
+        verbose_name="Dias de Consulta",
+        blank=True,
+        default=None,
+    )
+
     rate = models.DecimalField(
         max_digits=10, decimal_places=2, verbose_name="Valor Cobrado"
     )
@@ -208,3 +218,40 @@ class Speciality(models.Model):
     class Meta:
         verbose_name = "Speciality"
         verbose_name_plural = "Specialities"
+
+
+class TimeSlot(models.Model):
+    start_time = models.TimeField(verbose_name="Start Time")
+    end_time = models.TimeField(verbose_name="End Time")
+
+    def __str__(self):
+        return (
+            f"{self.start_time.strftime('%H:%M')} - {self.end_time.strftime('%H:%M')}"
+        )
+
+    class Meta:
+        verbose_name = "Time Slot"
+        verbose_name_plural = "Time Slots"
+
+
+class DayOfWeek(models.Model):
+    DAY_CHOICES = [
+        ("Monday", "Segunda-feira"),
+        ("Tuesday", "Terça-feira"),
+        ("Wednesday", "Quarta-feira"),
+        ("Thursday", "Quinta-feira"),
+        ("Friday", "Sexta-feira"),
+        ("Saturday", "Sábado"),
+        ("Sunday", "Domingo"),
+    ]
+
+    day = models.CharField(
+        max_length=10, choices=DAY_CHOICES, unique=True, verbose_name="Dia da Semana"
+    )
+
+    def __str__(self):
+        return self.get_day_display()
+
+    class Meta:
+        verbose_name = "Day of the Week"
+        verbose_name_plural = "Days of the Week"

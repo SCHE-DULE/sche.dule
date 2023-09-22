@@ -1,0 +1,16 @@
+
+
+{% block content %}
+  <h2>Appointment Detail</h2>
+  <p><strong>Client:</strong> {{ appointment.client }}</p>
+  <p><strong>Therapist:</strong> {{ appointment.therapist }}</p>
+  <p><strong>Service:</strong> {{ appointment.service }}</p>
+  <p><strong>Start Date & Time:</strong> {{ appointment.appointment_date_start }}</p>
+  <p><strong>End Date & Time:</strong> {{ appointment.appointment_date_end }}</p>
+  <p><strong>Status:</strong> {{ appointment.get_status_display }}</p>
+  <p><strong>Notes:</strong> {{ appointment.notes }}</p>
+
+  <a href="{% url 'appointment-update' appointment.pk %}" class="btn btn-primary">Edit</a>
+  <a href="{% url 'appointment-delete' appointment.pk %}" class="btn btn-danger">Delete</a>
+  <a href="{% url 'appointment-list' %}" class="btn btn-secondary">Back to List</a>
+{% endblock %}
