@@ -1,20 +1,18 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User, AbstractUser, Group, Permission
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
-class BaseUser(models.Model):
+from .permissions import PERMISSIONS_MAP
+
+
+class BaseUser(AbstractUser):
     GENDER_CHOICES = (
         ("M", "Masculino"),
         ("F", "Feminino"),
         ("O", "Outro"),
-    )
-
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        null=True,
-        default=None,
-        blank=True,
     )
 
     name = models.CharField(
@@ -27,38 +25,84 @@ class BaseUser(models.Model):
         max_length=1, choices=GENDER_CHOICES, verbose_name="Gênero"
     )
 
+    groups = models.ManyToManyField(
+        Group,
+        verbose_name="Groups",
+        blank=True,
+        related_name="baseuser_groups",
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        verbose_name="User Permissions",
+        blank=True,
+        related_name="baseuser_user_permissions",
+    )
+
     def __str__(self):
         return f"Name: {self.name}, Email: {self.email}"
 
     def save(self, *args, **kwargs):
-        if not self.user:
+        if not self.id:
             if (
                 not User.objects.filter(username=self.email).exists()
                 or User.objects.filter(username=self.name).exists()
             ):
-                user = User.objects.create_user(
-                    username=self.name.lower().replace(" ", ""), email=self.email
-                )
-
-                self.user = user
-                user.save()
+                self.username = self.name.lower().replace(" ", "")
 
         super().save(*args, **kwargs)
 
 
 class SystemUser(BaseUser):
     USER_TYPE = (
-        ("RECEPCIONISTA", "Recepcionista"),
-        ("GERENTE", "Gerente"),
-        ("GERENTE_GERAL", "Gerente Geral"),
-        ("ADMINISTRADOR", "Administrador"),
+        ("RECEPTIONIST", "Recepcionista"),
+        ("MANAGER", "Gerente"),
+        ("GENERAL_MANAGER", "Gerente Geral"),
+        ("ADMINISTRATOR", "Administrador"),
         ("SUPER_USER", "Super User"),
     )
 
     user_type = models.CharField(
-        max_length=13, choices=USER_TYPE, verbose_name="Tipo de Usuário"
+        max_length=15, choices=USER_TYPE, verbose_name="Tipo de Usuário"
     )
 
+    def save(self, *args, **kwargs):
+
+        return super(SystemUser, self).save(*args, **kwargs)
+
+
+    def assign_permissions(self):
+        content_type = ContentType.objects.get_for_model(self)
+        existing_permissions = Permission.objects.filter(content_type=content_type)
+
+        for codename in PERMISSIONS_MAP.get(self.user_type, []):
+            permission = existing_permissions.filter(codename=codename).first()
+
+            if permission is None:
+                permission = Permission.objects.create(
+                    codename=codename,
+                    content_type=content_type,
+                    name=f"Can {codename.replace('_', ' ')} {self._meta.verbose_name}",
+                )
+
+            self.user_permissions.add(permission)
+
+    class Meta:
+        verbose_name = "Usuário do Sistema"
+        verbose_name_plural = "Usuários do Sistema"
+
+
+@receiver(post_save, sender=SystemUser)
+def assign_groups_and_permissions_system_user(sender, instance, created, **kwargs):
+    group, created = Group.objects.get_or_create(name=instance.user_type)
+
+    print("Groups (Before Adding):", instance.groups.all())
+    instance.groups.clear()
+    instance.groups.add(group)
+
+    print("Groups (After Adding):", instance.groups.all())
+
+    instance.assign_permissions()
+        
 
 class Therapist(BaseUser):
     specialities = models.ManyToManyField("Speciality", verbose_name="Especialidades")
@@ -100,9 +144,37 @@ class Therapist(BaseUser):
     def __str__(self):
         return f"Terapeuta: {self.name}, Especialidades: {', '.join([speciality.name for speciality in self.specialities.all()])}, Registro: {self.crm}"
 
+    def assign_permissions(self):
+        content_type = ContentType.objects.get_for_model(self)
+        existing_permissions = Permission.objects.filter(content_type=content_type)
+
+        for codename in PERMISSIONS_MAP.get("THERAPIST", []):
+            permission = existing_permissions.filter(codename=codename).first()
+
+            if permission is None:
+                permission = Permission.objects.create(
+                    codename=codename,
+                    content_type=content_type,
+                    name=f"Can {codename.replace('_', ' ')} {self._meta.verbose_name}",
+                )
+
+            self.user_permissions.add(permission)
+            
     class Meta:
         verbose_name = "Terapeuta"
         verbose_name_plural = "Terapeutas"
+
+@receiver(post_save, sender=Therapist)
+def assign_groups_and_permissions_therapist(sender, instance, created, **kwargs):
+    group, created = Group.objects.get_or_create(name="THERAPIST")
+
+    print("Groups (Before Adding):", instance.groups.all())
+    instance.groups.clear()
+    instance.groups.add(group)
+
+    print("Groups (After Adding):", instance.groups.all())
+
+    instance.assign_permissions()
 
 
 class Client(BaseUser):
@@ -126,6 +198,10 @@ class Client(BaseUser):
         max_length=100, blank=True, null=True, verbose_name="Complemento"
     )
     observation = models.TextField(blank=True, null=True, verbose_name="Observação")
+
+    class Meta:
+        verbose_name = "Cliente"
+        verbose_name_plural = "Clientes"
 
 
 class Speciality(models.Model):
