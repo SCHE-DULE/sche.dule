@@ -1,4 +1,6 @@
 from django.urls import path
+from django.contrib.auth.views import LoginView, LogoutView
+
 from .views import (
     ClientListView,
     ClientCreateView,
@@ -21,6 +23,10 @@ from .views import (
 
 
 urlpatterns = [
+
+    path('login/', LoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+
     path("clients/", ClientListView.as_view(), name="client_list"),
     path("clients/create/", ClientCreateView.as_view(), name="client_create"),
     path("clients/<int:pk>/", ClientDetailView.as_view(), name="client_detail"),
