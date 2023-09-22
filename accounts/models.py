@@ -44,8 +44,8 @@ class BaseUser(AbstractUser):
     def save(self, *args, **kwargs):
         if not self.id:
             if (
-                not User.objects.filter(username=self.email).exists()
-                or User.objects.filter(username=self.name).exists()
+                not BaseUser.objects.filter(username=self.email).exists()
+                or BaseUser.objects.filter(username=self.name).exists()
             ):
                 self.username = self.name.lower().replace(" ", "")
 
@@ -58,7 +58,6 @@ class SystemUser(BaseUser):
         ("MANAGER", "Gerente"),
         ("GENERAL_MANAGER", "Gerente Geral"),
         ("ADMINISTRATOR", "Administrador"),
-        ("SUPER_USER", "Super User"),
     )
 
     user_type = models.CharField(
@@ -85,6 +84,7 @@ class SystemUser(BaseUser):
                 )
 
             self.user_permissions.add(permission)
+            print(self.user_permissions.all())
 
     class Meta:
         verbose_name = "Usuário do Sistema"

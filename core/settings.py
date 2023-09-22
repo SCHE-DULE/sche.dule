@@ -111,6 +111,14 @@ LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/accounts/clients/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
+# Define your custom user model auth
+AUTH_USER_MODEL = 'accounts.BaseUser'
+
+# Specify the authentication backends
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
