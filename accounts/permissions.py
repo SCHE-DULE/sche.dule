@@ -4,6 +4,13 @@ PERMISSIONS_MAP = {
                 "schedule_appointment",
                 "set_client_payment",
                 "view_scheduled_appointments",
+                "can_create_appointment",
+                "can_view_client_info",
+                "can_create_client",
+                "can_view_appointment_list",
+                "can_view_appointment_info",
+                "can_view_therapist_info",
+                "can_view_therapist_list",
             ],
             "THERAPIST": [
                 "view_scheduled_appointments",
@@ -13,6 +20,7 @@ PERMISSIONS_MAP = {
             "MANAGER": [
                 "manage_receptionists",
                 "modify_patient_information",
+                "modify_therapist_information",
             ],
             "GENERAL_MANAGER": [
                 "approve_new_tasks",
