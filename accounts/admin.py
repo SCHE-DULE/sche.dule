@@ -1,31 +1,56 @@
 from django.contrib import admin, messages
+from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Client, SystemUser, Therapist, Speciality, TimeSlot, DayOfWeek
+from .models import (
+    BaseUser,
+    Client,
+    SystemUser,
+    Therapist,
+    Speciality,
+    TimeSlot,
+    DayOfWeek,
+)
 
 
 @admin.register(SystemUser)
-class SystemUserAdmin(admin.ModelAdmin):
+class SystemUserAdmin(UserAdmin):
     list_display = ["name", "user_type"]
     search_fields = ["name", "user_type"]
-    exclude = (
-        'password',
-        'last_login',
-        'date_joined',
-        'is_superuser',
-        'username',
-        'first_name',
-        'last_name',
-        'is_staff',
-        'is_active',
-        'groups',
-        'user_permissions'
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "password1",
+                    "password2",
+                ),
+            },
+        ),
+        (
+            "Personal Info",
+            {"fields": ("name", "email", "birthday", "phone_number", "gender")},
+        ),
+        ("Type of User", {"fields": ("user_type",)}),
     )
+    fieldsets = (
+        (None, {"fields": ("username", "password")}),
+        (
+            "Personal Info",
+            {"fields": ("name", "email", "birthday", "phone_number", "gender")},
+        ),
+        ("Permissions", {"fields": ("is_active",)}),
+        ("Type of User", {"fields": ("user_type",)}),
+    )
+
+    # Exclude the following fields
+    exclude = ("groups", "user_permissions")
 
     def save_model(self, request, obj, form, change):
         if not change:
-            if not User.objects.filter(email=f"{obj.email}").exists():
+            if not BaseUser.objects.filter(email=f"{obj.email}").exists():
                 try:
                     request.user.id
                 except ObjectDoesNotExist:
@@ -39,33 +64,194 @@ class SystemUserAdmin(admin.ModelAdmin):
                 messages.error(request, "Este email já está sendo usado!")
         obj.save()
 
-    def change_view(self, request, object_id, form_url='', extra_context=None):
+    def change_view(self, request, object_id, form_url="", extra_context=None):
         # Fetch the SystemUser instance
         system_user = self.get_object(request, object_id)
-        
-        # Print information about the user
-        print(f"Viewing SystemUser: {system_user.name}, Groups: {system_user.groups.all()}")
 
-        
+        # Print information about the user
+        print(
+            f"Viewing SystemUser: {system_user.name}, Groups: {system_user.groups.all()}"
+        )
+
         # You can add any additional logic or custom code here
-        
+
         return super().change_view(request, object_id, form_url, extra_context)
 
 
-
 @admin.register(Client)
-class ClientAdmin(admin.ModelAdmin):
+class ClientAdmin(UserAdmin):
     list_display = ["name", "email"]
     search_fields = ["name"]
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "password1",
+                    "password2",
+                ),
+            },
+        ),
+        (
+            "Personal Info",
+            {"fields": ("name", "email", "birthday", "phone_number", "gender")},
+        ),
+        (
+            "Client Info",
+            {
+                "fields": (
+                    "cpf",
+                    "rg_or_rne",
+                )
+            },
+        ),
+        (
+            "Client Address",
+            {
+                "fields": (
+                    "street_address",
+                    "number",
+                    "zip_code",
+                    "neighborhood",
+                    "city",
+                    "state",
+                    "country",
+                )
+            },
+        ),
+        (
+            None,
+            {"fields": ("observation",)},
+        ),
+    )
+
+    fieldsets = (
+        (None, {"fields": ("username", "password")}),
+        (
+            "Personal Info",
+            {"fields": ("name", "email", "birthday", "phone_number", "gender")},
+        ),
+        (
+            "Permissions",
+            {"fields": ("is_active",)},
+        ),
+        (
+            "Client Info",
+            {
+                "fields": (
+                    "cpf",
+                    "rg_or_rne",
+                )
+            },
+        ),
+        (
+            "Client Address",
+            {
+                "fields": (
+                    "street_address",
+                    "number",
+                    "zip_code",
+                    "neighborhood",
+                    "city",
+                    "state",
+                    "country",
+                )
+            },
+        ),
+        (
+            None,
+            {"fields": ("observation",)},
+        ),
+    )
+
+    # Exclude the following fields
+    exclude = ("groups", "user_permissions")
 
     class Meta:
         verbose_name = "Cliente"
 
 
 @admin.register(Therapist)
-class TherapistAdmin(admin.ModelAdmin):
+class TherapistAdmin(UserAdmin):
     list_display = ["name", "crm"]
     search_fields = ["name", "crm", "specialities"]
+
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "password1",
+                    "password2",
+                ),
+            },
+        ),
+        (
+            "Personal Info",
+            {
+                "fields": ("name", "email", "birthday", "phone_number", "gender"),
+            },
+        ),
+        (
+            "Therapist Info",
+            {
+                "fields": (
+                    "specialities",
+                    "crm",
+                    "rate",
+                    "fee",
+                    "photo",
+                    "contract_scan",
+                ),
+            },
+        ),
+        (
+            "Availability",
+            {
+                "fields": ("availability_hours", "availability_days"),
+            },
+        ),
+    )
+
+    fieldsets = (
+        (None, {"fields": ("username", "password")}),
+        (
+            "Personal Info",
+            {
+                "fields": ("name", "email", "birthday", "phone_number", "gender"),
+            },
+        ),
+        (
+            "Permissions",
+            {
+                "fields": ("is_active",),
+            },
+        ),
+        (
+            "Therapist Info",
+            {
+                "fields": (
+                    "specialities",
+                    "crm",
+                    "rate",
+                    "fee",
+                    "photo",
+                    "contract_scan",
+                ),
+            },
+        ),
+        (
+            "Availability",
+            {
+                "fields": ("availability_hours", "availability_days"),
+            },
+        ),
+    )
+
+    # Exclude the following fields
+    exclude = ("groups", "user_permissions")
 
 
 @admin.register(Speciality)
