@@ -4,6 +4,8 @@ from django.contrib.auth.models import User, AbstractUser, Group, Permission
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from unidecode import unidecode
+
 
 from .permissions import PERMISSIONS_MAP
 
@@ -47,7 +49,8 @@ class BaseUser(AbstractUser):
                 not BaseUser.objects.filter(username=self.email).exists()
                 or BaseUser.objects.filter(username=self.name).exists()
             ):
-                self.username = self.name.lower().replace(" ", "")
+                if self.username is None:
+                    self.username = unidecode(self.name).lower().replace(" ", "")
 
         super().save(*args, **kwargs)
 
@@ -58,6 +61,7 @@ class SystemUser(BaseUser):
         ("MANAGER", "Gerente"),
         ("GENERAL_MANAGER", "Gerente Geral"),
         ("ADMINISTRATOR", "Administrador"),
+        ("SUPER_ADMIN", "Super Admin"),
     )
 
     user_type = models.CharField(
@@ -65,9 +69,7 @@ class SystemUser(BaseUser):
     )
 
     def save(self, *args, **kwargs):
-
         return super(SystemUser, self).save(*args, **kwargs)
-
 
     def assign_permissions(self):
         content_type = ContentType.objects.get_for_model(self)
@@ -102,7 +104,7 @@ def assign_groups_and_permissions_system_user(sender, instance, created, **kwarg
     print("Groups (After Adding):", instance.groups.all())
 
     instance.assign_permissions()
-        
+
 
 class Therapist(BaseUser):
     specialities = models.ManyToManyField("Speciality", verbose_name="Especialidades")
@@ -159,10 +161,11 @@ class Therapist(BaseUser):
                 )
 
             self.user_permissions.add(permission)
-            
+
     class Meta:
         verbose_name = "Terapeuta"
         verbose_name_plural = "Terapeutas"
+
 
 @receiver(post_save, sender=Therapist)
 def assign_groups_and_permissions_therapist(sender, instance, created, **kwargs):
