@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "contas",
     "appointments",
     "accounts",
+    "sass_processor",
 ]
 
 MIDDLEWARE = [
@@ -130,6 +131,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'templates/static'),)
 STATIC_ROOT = os.path.join('static')
+
+SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'static')
+SASS_PROCESSOR_INCLUDE_DIRS = [
+    os.path.join(BASE_DIR, 'templates/static/appointment/scss'),  # Substitua pelo caminho para seus arquivos SCSS
+]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
