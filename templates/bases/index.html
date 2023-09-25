@@ -34,7 +34,7 @@
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../static/img/favicon/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="{% static '/img/favicon/favicon.ico' %}" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -65,6 +65,7 @@
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{% static  'js/config.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'vendor/fonts/boxicons.css' %}">
     {% block 'head' %}{% endblock %}
   </head>
 
@@ -578,7 +579,7 @@
           <!-- Content wrapper -->
           <div class="content-wrapper">
             <!-- Content -->
-            {% block 'body' %}{% endblock %}
+            {% block content %}{% endblock %}
             
           </div>
           <!-- Content wrapper -->
@@ -590,15 +591,6 @@
       <div class="layout-overlay layout-menu-toggle"></div>
     </div>
     <!-- / Layout wrapper -->
-
-    <div class="buy-now">
-      <a
-        href="https://themeselection.com/products/sneat-bootstrap-html-admin-template/"
-        target="_blank"
-        class="btn btn-danger btn-buy-now"
-        >Upgrade to Pro</a
-      >
-    </div>
 
     <!-- Core JS -->
     <!-- build:js static/vendor/js/core.js -->

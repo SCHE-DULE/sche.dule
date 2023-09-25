@@ -130,11 +130,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'templates/static'),)
-STATIC_ROOT = os.path.join('static')
+STATIC_ROOT = os.path.join('staticfiles')
 
-SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'static')
+SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'static/scss')
 SASS_PROCESSOR_INCLUDE_DIRS = [
-    os.path.join(BASE_DIR, 'templates/static/appointment/scss'),  # Substitua pelo caminho para seus arquivos SCSS
+    os.path.join(BASE_DIR, 'templates/static/scss'),  # Substitua pelo caminho para seus arquivos SCSS
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

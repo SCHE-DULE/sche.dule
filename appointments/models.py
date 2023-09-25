@@ -91,7 +91,7 @@ class AppointmentPackage(models.Model):
     appointments = models.ManyToManyField(Appointment, verbose_name="Atendimentos")
 
     def __str__(self):
-        return f"Pacote: {self.name} - Terapeuta: {self.terapeuta.name}"
+        return f"Pacote: {self.name} - Terapeuta: {self.therapist.name}"
 
     class Meta:
         verbose_name = "Appointment Package"

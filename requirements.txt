@@ -17,3 +17,4 @@ tzdata==2023.3
 weasyprint==59.0
 webencodings==0.5.1
 zopfli==0.2.2
+django-sass-processor==1.2.2
