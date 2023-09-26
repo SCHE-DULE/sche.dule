@@ -45,7 +45,7 @@
     />
 
     <!-- Icons. Uncomment required icon fonts -->
-    <link rel="stylesheet" href=".{% static  'vendor/fonts/boxicons.css' %}" />
+    <link rel="stylesheet" href="{% static  'vendor/fonts/boxicons.css' %}" />
 
     <!-- Core CSS -->
     <link rel="stylesheet" href="{% static  'vendor/css/core.css' %} " class="template-customizer-core-css" />
@@ -136,14 +136,78 @@
               <span class="app-brand-text demo menu-text fw-bolder ms-2">SCHE.DULE</span>
             </a>
 
+            
             <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
               <i class="bx bx-chevron-left bx-sm align-middle"></i>
             </a>
           </div>
 
           <div class="menu-inner-shadow"></div>
-
-          <ul class="menu-inner py-1">
+            
+          <ul class="menu-inner ">
+          <li>                <!-- User -->
+                <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                  <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                      <img src="../static/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                    </div>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <div class="d-flex">
+                          <div class="flex-shrink-0 me-3">
+                            <div class="avatar avatar-online">
+                              <img src="../static/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                            </div>
+                          </div>
+                          <div class="flex-grow-1">
+                            <span class="fw-semibold d-block">John Doe</span>
+                            <small class="text-muted">Admin</small>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <i class="bx bx-user me-2"></i>
+                        <span class="align-middle">My Profile</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <i class="bx bx-cog me-2"></i>
+                        <span class="align-middle">Settings</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <span class="d-flex align-items-center align-middle">
+                          <i class="flex-shrink-0 bx bx-credit-card me-2"></i>
+                          <span class="flex-grow-1 align-middle">Billing</span>
+                          <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span>
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="auth-login-basic.html">
+                        <i class="bx bx-power-off me-2"></i>
+                        <span class="align-middle">Log Out</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <!--/ User -->
+                </li>
+                 <li class="menu-header small text-uppercase">
+                  <span class="menu-header-text">Painel</span>
+                </li>
             <!-- Dashboard -->
             <li class="menu-item active">
               <a href="index.html" class="menu-link">
@@ -467,11 +531,11 @@
           </ul>
         </aside>
         <!-- / Menu -->
-
+          
         <!-- Layout container -->
         <div class="layout-page">
           <!-- Navbar -->
-
+{% comment %}
           <nav
             class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
             id="layout-navbar"
@@ -490,7 +554,7 @@
                   <input
                     type="text"
                     class="form-control border-0 shadow-none"
-                    placeholder="Search..."
+                    placeholder="Search appointments..."
                     aria-label="Search..."
                   />
                 </div>
@@ -575,12 +639,13 @@
           </nav>
 
           <!-- / Navbar -->
-
+{% endcomment %}
           <!-- Content wrapper -->
           <div class="content-wrapper">
             <!-- Content -->
-            {% block content %}{% endblock %}
-            
+            <div class="container-xxl flex-grow-1 container-p-y">
+              {% block content %}{% endblock %}
+            </div>
           </div>
           <!-- Content wrapper -->
         </div>
@@ -594,22 +659,22 @@
 
     <!-- Core JS -->
     <!-- build:js static/vendor/js/core.js -->
-    <script src="../static/vendor/libs/jquery/jquery.js"></script>
-    <script src="../static/vendor/libs/popper/popper.js"></script>
-    <script src="../static/vendor/js/bootstrap.js"></script>
-    <script src="../static/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="{% static 'vendor/libs/jquery/jquery.js'%}"></script>
+    <script src="{% static 'vendor/libs/popper/popper.js'%}"></script>
+    <script src="{% static 'vendor/js/bootstrap.js'%}"></script>
+    <script src="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.js'%}"></script>
 
-    <script src="../static/vendor/js/menu.js"></script>
+    <script src="{% static 'vendor/js/menu.js'%}"></script>
     <!-- endbuild -->
 
     <!-- Vendors JS -->
-    <script src="../static/vendor/libs/apex-charts/apexcharts.js"></script>
+    <script src="{% static 'vendor/libs/apex-charts/apexcharts.js'%}"></script>
 
     <!-- Main JS -->
-    <script src="../static/js/main.js"></script>
+    <script src="{% static 'js/main.js'%}"></script>
 
     <!-- Page JS -->
-    <script src="../static/js/dashboards-analytics.js"></script>
+    <script src="{% static 'js/dashboards-analytics.js'%}"></script>
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
