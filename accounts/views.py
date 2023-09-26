@@ -69,8 +69,7 @@ class ClientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         form = super().get_form(form_class)
 
         user = self.request.user
-        print(user.get_all_permissions())
-        if not user.has_perm("accounts.modify_patient_information"):
+        if not user.has_perm("accounts.modify_patient_information"): # type: ignore
             excluded_fields = [
                 "cpf",
                 "rg_or_rne",
