@@ -8,6 +8,8 @@ from django.views.generic import (
     DeleteView,
     DetailView,
 )
+
+from .forms import ClientForm, TherapistForm
 from .models import Client, Therapist, SystemUser
 
 
@@ -16,30 +18,22 @@ class ClientListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Client
     template_name = "client/client_list.html"
     context_object_name = "clients"
+    extra_context = {
+        'page_name': 'Clientes', 
+        'page_section': 'Lista',
+        }
 
 
 class ClientCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = "accounts.can_create_client"
     model = Client
     template_name = "client/client_form.html"
-    fields = [
-        "name",
-        "email",
-        "birthday",
-        "phone_number",
-        "gender",
-        "cpf",
-        "rg_or_rne",
-        "country",
-        "state",
-        "city",
-        "neighborhood",
-        "zip_code",
-        "street_address",
-        "number",
-        "complement_address",
-    ]
+    form_class = ClientForm
     success_url = reverse_lazy("client_list")
+    extra_context = {
+        'page_name': 'Clientes', 
+        'page_section': 'Cadastrar',
+        }
 
 
 class ClientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -64,6 +58,10 @@ class ClientUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
         "complement_address",
     ]
     success_url = reverse_lazy("client_list")
+    extra_context = {
+        'page_name': 'Clientes', 
+        'page_section': 'Atualizar',
+        }
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -94,6 +92,10 @@ class ClientDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Client
     template_name = "client/client_confirm_delete.html"
     success_url = reverse_lazy("client_list")
+    extra_context = {
+        'page_name': 'Clientes', 
+        'page_section': 'Desativar',
+        }
 
 
 class ClientDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -101,6 +103,10 @@ class ClientDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = Client
     template_name = "client/client_detail.html"
     context_object_name = "client"
+    extra_context = {
+        'page_name': 'Clientes', 
+        'page_section': 'Detalhes',
+        }
 
 
 class SystemUserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -159,50 +165,34 @@ class TherapistListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Therapist
     template_name = "therapist/therapist_list.html"
     context_object_name = "therapists"
+    extra_context = {
+        'page_name': 'Terapeutas', 
+        'page_section': 'Lista',
+        }
 
 
 class TherapistCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = "accounts.can_create_therapist"
     model = Therapist
-    fields = [
-        "name",
-        "email",
-        "birthday",
-        "phone_number",
-        "gender",
-        "specialities",
-        "crm",
-        "availability_hours",
-        "availability_days",
-        "rate",
-        "fee",
-        "photo",
-        "contract_scan",
-    ]
+    form_class = TherapistForm
     template_name = "therapist/therapist_form.html"
     success_url = reverse_lazy("therapist_list")
+    extra_context = {
+        'page_name': 'Terapeutas', 
+        'page_section': 'Cadastrar',
+        }
 
 
 class TherapistUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = "accounts.modify_therapist_information"
     model = Therapist
-    fields = [
-        "name",
-        "email",
-        "birthday",
-        "phone_number",
-        "gender",
-        "specialities",
-        "crm",
-        "availability_hours",
-        "availability_days",
-        "rate",
-        "fee",
-        "photo",
-        "contract_scan",
-    ]
+    form_class = TherapistForm
     template_name = "therapist/therapist_form.html"
     success_url = reverse_lazy("therapist_list")
+    extra_context = {
+        'page_name': 'Terapeutas', 
+        'page_section': 'Atualizar',
+        }
 
 
 class TherapistDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -210,6 +200,10 @@ class TherapistDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteVie
     model = Therapist
     template_name = "therapist/therapist_delete.html"
     success_url = reverse_lazy("therapist_list")
+    extra_context = {
+        'page_name': 'Terapeutas', 
+        'page_section': 'Desativar',
+        }
 
 
 class TherapistDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -217,3 +211,7 @@ class TherapistDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailVie
     model = Therapist
     template_name = "therapist/therapist_detail.html"
     context_object_name = "therapist"
+    extra_context = {
+        'page_name': 'Terapeutas', 
+        'page_section': 'Detalhes',
+        }

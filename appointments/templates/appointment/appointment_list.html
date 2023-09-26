@@ -5,7 +5,7 @@
 {% block content %}
 
 <div class="card">
-  <h5 class="card-header">Lista de Agendamentos</h5>
+<div class="card-body">
   <div class="table-responsive text-nowrap">
     <table class="table table-hover">
       <thead>
@@ -44,11 +44,13 @@
                 class="avatar avatar-xs pull-up"
                 title="{{ appointment.therapist.name }}"
               >
+              <a href="{% url 'therapist_detail' appointment.therapist.pk %}">
                 <img
                   src="{{ appointment.therapist.photo.url }}"
                   alt="Avatar"
                   class="rounded-circle"
                 />
+              </a>
               </li>
             </ul>
           </td>
@@ -753,6 +755,7 @@
       </tbody>
     </table>
   </div>
+</div>
 </div>
 <a href="{% url 'appointment-create' %}" class="btn btn-primary"
   >Create Appointment</a

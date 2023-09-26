@@ -11,6 +11,8 @@ from django.views.generic import (
     DetailView,
 )
 
+from .forms import AppointmentForm
+
 from .models import Appointment
 
 class AppointmentListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -18,6 +20,10 @@ class AppointmentListView(LoginRequiredMixin, PermissionRequiredMixin, ListView)
     model = Appointment
     template_name = 'appointment/appointment_list.html'  
     context_object_name = 'appointments'
+    extra_context = {
+        'page_name': 'Agendamento', 
+        'page_section': 'Lista',
+        }
 
 
 class AppointmentDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -25,13 +31,21 @@ class AppointmentDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailV
     model = Appointment
     template_name = 'appointment/appointment_detail.html'  
     context_object_name = 'appointment'
+    extra_context = {
+        'page_name': 'Agendamento', 
+        'page_section': 'Detalhes',
+        }
 
 
 class AppointmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = "accounts.can_create_appointment"
     model = Appointment
+    form_class = AppointmentForm
     template_name = 'appointment/appointment_form.html'  
-    fields = '__all__'
+    extra_context = {
+        'page_name': 'Agendamento', 
+        'page_section': 'Cadastrar',
+        }
 
     def get_success_url(self):
         return reverse_lazy("appointment-detail", kwargs={"pk": self.object.pk})
@@ -40,8 +54,12 @@ class AppointmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateV
 class AppointmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     permission_required = "accounts.can_edit_appointment"
     model = Appointment
+    form_class = AppointmentForm
     template_name = 'appointment/appointment_form.html'  
-    fields = '__all__'
+    extra_context = {
+        'page_name': 'Agendamento', 
+        'page_section': 'Atualizar',
+        }
 
     def get_success_url(self):
         return reverse_lazy("appointment-detail", kwargs={"pk": self.object.pk})
@@ -51,4 +69,8 @@ class AppointmentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteV
     permission_required = "accounts.can_remove_appointment"
     model = Appointment
     template_name = 'appointment/appointment_confirm_delete.html' 
-    success_url = reverse_lazy("appointment_list")
+    success_url = reverse_lazy("appointment-list")
+    extra_context = {
+        'page_name': 'Agendamento', 
+        'page_section': 'Desativar',
+        }
