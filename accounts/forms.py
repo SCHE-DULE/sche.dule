@@ -70,6 +70,7 @@ class ClientForm(forms.ModelForm):
                 }
             ),
             "birthday": forms.DateInput(
+                format=("%Y-%m-%d"),
                 attrs={
                     "class": "form-control",
                     "type": "date",
@@ -187,13 +188,15 @@ class TherapistForm(forms.ModelForm):
     )
 
     birthday = forms.DateField(
-        widget=forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+        widget=forms.DateInput(
+            format=("%Y-%m-%d"), attrs={"class": "form-control", "type": "date"}
+        ),
         label="Data de Nascimento",
     )
 
     phone_number = forms.CharField(
         widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "000.000.000-00"}
+            attrs={"class": "form-control", "placeholder": "(99) 99999-9999"}
         ),
         label="Número de Telefone",
     )

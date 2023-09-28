@@ -9,4 +9,4 @@ def menu_context(request):
     else:
         systemuser = None
     
-    return {'systemuser': systemuser}
+    return {'logged_user': systemuser}

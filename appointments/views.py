@@ -1,7 +1,9 @@
 from typing import Any
 from django.http import HttpRequest
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 from django.views.generic import (
     ListView,
@@ -24,6 +26,7 @@ class AppointmentListView(LoginRequiredMixin, PermissionRequiredMixin, ListView)
         'page_name': 'Agendamento', 
         'page_section': 'Lista',
         }
+    ordering = ['appointment_date_start']
 
 
 class AppointmentDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -74,3 +77,13 @@ class AppointmentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteV
         'page_name': 'Agendamento', 
         'page_section': 'Desativar',
         }
+    
+@login_required
+def dashboard(request):
+    appointments = Appointment.objects.order_by('appointment_date_start')
+    
+    extra_context = {
+        'page_section': 'Dashboard',
+    }
+    
+    return render(request, 'dashboard/dashboard.html', {'appointments': appointments, **extra_context})

@@ -1,13 +1,61 @@
-
-
+{% extends 'bases/index.html' %} 
+{% load static %} 
+{% block title %}System Users{% endblock %}
 {% block content %}
-  <h2>System Users</h2>
-  <ul>
-    {% for systemuser in systemusers %}
-      <li><a href="{% url 'systemuser_detail' systemuser.pk %}">{{ systemuser.name }}</a></li>
-    {% empty %}
-      <li>No system users available.</li>
-    {% endfor %}
-  </ul>
-  <a href="{% url 'systemuser_create' %}">Create New System User</a>
+<div class="card">
+  <div class="card-body">
+    <div class="table-responsive text-nowrap">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>User Type</th>
+          </tr>
+        </thead>
+        <tbody class="table-border-bottom-0">
+          {% for systemuser in systemusers %}
+          <tr class="table-default">
+            <td>
+              <a href="{% url 'systemuser_detail' systemuser.pk %}">
+                <i class="fab fa-sketch fa-lg text-warning me-3"></i>
+                <strong>{{ systemuser.name }}</strong>
+              </a>
+            </td>
+            <td>{{ systemuser.email }}</td>
+            <td>{{ systemuser.get_user_type_display }}</td>
+            <td>
+              <div class="dropdown">
+                <button
+                  type="button"
+                  class="btn p-0 dropdown-toggle hide-arrow"
+                  data-bs-toggle="dropdown"
+                >
+                  <i class="bx bx-dots-vertical-rounded"></i>
+                </button>
+                <div class="dropdown-menu">
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'systemuser_update' systemuser.pk %}"
+                  ><i class="bx bx-edit-alt me-1"></i> Edit</a>
+                  <a
+                    class="dropdown-item"
+                    href="{% url 'systemuser_delete' systemuser.pk %}"
+                  >
+                    <i class="bx bx-trash me-1"></i> Delete
+                  </a>
+                </div>
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr class="table-default">
+            <p>No system users available.</p>
+          </tr>
+          {% endfor %} 
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 {% endblock %}

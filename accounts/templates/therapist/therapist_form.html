@@ -1,9 +1,12 @@
 {% extends 'bases/index.html' %} 
 {% load static %} 
 {% block 'head' %} 
+{% block 'title' %}
+{% if form.instance.pk %} Editar infomações de {{therapist.name}}
+{% else %} Cadastrar Terapeuta {% endif %}
+{% endblock %}
 {% endblock %} 
 {% block content %}
-{% block 'title' %}Criar Terapeuta{% endblock %}
 
 <div class="card mb-4">
   <h5 class="card-header">Profile Details</h5>
@@ -43,6 +46,5 @@
   </div>
   <!-- /Account -->
 </div>
-
 {% endblock %}
 

@@ -2,6 +2,10 @@
 {% load static %} 
 {% block 'head' %} 
 {% endblock %} 
+{% block 'title' %}
+{% if form.instance.pk %} Editar infomações de {{client.name}}
+{% else %} Cadastrar Cliente {% endif %}
+{% endblock %}
 {% block content %}
 <div class="container">
   <div class="card">

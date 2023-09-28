@@ -5,75 +5,30 @@
 {% endblock %}
 {% block 'title' %}Lista de Terapeutas{% endblock %}
 {% block content %}
-    
 
-<div class="card">
-  <div class="card-body">
-    <div class="table-responsive text-nowrap">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Telefone</th>
-            <th>Especialidades</th>
-          </tr>
-        </thead>
-        <tbody class="table-border-bottom-0">
-          {% for therapist in therapists %}
-          <tr class="table-default">
-            <td>
-              <a href="{% url 'therapist_detail' therapist.pk %}">
-                <i class="fab fa-sketch fa-lg text-warning me-3"></i>
-                <strong>{{ therapist.name }}</strong>
-              </a>
-            </td>
-            <td>{{ therapist.email }}</td>
-            <td>{{ therapist.phone_number }}</td>
-            <td>
-                {% for speciality in therapist.specialities.all %}
-                    {{ speciality.name }}
-                    {% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </td>
-            <td>
-              <div class="dropdown">
-                <button
-                  type="button"
-                  class="btn p-0 dropdown-toggle hide-arrow"
-                  data-bs-toggle="dropdown"
-                >
-                  <i class="bx bx-dots-vertical-rounded"></i>
-                </button>
-                <div class="dropdown-menu">
-                  <a
-                    class="dropdown-item"
-                    href="{% url 'therapist_update' therapist.pk %}"
-                    ><i class="bx bx-edit-alt me-1"></i> Edit</a
-                  >
-                  {% if perms.accounts.can_remove_appointment %}
-                  <a
-                    class="dropdown-item"
-                    {% comment %} data-bs-toggle="modal"
-                    data-bs-target="#backDropModal" {% endcomment %}
-                    href="{% url 'therapist_delete' therapist.pk %}"
-                  >
-                    <i class="bx bx-trash me-1"></i> Delete
-                  </a>
-                  {% endif %}
-                </div>
-              </div>
-            </td>
-          </tr>
-          {% empty %}
-          <tr class="table-default">
-            <p>Não há Terapeutas cadastrados.</p>
-          </tr>
-          {% endfor %} 
-        </tbody>
-      </table>
-    </div>
+<div class="row mb-5">
+  {% for therapist in therapists %}
+  <div class="col-md-6 col-lg-4 mb-3">
+    <a href="{% url 'therapist_detail' therapist.pk %}">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">{{ therapist.name }}</h5>
+        </div>
+        <img class="img-fluid" src="{{ therapist.photo.url }}" alt="Card image cap" />
+        <div class="card-body">
+          <p class="card-text">
+            {% for speciality in therapist.specialities.all %}
+                {{ speciality.name }}
+                {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </p>
+        </div>
+      </div>
+    </a>
   </div>
+  {% empty %}
+      <p>Não há Terapeutas cadastrados.</p>
+  {% endfor %} 
 </div>
 {% endblock %}
 

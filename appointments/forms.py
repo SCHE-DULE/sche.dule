@@ -3,13 +3,14 @@ from django import forms
 from accounts.models import Client, Speciality, Therapist
 from .models import Appointment
 
+
 class AppointmentForm(forms.ModelForm):
     class Meta:
         model = Appointment
         fields = [
             "client",
-            "therapist",
             "service",
+            "therapist",
             "appointment_date_start",
             "appointment_date_end",
             "status",
@@ -35,12 +36,18 @@ class AppointmentForm(forms.ModelForm):
     )
 
     appointment_date_start = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={"class": "form-control", "type": "datetime-local"}),
+        widget=forms.DateTimeInput(
+            format=("%Y-%m-%dT%H:%M"),
+            attrs={"class": "form-control", "type": "datetime-local"},
+        ),
         label="Data e Hora do início do Atendimento",
     )
 
     appointment_date_end = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={"class": "form-control", "type": "datetime-local"}),
+        widget=forms.DateTimeInput(
+            format=("%Y-%m-%dT%H:%M"),
+            attrs={"class": "form-control", "type": "datetime-local"},
+        ),
         label="Data e Hora do término do Atendimento",
     )
 
