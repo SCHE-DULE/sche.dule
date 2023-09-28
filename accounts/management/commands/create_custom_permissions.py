@@ -3,6 +3,7 @@ from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from accounts.models import SystemUser
 
+
 class Command(BaseCommand):
 
     def handle(self, *args, **options):

@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-7u%%td0%xk4$t(wn3sxxr&5zs_v3rliclv4^u&*f7r2-+tv)s+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["192.168.0.150", "localhost"]
 
 
 # Application definition
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "contas",
     "appointments",
     "accounts",
+    "sass_processor",
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "accounts.context_processors.menu_context",
             ],
         },
     },
@@ -108,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Login
 LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/accounts/clients/'
+LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 # Define your custom user model auth
@@ -137,7 +139,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'templates/static'),)
-STATIC_ROOT = os.path.join('static')
+STATIC_ROOT = os.path.join('staticfiles')
+
+SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'static/scss')
+SASS_PROCESSOR_INCLUDE_DIRS = [
+    os.path.join(BASE_DIR, 'templates/static/scss'),  # Substitua pelo caminho para seus arquivos SCSS
+]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'

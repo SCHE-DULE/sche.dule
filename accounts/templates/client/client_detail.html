@@ -1,8 +1,9 @@
-
+{% extends 'bases/index.html' %}
 {% load static %}
-
+{% block 'title' %}Cliente - {{ therapist.name }}{% endblock %}
 {% block content %}
-    <h2>Client Details</h2>
+<div class="card">
+    <div class="card-body">
     <p><strong>Name:</strong> {{ client.name }}</p>
     <p><strong>Email:</strong> {{ client.email }}</p>
     <p><strong>Phone Number:</strong> {{ client.phone_number }}</p>
@@ -21,4 +22,6 @@
     <a href="{% url 'client_list' %}" class="btn btn-primary">Back to List</a>
     <a href="{% url 'client_update' client.pk %}" class="btn btn-secondary">Edit</a>
     <a href="{% url 'client_delete' client.pk %}" class="btn btn-danger">Delete</a>
+    </div>
+</div>
 {% endblock %}

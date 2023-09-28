@@ -1,49 +1,99 @@
-
+{% extends 'bases/index.html' %}
 {% load static %}
 {% block 'head' %}
 
-    <link href="{% static 'perfil/css/home.css' %}" rel="stylesheet">
-    <link href="{% static 'perfil/css/gerenciar.css' %}" rel="stylesheet">
+{% endblock %}
+{% block 'title' %}Lista de Terapeutas{% endblock %}
+{% block content %}
 
+<div class="row mb-5">
+  {% for therapist in therapists %}
+  <div class="col-md-6 col-lg-4 mb-3">
+    <a href="{% url 'therapist_detail' therapist.pk %}">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">{{ therapist.name }}</h5>
+        </div>
+        <img class="img-fluid" src="{{ therapist.photo.url }}" alt="Card image cap" />
+        <div class="card-body">
+          <p class="card-text">
+            {% for speciality in therapist.specialities.all %}
+                {{ speciality.name }}
+                {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+          </p>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% empty %}
+      <p>Não há Terapeutas cadastrados.</p>
+  {% endfor %} 
+</div>
 {% endblock %}
 
-{% block body %}
-    <div class="container">
-        <br>
-        {% if therapists %}
-            <h2>List of Therapists</h2>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Specialities</th>
-                        <!-- Add more columns as needed -->
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for therapist in therapists %}
-                        <tr>
-                            <td><a href="{% url 'therapist_detail' therapist.pk %}">{{ therapist.name }}</a>{{ therapist.name }}</td>
-                            <td>{{ therapist.email }}</td>
-                            <td>
-                                {% for speciality in therapist.specialities.all %}
-                                    {{ speciality.name }}
-                                    {% if not forloop.last %}, {% endif %}
-                                {% endfor %}
-                            </td>
-                            <td><a href="{% url 'therapist_delete' therapist.pk %}">Delete Therapist</a></td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="3">No therapists available.</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No therapists available.</p>
-        {% endif %}
-        <a href="{% url 'therapist_create' %}" class="btn btn-primary">Cadastrar Terapeuta</a>
+{% comment %} <div class="col-lg-4 col-md-3">
+    <small class="text-light fw-semibold">Backdrop</small>
+    <div class="mt-3">
+      <!-- Button trigger modal -->
+      <button
+        type="button"
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#backDropModal"
+      >
+        Launch modal
+      </button>
+
+      <!-- Modal -->
+      <div class="modal fade" id="backDropModal" data-bs-backdrop="static" tabindex="-1">
+        <div class="modal-dialog">
+          <form class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="backDropModalTitle">Remove Cliente</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col mb-3">
+                    <p>Are you sure you want to delete {{ client.name }}?</p>
+                </div>
+              </div>
+              <div class="row g-2">
+                <div class="col mb-0">
+                  <label for="emailBackdrop" class="form-label">Email</label>
+                  <input
+                    type="text"
+                    id="emailBackdrop"
+                    class="form-control"
+                    placeholder="xxxx@xxx.xx"
+                  />
+                </div>
+                <div class="col mb-0">
+                  <label for="dobBackdrop" class="form-label">DOB</label>
+                  <input
+                    type="text"
+                    id="dobBackdrop"
+                    class="form-control"
+                    placeholder="DD / MM / YY"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                Close
+              </button>
+              <button type="button" class="btn btn-primary">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-{% endblock %}
+  </div> {% endcomment %}
+

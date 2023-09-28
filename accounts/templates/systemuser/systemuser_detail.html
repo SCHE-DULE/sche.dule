@@ -1,13 +1,73 @@
-
+{% extends 'bases/index.html' %}
+{% load static %} 
+{% block head %} {% endblock%} 
+{% block title %}System User - {{ systemuser.name }}{% endblock %}
 {% block content %}
-  <h2>System User Details</h2>
-  <p>Name: {{ systemuser.name }}</p>
-  <p>Email: {{ systemuser.email }}</p>
-  <p>Birthday: {{ systemuser.birthday }}</p>
-  <p>Phone Number: {{ systemuser.phone_number }}</p>
-  <p>Gender: {{ systemuser.get_gender_display }}</p>
-  <p>User Type: {{ systemuser.get_user_type_display }}</p>
-  <a href="{% url 'systemuser_list' %}">Back to System Users</a>
-  <a href="{% url 'systemuser_update' systemuser.pk %}" class="btn btn-secondary">Edit</a>
-  <a href="{% url 'systemuser_delete' systemuser.pk %}" class="btn btn-danger">Delete</a>
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card mb-4">
+            <!-- Account -->
+            <div class="card-body">
+              <div class="d-flex align-items-start align-items-sm-center gap-4">
+                <!-- Add a placeholder image if needed -->
+                <img
+                  src="{% static 'placeholder-image.jpg' %}"
+                  alt="User Avatar"
+                  class="d-block rounded"
+                  height="100"
+                  width="100"
+                  id="uploadedAvatar"
+                />
+                <div class="mb-3">
+                  <h4 class="fw-bold py-3 mb-1">{{ systemuser.name }}</h4>
+                  <p class="text-muted mb-0">User Type: {{ systemuser.get_user_type_display }}</p>
+                </div>
+              </div>
+            </div>
+            <hr class="my-0" />
+            <div class="card-body">
+              <table class="table table-striped table-borderless border-bottom">
+                <tbody>
+                  <tr>
+                    <th>Name</th>
+                    <td>{{ systemuser.name }}</td>
+                  </tr>
+                  <tr>
+                    <th>Email</th>
+                    <td>{{ systemuser.email }}</td>
+                  </tr>
+                  <tr>
+                    <th>Birthday</th>
+                    <td>{{ systemuser.birthday }}</td>
+                  </tr>
+                  <tr>
+                    <th>Phone Number</th>
+                    <td>{{ systemuser.phone_number }}</td>
+                  </tr>
+                  <tr>
+                    <th>Gender</th>
+                    <td>{{ systemuser.get_gender_display }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- /Account -->
+          </div>
+        </div>
+      </div>
+      <div class="btn-group" role="group">
+        <a href="{% url 'systemuser_list' %}" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Voltar">
+          <i class="bx bx-arrow-back"></i>
+        </a>
+        <a href="{% url 'systemuser_update' systemuser.pk %}" class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Usuário">
+          <i class="bx bx-edit"></i>
+        </a>
+        <a href="{% url 'systemuser_delete' systemuser.pk %}" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Desativar Usuário">
+          <i class="bx bx-trash"></i>
+        </a>
+      </div>      
+    </div>
+  </div>
 {% endblock %}

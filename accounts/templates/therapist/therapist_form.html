@@ -1,11 +1,50 @@
-
-{% load static %}
-
-{% block body %}
-  <h2>Create or Edit Therapist</h2>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-  </form>
+{% extends 'bases/index.html' %} 
+{% load static %} 
+{% block 'head' %} 
+{% block 'title' %}
+{% if form.instance.pk %} Editar infomações de {{therapist.name}}
+{% else %} Cadastrar Terapeuta {% endif %}
 {% endblock %}
+{% endblock %} 
+{% block content %}
+
+<div class="card mb-4">
+  <h5 class="card-header">Profile Details</h5>
+  <!-- Account -->
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="row">
+        {% for field in form %} 
+          {% if field.name == 'fee' or field.name == 'rate' %}
+            <div class="mb-3 col-md-6">
+              <label for="{{ field.id_for_label }}" class="form-label"
+                >{{ field.label }}</label
+              >
+              <div class="input-group">
+                <span class="input-group-text">R$</span>
+                {{ field }}
+                <span class="input-group-text">,00</span>
+              </div>
+            </div>
+          {% else %}
+            <div class="mb-3 col-md-6">
+              <label for="{{ field.id_for_label }}" class="form-label"
+                >{{ field.label }}</label
+              >
+              {{ field }}
+              <div id="floatingInputHelp" class="form-text">
+                {{ field.help_text }}
+              </div>
+            </div>
+          {% endif %} 
+        {% endfor %}
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+  </div>
+  <!-- /Account -->
+</div>
+{% endblock %}
+

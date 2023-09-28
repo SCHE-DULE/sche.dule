@@ -1,0 +1,114 @@
+{% extends 'bases/index.html' %} 
+{% load static %} 
+{% block 'title'%}Dashboard{% endblock%} 
+{% block head %} {% endblock %} 
+{% block content %}
+
+<div class="card">
+<div class="card-body">
+  <div class="table-responsive text-nowrap">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Atendimento</th>
+          <th>Cliente</th>
+          <th>Horário</th>
+          <th>Terapeuta</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody class="table-border-bottom-0">
+        {% for appointment in appointments %}
+        <tr class="table-default">
+          <td>
+            <a href="{% url 'appointment-detail' appointment.pk %}"
+            >
+            <i class="fab fa-sketch fa-lg text-warning me-3"></i>
+            <strong>{{ appointment.service.name }}</strong>
+          </a>
+          </td>
+          <td>{{ appointment.client.name }}</td>
+          <td>
+            {{ appointment.appointment_date_start|date:"d/m/y H:i" }} - 
+            {{ appointment.appointment_date_end|date:"d/m/y H:i" }}
+          </td>
+          <td>
+            <ul
+              class="list-unstyled users-list m-0 avatar-group d-flex align-items-center"
+            >
+              <li
+                data-bs-toggle="tooltip"
+                data-popup="tooltip-custom"
+                data-bs-placement="top"
+                class="avatar avatar-xs pull-up"
+                title="{{ appointment.therapist.name }}"
+              >
+              <a href="{% url 'therapist_detail' appointment.therapist.pk %}">
+                <img
+                  src="{{ appointment.therapist.photo.url }}"
+                  alt="Avatar"
+                  class="rounded-circle"
+                />
+              </a>
+              </li>
+            </ul>
+          </td>
+          <td>
+            {% if appointment.status == "PENDING" %}
+            <span class="badge bg-label-warning me-1"
+              >{{ appointment.get_status_display }}</span
+            >
+            {% elif appointment.status == "CONFIRMED" %}
+            <span class="badge bg-label-success me-1"
+              >{{ appointment.get_status_display }}</span
+            >
+            {% elif appointment.status == "CANCELLED" %}
+            <span class="badge bg-label-secondary me-1"
+              >{{ appointment.get_status_display }}</span
+            >
+            {% elif appointment.status == "COMPLETED" %}
+            <span class="badge bg-label-primary me-1"
+              >{{ appointment.get_status_display }}</span
+            >
+            {% endif %}
+          </td>
+          <td>
+            <div class="dropdown">
+              <button
+                type="button"
+                class="btn p-0 dropdown-toggle hide-arrow"
+                data-bs-toggle="dropdown"
+              >
+                <i class="bx bx-dots-vertical-rounded"></i>
+              </button>
+              <div class="dropdown-menu">
+                <a
+                  class="dropdown-item"
+                  href="{% url 'appointment-update' appointment.pk %}"
+                  ><i class="bx bx-edit-alt me-1"></i> Edit</a
+                >
+                {% if perms.accounts.can_remove_appointment %}
+                <a
+                  class="dropdown-item"
+                  href="{% url 'appointment-delete' appointment.pk %}"
+                >
+                  <i class="bx bx-trash me-1"></i> Delete
+                </a>
+                {% endif %}
+              </div>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr class="table-default"><p>No appointments available.</p></tr>
+        {% endfor %} 
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+<a href="{% url 'appointment-create' %}" class="btn btn-primary"
+  >Create Appointment</a
+>
+{% endblock %}

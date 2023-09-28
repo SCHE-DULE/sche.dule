@@ -1,10 +1,20 @@
-
+{% extends 'bases/index.html' %}
+{% load static %}
+{% block title %}Delete System User{% endblock %}
 {% block content %}
-  <h2>Delete System User</h2>
-  <p>Are you sure you want to delete "{{ systemuser.name }}"?</p>
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit">Delete</button>
-  </form>
-  <a href="{% url 'systemuser_list' %}">Cancel</a>
+<div class="card">
+  <div class="card-body">
+    <div class="mb-3 col-12 mb-0">
+      <div class="alert alert-warning">
+        <h6 class="alert-heading fw-bold mb-1">Are you sure you want to delete "{{ systemuser.name }}"?</h6>
+      </div>
+    </div>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+    <a href="{% url 'systemuser_list' %}" class="btn btn-secondary mt-2">Cancel</a>
+  </div>
+</div>
 {% endblock %}
+

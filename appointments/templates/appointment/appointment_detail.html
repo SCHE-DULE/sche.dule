@@ -1,7 +1,10 @@
-
-
+{% extends 'bases/index.html' %}
+{% load static %} 
+{% block head %} {% endblock %} 
+{% block 'title' %}Detalhes Agendamento{% endblock %}
 {% block content %}
-  <h2>Appointment Detail</h2>
+<div class="card">
+  <div class="card-body">
   <p><strong>Client:</strong> {{ appointment.client }}</p>
   <p><strong>Therapist:</strong> {{ appointment.therapist }}</p>
   <p><strong>Service:</strong> {{ appointment.service }}</p>
@@ -13,4 +16,6 @@
   <a href="{% url 'appointment-update' appointment.pk %}" class="btn btn-primary">Edit</a>
   <a href="{% url 'appointment-delete' appointment.pk %}" class="btn btn-danger">Delete</a>
   <a href="{% url 'appointment-list' %}" class="btn btn-secondary">Back to List</a>
+  </div>
+</div>
 {% endblock %}

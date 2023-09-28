@@ -1,11 +1,49 @@
-
-
+{% extends 'bases/index.html' %}
+{% load static %}
+{% block title %}{% if form.instance.pk %}Edit{% else %}Create{% endif %} System User{% endblock %}
 {% block content %}
-  <h2>{% if form.instance.pk %}Edit{% else %}Create{% endif %} System User</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">{% if form.instance.pk %}Update{% else %}Create{% endif %}</button>
-  </form>
-  <a href="{% url 'systemuser_list' %}">Back to System Users</a>
+<div class="card mb-4">
+  <h5 class="card-header">{% if form.instance.pk %}Edit{% else %}Create{% endif %} System User</h5>
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input class="form-control" type="text" id="name" name="name" value="{{ systemuser.name }}" autofocus>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input class="form-control" type="text" id="email" name="email" value="{{ systemuser.email }}" placeholder="john.doe@example.com">
+      </div>
+      <div class="mb-3">
+        <label for="birthday" class="form-label">Birthday</label>
+        <input class="form-control" type="date" id="birthday" name="birthday" value="{{ systemuser.birthday }}">
+      </div>
+      <div class="mb-3">
+        <label for="phone_number" class="form-label">Phone Number</label>
+        <input class="form-control" type="text" id="phone_number" name="phone_number" value="{{ systemuser.phone_number }}">
+      </div>
+      <div class="mb-3">
+        <label for="gender" class="form-label">Gender</label>
+        <select id="gender" name="gender" class="form-select">
+          <option value="male" {% if systemuser.gender == 'male' %}selected{% endif %}>Male</option>
+          <option value="female" {% if systemuser.gender == 'female' %}selected{% endif %}>Female</option>
+          <option value="other" {% if systemuser.gender == 'other' %}selected{% endif %}>Other</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="user_type" class="form-label">User Type</label>
+        <select id="user_type" name="user_type" class="form-select">
+          <option value="admin" {% if systemuser.user_type == 'admin' %}selected{% endif %}>Admin</option>
+          <option value="user" {% if systemuser.user_type == 'user' %}selected{% endif %}>User</option>
+        </select>
+      </div>
+      <div class="mt-2">
+        <button type="submit" class="btn btn-primary me-2">{% if form.instance.pk %}Update{% else %}Create{% endif %}</button>
+        <a href="{% url 'systemuser_list' %}" class="btn btn-secondary">Back to System Users</a>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}
+

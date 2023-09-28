@@ -1,10 +1,30 @@
-
+{% extends 'bases/index.html' %}
+{% load static %} 
+{% block head %} {% endblock%} 
+{% block 'title' %}Desativar Terapeuta{% endblock %}
 {% block content %}
-  <h2>Delete Therapist</h2>
-  <p>Are you sure you want to delete {{ therapist.name }}?</p>
-  <form method="post">
-    {% csrf_token %}
-    <input type="submit" class="btn btn-danger" value="Yes, Delete">
-    <a href="{% url 'therapist_list' %}" class="btn btn-secondary">Cancel</a>
-  </form>
+<div class="card">
+  <div class="card-body">
+    <div class="mb-3 col-12 mb-0">
+      <div class="alert alert-warning">
+        <h6 class="alert-heading fw-bold mb-1">Tem certeza que quer desativar a conta de {{ therapist.name }}?</h6>
+      </div>
+    </div>
+    <form id="formAccountDeactivation" onsubmit="return false">
+      {% csrf_token %}
+      <div class="form-check mb-3">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          name="accountActivation"
+          id="accountActivation"
+        />
+        <label class="form-check-label" for="accountActivation"
+          >Confirmar</label
+        >
+      </div>
+      <button type="submit" class="btn btn-danger deactivate-account">Desativar conta de Terapeuta</button>
+    </form>
+  </div>
+</div>
 {% endblock %}
