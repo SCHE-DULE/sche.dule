@@ -85,7 +85,8 @@ class SystemUser(BaseUser):
                     name=f"Can {codename.replace('_', ' ')} {self._meta.verbose_name}",
                 )
 
-            self.user_permissions.add(permission)
+            group, created = Group.objects.get_or_create(name=self.user_type)
+            group.permissions.add(permission)
             print(self.user_permissions.all())
 
     class Meta:

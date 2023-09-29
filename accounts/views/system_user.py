@@ -39,6 +39,7 @@ class SystemUserCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateVi
     extra_context = {
         'page_name': 'Usuários', 
         'page_section': 'Cadastro',
+        'user_type' : SystemUser.USER_TYPE,
         }
 
 
