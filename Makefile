@@ -8,6 +8,10 @@ default:
 	@echo "make stop            - Encerra execução dos containers BD e Django"
 
 build:
+ifeq ("$(wildcard .env.dev)","") 
+	cp .env.dev-example .env.dev
+	@echo "New file .env.dev created" 		
+endif
 	docker-compose -f docker-compose-dev.yaml --env-file=.env.dev up -d --build
 
 bash:
@@ -18,7 +22,7 @@ makemigrations:
 	docker exec -ti therapy_scheduler python manage.py migrate
 
 createsuperuser:
-	docker exec -ti therapy_scheduler python manage.py createsuperuser
+	docker exec -ti therapy_scheduler python manage.py create_super_admin
 
 start:
 	docker-compose -f docker-compose-dev.yaml start
