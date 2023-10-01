@@ -1,19 +1,19 @@
 {% extends 'bases/index.html' %}
 {% load static %}
-{% block title %}Delete System User{% endblock %}
+{% block title %}Deletar System User{% endblock %}
 {% block content %}
 <div class="card">
   <div class="card-body">
     <div class="mb-3 col-12 mb-0">
       <div class="alert alert-warning">
-        <h6 class="alert-heading fw-bold mb-1">Are you sure you want to delete "{{ systemuser.name }}"?</h6>
+        <h6 class="alert-heading fw-bold mb-1">Tem certeza que deseja deletar "{{ systemuser.name }}"?</h6>
       </div>
     </div>
     <form method="post">
       {% csrf_token %}
-      <button type="submit" class="btn btn-danger">Delete</button>
+      <button type="submit" class="btn btn-danger">Deletar</button>
     </form>
-    <a href="{% url 'systemuser_list' %}" class="btn btn-secondary mt-2">Cancel</a>
+    <a href="{% url 'systemuser_list' %}" class="btn btn-secondary mt-2">Cancelar</a>
   </div>
 </div>
 {% endblock %}

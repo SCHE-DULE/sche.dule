@@ -17,7 +17,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>{% block 'title' %}{% endblock %}</title>
+    <title>{% block 'title' %}Login{% endblock %}</title>
 
     <meta name="description" content="" />
 
@@ -179,7 +179,7 @@
                 </a>
               </div>
               <!-- /Logo -->
-              <h4 class="mb-2">Welcome to sche.dule! 👋</h4>
+              <h4 class="mb-2">Bem-vindo ao SCHE.DULE! 👋</h4>
               <form
                 id="formAuthentication"
                 class="mb-3"
@@ -191,16 +191,16 @@
                   <label
                     for="email"
                     class="form-label"
-                    >Username</label
+                    >Usuario</label
                   >
                   {{ form.username }}
                   {{ form.username.errors }}
                 </div>
                 <div class="mb-3 form-password-toggle">
                   <div class="d-flex justify-content-between">
-                    <label class="form-label" for="password">Password</label>
+                    <label class="form-label" for="password">Senha</label>
                     <a href="auth-forgot-password-basic.html">
-                      <small>Forgot Password?</small>
+                      <small>Esqueceu a senha?</small>
                     </a>
                   </div>
                   <div class="input-group input-group-merge">
@@ -219,13 +219,13 @@
                       id="remember-me"
                     />
                     <label class="form-check-label" for="remember-me">
-                      Remember Me
+                      Lembrar meus dados
                     </label>
                   </div>
                 </div>
                 <div class="mb-3">
                   <button class="btn btn-primary d-grid w-100" type="submit">
-                    Login
+                    Logar
                   </button>
                 </div>
               </form>
