@@ -26,9 +26,14 @@
       <div class="mb-3">
         <label for="gender" class="form-label">Gender</label>
         <select id="gender" name="gender" class="form-select">
-          <option value="male" {% if systemuser.gender == 'male' %}selected{% endif %}>Male</option>
-          <option value="female" {% if systemuser.gender == 'female' %}selected{% endif %}>Female</option>
-          <option value="other" {% if systemuser.gender == 'other' %}selected{% endif %}>Other</option>
+          <option value="male" {% if systemuser.gender == 'male' %}selected{% endif %}>Homem</option>
+          <option value="female" {% if systemuser.gender == 'female' %}selected{% endif %}>Mulher</option>
+          <option value="homem-trans" {% if systemuser.gender == 'homem-trans' %}selected{% endif %}>Homem-Trans</option>
+          <option value="mulher-trans" {% if systemuser.gender == 'mulher-trans' %}selected{% endif %}>Mulher-Trans</option>
+          <option value="assexual" {% if systemuser.gender == 'assexual' %}selected{% endif %}>Assexual</option>
+          <option value="fluido" {% if systemuser.gender == 'fluido' %}selected{% endif %}>Fluido</option>
+          <option value="pansexual" {% if systemuser.gender == 'pansexual' %}selected{% endif %}>Pansexual</option>
+          <option value="outros" {% if systemuser.gender == 'outros' %}selected{% endif %}>Outros</option>
         </select>
       </div>
       <div class="mb-3">
