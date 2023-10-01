@@ -22,41 +22,41 @@
                 <strong>Email:</strong> {{ therapist.email }}
               </li>
               <li class="list-group-item">
-                <strong>Birthday:</strong> {{ therapist.birthday }}
+                <strong>Aniversario:</strong> {{ therapist.birthday }}
               </li>
               <li class="list-group-item">
-                <strong>Phone Number:</strong> {{ therapist.phone_number }}
+                <strong>Numero de telefone:</strong> {{ therapist.phone_number }}
               </li>
               <li class="list-group-item">
-                <strong>Gender:</strong> {{ therapist.get_gender_display }}
+                <strong>Gênero:</strong> {{ therapist.get_gender_display }}
               </li>
               <li class="list-group-item">
                 <strong>CRM:</strong> {{ therapist.crm }}
               </li>
               <li class="list-group-item">
-                <strong>Availability Days:</strong>
+                <strong>Dias disponiveis:</strong>
                 {% for day in therapist.availability_days.all %} 
                   {{ day.get_day_display }}
                   {% if not forloop.last %}, {% endif %} 
                 {% endfor %}
               </li>
               <li class="list-group-item">
-                <strong>Availability Hours:</strong>
+                <strong>Horas disponiveis:</strong>
                 {% for hour in therapist.availability_hours.all %} 
                   {{ hour.start_time|time:"H:i" }} - {{ hour.end_time|time:"H:i" }}
                   {% if not forloop.last %}, {% endif %} 
                 {% endfor %}
               </li>
               <li class="list-group-item">
-                <strong>Rate:</strong> {{ therapist.rate }}
+                <strong>Valor:</strong> {{ therapist.rate }}
               </li>
               <li class="list-group-item">
-                <strong>Fee:</strong> {{ therapist.fee }}
+                <strong>Taxa:</strong> {{ therapist.fee }}
               </li>
               <li class="list-group-item">
-                <strong>Contract Scan:</strong>
+                <strong>Contrato Scaneado:</strong>
                 {% if therapist.contract_scan %}
-                <a href="{{ therapist.contract_scan.url }}" target="_blank">View Contract</a>
+                <a href="{{ therapist.contract_scan.url }}" target="_blank">Ver Contrato</a>
                 {% else %} N/A {% endif %}
               </li>
             </ul>
@@ -113,7 +113,7 @@
                     </td>
                   </tr>
                   {% empty %}
-                  <tr class="table-default"><p>No appointments available.</p></tr>
+                  <tr class="table-default"><p>Sem agendamento disponível.</p></tr>
                   {% endfor %}
                 </tbody>
               </table>
@@ -127,15 +127,15 @@
 
   <div class="my-3">
     <a href="{% url 'therapist_list' %}" class="btn btn-primary"
-      >Back to List</a
+      >Voltar para Lista</a
     >
     <a
       href="{% url 'therapist_update' therapist.pk %}"
       class="btn btn-secondary"
-      >Edit</a
+      >Editar</a
     >
     <a href="{% url 'therapist_delete' therapist.pk %}" class="btn btn-danger"
-      >Delete</a
+      >Deletar</a
     >    
   </div>
 

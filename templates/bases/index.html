@@ -1,25 +1,15 @@
+{% load compress %}
 {% load static %}
 
 <!DOCTYPE html>
 
-<!-- =========================================================
-* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
-==============================================================
-
-* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
-* Created by: ThemeSelection
-* License: You must have a valid license purchased in order to legally use the theme for your project.
-* Copyright ThemeSelection (https://themeselection.com)
-
-=========================================================
- -->
 <!-- beautify ignore:start -->
 <html
   lang="en"
   class="light-style layout-menu-fixed"
   dir="ltr"
   data-theme="theme-default"
-  data-static-path="../static/"
+  data-static-path="/static/"
   data-template="vertical-menu-template-free"
 >
   <head>
@@ -29,7 +19,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>{% block 'title' %}{% endblock %}</title>
+    <title>{% block 'title' %}SCHE.DULE{% endblock %}</title>
 
     <meta name="description" content="" />
 
@@ -44,30 +34,28 @@
       rel="stylesheet"
     />
 
-    <!-- Icons. Uncomment required icon fonts -->
-    <link rel="stylesheet" href="{% static  'vendor/fonts/boxicons.css' %}" />
-
     <!-- Core CSS -->
-    <link rel="stylesheet" href="{% static  'vendor/css/core.css' %} " class="template-customizer-core-css" />
-    <link rel="stylesheet" href="{% static  'vendor/css/theme-default.css' %}" class="template-customizer-theme-css" />
-    <link rel="stylesheet" href="{% static  'css/demo.css' %}" />
-
-    <!-- Vendors CSS -->
-    <link rel="stylesheet" href="{% static  'vendor/libs/perfect-scrollbar/perfect-scrollbar.css' %}" />
-
-    <link rel="stylesheet" href="{% static  'vendor/libs/apex-charts/apex-charts.css' %}" />
+    {% compress css %}
+    <link rel="stylesheet" href="{% static 'vendor/css/core.css' %}" class="template-customizer-core-css" preload/>
+    <link rel="stylesheet" href="{% static 'vendor/css/theme-default.css' %}" class="template-customizer-theme-css"/>
+    {% endcompress %}
 
     <!-- Page CSS -->
 
+    <!-- Icons. Uncomment required icon fonts -->
+    {% compress css %}
+    <link rel="stylesheet" href="{% static 'vendor/fonts/boxicons.css' %}"/>
+    {% endcompress %}
+    {% block 'head' %}
+    {% endblock %}
     <!-- Helpers -->
+    {% compress js %}
     <script src="{% static  'vendor/js/helpers.js' %}"></script>
 
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{% static  'js/config.js' %}"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'vendor/fonts/boxicons.css' %}">
-    {% block 'head' %}
-    {% endblock %}
+    {% endcompress %}
   </head>
 
   <body>
@@ -114,23 +102,18 @@
 
     <!-- Core JS -->
     <!-- build:js static/vendor/js/core.js -->
-    <script src="{% static 'vendor/libs/jquery/jquery.js'%}"></script>
-    <script src="{% static 'vendor/libs/popper/popper.js'%}"></script>
-    <script src="{% static 'vendor/js/bootstrap.js'%}"></script>
-    <script src="{% static 'vendor/libs/perfect-scrollbar/perfect-scrollbar.js'%}"></script>
-
-    <script src="{% static 'vendor/js/menu.js'%}"></script>
+    {% compress js %}
+    <script src="{% static 'vendor/libs/jquery/jquery.js' %}"></script>
+    <script src="{% static 'vendor/libs/popper/popper.js' %}"></script>
+    <script src="{% static 'vendor/js/bootstrap.js' %}"></script>
+    
+    <script src="{% static 'vendor/js/menu.js' %}"></script>
+   
     <!-- endbuild -->
-
-    <!-- Vendors JS -->
-    <script src="{% static 'vendor/libs/apex-charts/apexcharts.js'%}"></script>
 
     <!-- Main JS -->
     <script src="{% static 'js/main.js'%}"></script>
-
-    <!-- Page JS -->
-    <script src="{% static 'js/dashboards-analytics.js'%}"></script>
-
+    {% endcompress %}
     <!-- Func JS -->
     <script src="{% static 'js/func.js'%}"></script>
 
