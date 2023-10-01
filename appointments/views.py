@@ -26,7 +26,7 @@ class AppointmentListView(LoginRequiredMixin, PermissionRequiredMixin, ListView)
         'page_name': 'Agendamento', 
         'page_section': 'Lista',
         }
-    ordering = ['appointment_date_start']
+    ordering = ['appointment_date']
 
 
 class AppointmentDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -80,7 +80,7 @@ class AppointmentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteV
     
 @login_required
 def dashboard(request):
-    appointments = Appointment.objects.order_by('appointment_date_start')
+    appointments = Appointment.objects.order_by('appointment_date')
     
     extra_context = {
         'page_section': 'Dashboard',

@@ -8,13 +8,13 @@ class AppointmentAdmin(admin.ModelAdmin):
         "client",
         "therapist",
         "service",
-        "appointment_date_start",
+        "appointment_date",
         "status",
     ]
     list_filter = ["status", "service"]
     search_fields = ["client__name", "therapist__name"]
-    date_hierarchy = "appointment_date_start"
-    ordering = ["-appointment_date_start"]
+    date_hierarchy = "appointment_date"
+    ordering = ["-appointment_date"]
 
 
 @admin.register(AppointmentPackage)

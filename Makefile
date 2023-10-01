@@ -30,3 +30,6 @@ start:
 
 stop:
 	docker-compose -f docker-compose-dev.yaml stop 
+
+clearmigrations:
+	docker-compose -f docker-compose-dev.yaml find . -path "/migrations/.py" -not -name "_init_.py" -delete

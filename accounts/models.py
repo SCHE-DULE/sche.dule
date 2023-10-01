@@ -44,10 +44,11 @@ class BaseUser(AbstractUser):
         return f"Name: {self.name}, Email: {self.email}"
 
     def save(self, *args, **kwargs):
+        print(self.username)
         if not self.id:
             if (
-                not BaseUser.objects.filter(username=self.email).exists()
-                or BaseUser.objects.filter(username=self.name).exists()
+                not BaseUser.objects.filter(email=self.email).exists()
+                or BaseUser.objects.filter(name=self.name).exists()
             ):
                 if self.username is None:
                     self.username = unidecode(self.name).lower().replace(" ", "")
@@ -71,23 +72,6 @@ class SystemUser(BaseUser):
     def save(self, *args, **kwargs):
         return super(SystemUser, self).save(*args, **kwargs)
 
-    def assign_permissions(self):
-        content_type = ContentType.objects.get_for_model(self)
-        existing_permissions = Permission.objects.filter(content_type=content_type)
-
-        for codename in PERMISSIONS_MAP.get(self.user_type, []):
-            permission = existing_permissions.filter(codename=codename).first()
-
-            if permission is None:
-                permission = Permission.objects.create(
-                    codename=codename,
-                    content_type=content_type,
-                    name=f"Can {codename.replace('_', ' ')} {self._meta.verbose_name}",
-                )
-
-            self.user_permissions.add(permission)
-            print(self.user_permissions.all())
-
     class Meta:
         verbose_name = "Usuário do Sistema"
         verbose_name_plural = "Usuários do Sistema"
@@ -97,13 +81,10 @@ class SystemUser(BaseUser):
 def assign_groups_and_permissions_system_user(sender, instance, created, **kwargs):
     group, created = Group.objects.get_or_create(name=instance.user_type)
 
-    print("Groups (Before Adding):", instance.groups.all())
     instance.groups.clear()
     instance.groups.add(group)
 
     print("Groups (After Adding):", instance.groups.all())
-
-    instance.assign_permissions()
 
 
 class Therapist(BaseUser):
@@ -146,22 +127,6 @@ class Therapist(BaseUser):
     def __str__(self):
         return f"Terapeuta: {self.name}, Especialidades: {', '.join([speciality.name for speciality in self.specialities.all()])}, Registro: {self.crm}"
 
-    def assign_permissions(self):
-        content_type = ContentType.objects.get_for_model(self)
-        existing_permissions = Permission.objects.filter(content_type=content_type)
-
-        for codename in PERMISSIONS_MAP.get("THERAPIST", []):
-            permission = existing_permissions.filter(codename=codename).first()
-
-            if permission is None:
-                permission = Permission.objects.create(
-                    codename=codename,
-                    content_type=content_type,
-                    name=f"Can {codename.replace('_', ' ')} {self._meta.verbose_name}",
-                )
-
-            self.user_permissions.add(permission)
-
     class Meta:
         verbose_name = "Terapeuta"
         verbose_name_plural = "Terapeutas"
@@ -171,13 +136,10 @@ class Therapist(BaseUser):
 def assign_groups_and_permissions_therapist(sender, instance, created, **kwargs):
     group, created = Group.objects.get_or_create(name="THERAPIST")
 
-    print("Groups (Before Adding):", instance.groups.all())
     instance.groups.clear()
     instance.groups.add(group)
 
     print("Groups (After Adding):", instance.groups.all())
-
-    instance.assign_permissions()
 
 
 class Client(BaseUser):

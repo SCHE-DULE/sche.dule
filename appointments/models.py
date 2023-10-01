@@ -1,5 +1,5 @@
 from django.db import models
-from accounts.models import Client, Therapist, Speciality
+from accounts.models import Client, Therapist, Speciality, TimeSlot
 
 
 class Appointment(models.Model):
@@ -31,15 +31,18 @@ class Appointment(models.Model):
         verbose_name="Tipo de Tratamento",
     )
 
-    appointment_date_start = models.DateTimeField(
-        verbose_name="Data e Hora do início do Atendimento",
+    appointment_date = models.DateField(
+        verbose_name="Data do Atendimento",
         blank=False,
         null=False,
     )
-    appointment_date_end = models.DateTimeField(
-        verbose_name="Data e Hora do término do Atendimento",
+    appointment_time_slot = models.ForeignKey(
+        TimeSlot,
+        on_delete=models.CASCADE,
         blank=False,
         null=False,
+        related_name="time_slot_appointments",
+        verbose_name="Horário do Atendimento",
     )
 
     status = models.CharField(
@@ -53,7 +56,7 @@ class Appointment(models.Model):
     notes = models.TextField(blank=True, null=True, verbose_name="Observações")
 
     def __str__(self):
-        return f"Atendimento para {self.client.name} com {self.therapist.name} ({self.service.name}) em {self.appointment_date_start} até {self.appointment_date_end}"
+        return f"Atendimento para {self.client.name} com {self.therapist.name} ({self.service.name}) em {self.appointment_date} às {self.appointment_time_slot}"
 
     class Meta:
         verbose_name = "Atendimento"
