@@ -1,4 +1,3 @@
-{% load compress %}
 {% load static %}
 
 <!DOCTYPE html>
@@ -9,7 +8,8 @@
   class="light-style layout-menu-fixed"
   dir="ltr"
   data-theme="theme-default"
-  data-static-path="/static/"
+  data-static-path="../static/"
+  data-assets-path="../static/"
   data-template="vertical-menu-template-free"
 >
   <head>
@@ -35,27 +35,29 @@
     />
 
     <!-- Core CSS -->
-    {% compress css %}
+    
     <link rel="stylesheet" href="{% static 'vendor/css/core.css' %}" class="template-customizer-core-css" preload/>
     <link rel="stylesheet" href="{% static 'vendor/css/theme-default.css' %}" class="template-customizer-theme-css"/>
-    {% endcompress %}
+    
 
     <!-- Page CSS -->
 
     <!-- Icons. Uncomment required icon fonts -->
-    {% compress css %}
+    
     <link rel="stylesheet" href="{% static 'vendor/fonts/boxicons.css' %}"/>
-    {% endcompress %}
+    
     {% block 'head' %}
     {% endblock %}
     <!-- Helpers -->
-    {% compress js %}
+    
     <script src="{% static  'vendor/js/helpers.js' %}"></script>
 
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{% static  'js/config.js' %}"></script>
-    {% endcompress %}
+    
+    {% block head %}
+    {% endblock %}
   </head>
 
   <body>
@@ -102,7 +104,7 @@
 
     <!-- Core JS -->
     <!-- build:js static/vendor/js/core.js -->
-    {% compress js %}
+    
     <script src="{% static 'vendor/libs/jquery/jquery.js' %}"></script>
     <script src="{% static 'vendor/libs/popper/popper.js' %}"></script>
     <script src="{% static 'vendor/js/bootstrap.js' %}"></script>
@@ -113,7 +115,9 @@
 
     <!-- Main JS -->
     <script src="{% static 'js/main.js'%}"></script>
-    {% endcompress %}
+    {% block js %}
+    {% endblock %}
+    
     <!-- Func JS -->
     <script src="{% static 'js/func.js'%}"></script>
 

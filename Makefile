@@ -1,6 +1,7 @@
 default: 
 	@echo "Comandos disponíveis"
 	@echo "make build           			- Cria containers caso não os tenha"
+	@echo "make connect						- Connect to AWS"
 	@echo "make makemigrations  			- Cria migrations"
 	@echo "make migrate         			- Executa migrations"
 	@echo "make create_super_admin			- Criar um usuario super admin"
@@ -45,4 +46,7 @@ stop:
 	docker-compose -f docker-compose-dev.yaml stop 
 
 clearmigrations:
-	docker exec -ti therapy_scheduler find . -path "/migrations/.py" -not -name "_init_.py" -delete
+	docker exec -ti therapy_scheduler find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+
+connect:
+	ssh -i "teste-schedule.pem" ubuntu@ec2-3-23-182-8.us-east-2.compute.amazonaws.com

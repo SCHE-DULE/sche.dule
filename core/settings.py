@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     "appointments",
     "accounts",
     "sass_processor",
-    "compressor",
+    # "compressor",
 ]
 
 MIDDLEWARE = [
@@ -150,16 +150,16 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
-COMPRESS_ENABLED = False
-COMPRESS_URL = '/static/'
-COMPRESS_CSS_FILTERS = [
-    'compressor.filters.css_default.CssAbsoluteFilter',
-    'compressor.filters.cssmin.CSSMinFilter',
-]
-COMPRESS_JS_FILTERS = [
-    'compressor.filters.jsmin.JSMinFilter',
-]
-COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage'
+# COMPRESS_ENABLED = False
+# COMPRESS_URL = '/static/'
+# COMPRESS_CSS_FILTERS = [
+#     'compressor.filters.css_default.CssAbsoluteFilter',
+#     'compressor.filters.cssmin.CSSMinFilter',
+# ]
+# COMPRESS_JS_FILTERS = [
+#     'compressor.filters.jsmin.JSMinFilter',
+# ]
+# COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage'
 
 
 SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'static/scss')

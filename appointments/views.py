@@ -1,9 +1,11 @@
 from typing import Any
 from django.http import HttpRequest
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 from django.views.generic import (
     ListView,
@@ -27,6 +29,7 @@ class AppointmentListView(LoginRequiredMixin, PermissionRequiredMixin, ListView)
         'page_section': 'Lista',
         }
     ordering = ['appointment_date']
+    paginate_by = 10
 
 
 class AppointmentDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -65,7 +68,7 @@ class AppointmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateV
         }
 
     def get_success_url(self):
-        return reverse_lazy("appointment-detail", kwargs={"pk": self.object.pk})
+        return reverse_lazy("client_detail", kwargs={"pk": self.object.pk})
 
 
 class AppointmentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -80,10 +83,20 @@ class AppointmentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteV
     
 @login_required
 def dashboard(request):
+    current_datetime = timezone.now()
+    
+    upcoming_appointments = Appointment.objects.filter(
+        appointment_date__gte=current_datetime.date(),
+        appointment_time_slot__start_time__gte=current_datetime.time()
+    ).order_by('appointment_date', 'appointment_time_slot__start_time')
+    
+    appointments = Appointment.objects.order_by('appointment_date')
+    
     appointments = Appointment.objects.order_by('appointment_date')
     
     extra_context = {
         'page_section': 'Dashboard',
+        'upcoming_appointments': upcoming_appointments
     }
     
     return render(request, 'dashboard/dashboard.html', {'appointments': appointments, **extra_context})

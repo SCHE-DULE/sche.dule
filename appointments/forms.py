@@ -1,6 +1,6 @@
 from django import forms
 
-from accounts.models import Client, Speciality, Therapist
+from accounts.models import Client, Speciality, Therapist, TimeSlot
 from .models import Appointment
 
 
@@ -11,8 +11,8 @@ class AppointmentForm(forms.ModelForm):
             "client",
             "service",
             "therapist",
-            "appointment_date_start",
-            "appointment_date_end",
+            "appointment_date",
+            "appointment_time_slot",
             "status",
             "notes",
         ]
@@ -35,20 +35,18 @@ class AppointmentForm(forms.ModelForm):
         label="Tipo de Tratamento",
     )
 
-    appointment_date_start = forms.DateTimeField(
-        widget=forms.DateTimeInput(
-            format=("%Y-%m-%dT%H:%M"),
-            attrs={"class": "form-control", "type": "datetime-local"},
+    appointment_date = forms.DateField(
+        widget=forms.DateInput(
+            format=("%Y-%m-%d"), attrs={"class": "form-control", "type": "date"}
         ),
-        label="Data e Hora do início do Atendimento",
+        label="Data do Atendimento",
     )
 
-    appointment_date_end = forms.DateTimeField(
-        widget=forms.DateTimeInput(
-            format=("%Y-%m-%dT%H:%M"),
-            attrs={"class": "form-control", "type": "datetime-local"},
-        ),
-        label="Data e Hora do término do Atendimento",
+    appointment_time_slot = forms.ModelChoiceField(
+        queryset=TimeSlot.objects.all(),
+        widget=forms.Select(attrs={"class": "form-select"}),
+        label="Horário do Atendimento",
+        help_text="Selecione um horário para o agendamento",
     )
 
     status = forms.ChoiceField(

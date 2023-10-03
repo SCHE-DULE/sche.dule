@@ -1,3 +1,4 @@
+import random
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User, AbstractUser, Group, Permission
@@ -50,7 +51,7 @@ class BaseUser(AbstractUser):
                 not BaseUser.objects.filter(email=self.email).exists()
                 or BaseUser.objects.filter(name=self.name).exists()
             ):
-                if self.username is None:
+                if self.username == "":
                     self.username = unidecode(self.name).lower().replace(" ", "")
 
         super().save(*args, **kwargs)

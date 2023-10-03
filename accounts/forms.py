@@ -3,7 +3,7 @@ from django.utils.safestring import mark_safe
 
 from django import forms
 
-from .models import Client, DayOfWeek, Speciality, TimeSlot
+from .models import Client, DayOfWeek, Speciality, SystemUser, Therapist, TimeSlot
 
 
 class UserLoginForm(AuthenticationForm):
@@ -33,6 +33,88 @@ class UserLoginForm(AuthenticationForm):
                 "aria-describedby": "password",
             }
         )
+    )
+
+
+class SystemUserForm(forms.ModelForm):
+    class Meta:
+        model = SystemUser
+        fields = [
+            "name",
+            "email",
+            "birthday",
+            "phone_number",
+            "gender",
+            "user_type",
+        ]
+
+    name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Nome Completo",
+            }
+        ),
+        label="Nome",
+        help_text="Conforme documento",
+    )
+
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "name@example.com",
+            }
+        ),
+        label="Email de Contato",
+    )
+
+    birthday = forms.DateField(
+        widget=forms.DateInput(
+            format=("%Y-%m-%d"), attrs={"class": "form-control", "type": "date"}
+        ),
+        label="Data de Nascimento",
+    )
+
+    phone_number = forms.CharField(
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "(99) 99999-9999"}
+        ),
+        label="Número de Telefone",
+    )
+
+    gender = forms.ChoiceField(
+        choices=SystemUser.GENDER_CHOICES,
+        widget=forms.Select(attrs={"class": "form-select"}),
+        label="Gênero",
+    )
+
+    user_type = forms.ChoiceField(
+        choices=SystemUser.USER_TYPE,
+        widget=forms.Select(
+            attrs={
+                "class": "form-select",
+                "placeholder": "Selecione o tipo de usuário",
+            }
+        ),
+        label="Tipo de Usuário",
+    )
+
+
+class PasswordSetForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        user_username = kwargs.pop("user_username", None)
+        super().__init__(*args, **kwargs)
+
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={"class": "form-control"}),
+        label="Password",
+    )
+
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(attrs={"class": "form-control"}),
+        label="Confirm Password",
     )
 
 
@@ -74,7 +156,7 @@ class ClientForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "type": "date",
-                }
+                },
             ),
             "phone_number": forms.TextInput(
                 attrs={
@@ -141,10 +223,6 @@ class ClientForm(forms.ModelForm):
                 }
             ),
         }
-
-
-from django import forms
-from .models import Therapist
 
 
 class TherapistForm(forms.ModelForm):

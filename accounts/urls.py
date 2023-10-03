@@ -4,6 +4,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from accounts.forms import UserLoginForm
 
 from .views.system_user import (
+    PasswordSetView,
     SystemUserListView,
     SystemUserCreateView,
     SystemUserUpdateView,
@@ -54,6 +55,7 @@ urlpatterns = [
         SystemUserDeleteView.as_view(),
         name="systemuser_delete",
     ),
+    path("set_password/<int:pk>/", PasswordSetView.as_view(), name="set_password"),
     path("therapist/", TherapistListView.as_view(), name="therapist_list"),
     path("therapist/<int:pk>/", TherapistDetailView.as_view(), name="therapist_detail"),
     path("therapist/create/", TherapistCreateView.as_view(), name="therapist_create"),

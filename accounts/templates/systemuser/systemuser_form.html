@@ -1,50 +1,39 @@
 {% extends 'bases/index.html' %}
-{% load static %}
+{% load static %} 
+{% block 'head' %} 
+{% endblock %} 
 {% block title %}{% if form.instance.pk %}Edit{% else %}Create{% endif %} System User{% endblock %}
 {% block content %}
-<div class="card mb-4">
-  <h5 class="card-header">{% if form.instance.pk %}Edit{% else %}Create{% endif %} System User</h5>
+<div class="card">
   <div class="card-body">
     <form method="post">
-      {% csrf_token %}
-      <div class="mb-3">
-        <label for="name" class="form-label">Nome</label>
-        <input class="form-control" type="text" id="name" name="name" value="{{ systemuser.name }}" autofocus>
-      </div>
-      <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input class="form-control" type="text" id="email" name="email" value="{{ systemuser.email }}" placeholder="john.doe@example.com">
-      </div>
-      <div class="mb-3">
-        <label for="birthday" class="form-label">Aniversário</label>
-        <input class="form-control" type="date" id="birthday" name="birthday" value="{{ systemuser.birthday }}">
-      </div>
-      <div class="mb-3">
-        <label for="phone_number" class="form-label">Número de telefone</label>
-        <input class="form-control" type="text" id="phone_number" name="phone_number" value="{{ systemuser.phone_number }}">
-      </div>
-      <div class="mb-3">
-        <label for="gender" class="form-label">Gênero</label>
-        <select id="gender" name="gender" class="form-select">
-          <option value="male" {% if systemuser.gender == 'male' %}selected{% endif %}>Homem</option>
-          <option value="female" {% if systemuser.gender == 'female' %}selected{% endif %}>Mulher</option>
-          <option value="outros" {% if systemuser.gender == 'outros' %}selected{% endif %}>Outros</option>
-        </select>
-      </div>
-      <div class="mb-3">
-        <label for="user_type" class="form-label">User Type</label>
-        <select id="user_type" name="user_type" class="form-select">
-          {% for user_type_code, user_type_name in user_type %}
-              <option value="{{ user_type_code }}" {% if systemuser.user_type == user_type_code %}selected{% endif %}>
-                  {{ user_type_name }}
-              </option>
-          {% endfor %}
-      </select>      
-      </div>
-      <div class="mt-2">
-        <button type="submit" class="btn btn-primary me-2">{% if form.instance.pk %}Update{% else %}Create{% endif %}</button>
-        <a href="{% url 'systemuser_list' %}" class="btn btn-secondary">Back to System Users</a>
-      </div>
+      {% csrf_token %} 
+      {% for field in form %}
+        <div class="row mb-3 form-group">
+          <label for="{{ field.id_for_label }}" class="col-sm-3 col-form-label">{{ field.label }}</label>
+          <div class="col-sm-9">
+            {{ field }}
+            {% if field.help_text %}
+            <div id="floatingInputHelp" class="form-text">
+              {{ field.help_text }}
+            </div>
+            {% endif %}
+            {% if field.errors %}
+              <div class="text-danger">
+                {% for error in field.errors %}
+                  {{ error|escape }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary">Salvar</button>
+      <a
+        href="{% if form.instance.pk %}{% url 'systemuser_detail' form.instance.pk %}{% else %}{% url 'systemuser_list' %}{% endif %}"
+        class="btn btn-secondary"
+        >Cancelar</a
+      >
     </form>
   </div>
 </div>

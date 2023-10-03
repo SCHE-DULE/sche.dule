@@ -10,7 +10,7 @@ $(document).ready(function () {
                 therapistSelect.find('option:not(:first)').remove();
                 $.each(data.therapists, function (index, therapist) {
                     therapistSelect.append($('<option>', {
-                        value: therapist.id,
+                        value: therapist.pk,
                         text: therapist.name
                     }));
                 });
