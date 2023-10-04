@@ -90,13 +90,9 @@ def dashboard(request):
         appointment_time_slot__start_time__gte=current_datetime.time()
     ).order_by('appointment_date', 'appointment_time_slot__start_time')
     
-    appointments = Appointment.objects.order_by('appointment_date')
-    
-    appointments = Appointment.objects.order_by('appointment_date')
-    
     extra_context = {
-        'page_section': 'Dashboard',
+        'page_section': 'Próximos Atendimentos',
         'upcoming_appointments': upcoming_appointments
     }
     
-    return render(request, 'dashboard/dashboard.html', {'appointments': appointments, **extra_context})
+    return render(request, 'dashboard/dashboard.html', {**extra_context})

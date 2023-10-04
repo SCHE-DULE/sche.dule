@@ -10,41 +10,31 @@
           <tr>
             <th>Nome</th>
             <th>Email</th>
-            <th>User Type</th>
+            <th>Tipo de Perfil</th>
           </tr>
         </thead>
         <tbody class="table-border-bottom-0">
           {% for systemuser in systemusers %}
           <tr class="table-default">
             <td>
-              <a href="{% url 'systemuser_detail' systemuser.pk %}">
-                <i class="fab fa-sketch fa-lg text-warning me-3"></i>
-                <strong>{{ systemuser.name }}</strong>
-              </a>
+              <div class="d-flex flex-column">
+                <a href="{% url 'systemuser_detail' systemuser.pk %}">
+                  <strong>{{ systemuser.name }}</strong>
+                </a>
+                <small class="text-muted">
+                  {{ systemuser.username }}
+                </small>
+              </div>
             </td>
             <td>{{ systemuser.email }}</td>
             <td>{{ systemuser.get_user_type_display }}</td>
             <td>
-              <div class="dropdown">
-                <button
-                  type="button"
-                  class="btn p-0 dropdown-toggle hide-arrow"
-                  data-bs-toggle="dropdown"
-                >
-                  <i class="bx bx-dots-vertical-rounded"></i>
-                </button>
-                <div class="dropdown-menu">
-                  <a
-                    class="dropdown-item"
-                    href="{% url 'systemuser_update' systemuser.pk %}"
-                  ><i class="bx bx-edit-alt me-1"></i> Editar</a>
-                  <a
-                    class="dropdown-item"
-                    href="{% url 'systemuser_delete' systemuser.pk %}"
-                  >
-                    <i class="bx bx-trash me-1"></i> Deletar
+              <div class="d-inline-block text-nowrap">
+                <button class="btn btn-sm btn-icon">
+                  <a href="{% url 'systemuser_update' systemuser.pk %}" data-bs-toggle="tooltip" class="text-body" data-bs-placement="top" aria-label="Editar" data-bs-original-title="Editar">
+                    <i class="bx bx-edit"></i>
                   </a>
-                </div>
+                </button>
               </div>
             </td>
           </tr>

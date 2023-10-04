@@ -16,53 +16,39 @@
             </h6>
           </div>
             <img class="img-fluid d-flex mx-auto" src="{{ therapist.photo.url }}" alt="Foto do Terapeuta">
-          <div class="card-body">
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item">
-                <strong>Email:</strong> {{ therapist.email }}
-              </li>
-              <li class="list-group-item">
-                <strong>Aniversario:</strong> {{ therapist.birthday }}
-              </li>
-              <li class="list-group-item">
-                <strong>Numero de telefone:</strong> {{ therapist.phone_number }}
-              </li>
-              <li class="list-group-item">
-                <strong>Gênero:</strong> {{ therapist.get_gender_display }}
-              </li>
-              <li class="list-group-item">
-                <strong>CRM:</strong> {{ therapist.crm }}
-              </li>
-              <li class="list-group-item">
-                <strong>Dias disponiveis:</strong>
-                {% for day in therapist.availability_days.all %} 
-                  {{ day.get_day_display }}
-                  {% if not forloop.last %}, {% endif %} 
-                {% endfor %}
-              </li>
-              <li class="list-group-item">
-                <strong>Horas disponiveis:</strong>
-                {% for hour in therapist.availability_hours.all %} 
-                  {{ hour.start_time|time:"H:i" }} - {{ hour.end_time|time:"H:i" }}
-                  {% if not forloop.last %}, {% endif %} 
-                {% endfor %}
-              </li>
-              <li class="list-group-item">
-                <strong>Valor:</strong> {{ therapist.rate }}
-              </li>
-              <li class="list-group-item">
-                <strong>Taxa:</strong> {{ therapist.fee }}
-              </li>
-              <li class="list-group-item">
-                <strong>Contrato Scaneado:</strong>
-                {% if therapist.contract_scan %}
-                <a href="{{ therapist.contract_scan.url }}" target="_blank">Ver Contrato</a>
-                {% else %} N/A {% endif %}
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
+            <div class="card-body">
+              <small class="text-muted text-uppercase">About</small>
+              <ul class="list-unstyled mb-4 mt-3">
+                  <li class="d-flex align-items-center mb-3"><i class="bx bx-envelope"></i><span class="fw-medium mx-2">Email:</span> {{ therapist.email }}</li>
+                  <li class="d-flex align-items-center mb-3"><i class="bx bx-calendar"></i><span class="fw-medium mx-2">Aniversario:</span> {{ therapist.birthday }}</li>
+                  <li class="d-flex align-items-center mb-3"><i class="bx bx-phone"></i><span class="fw-medium mx-2">Numero de telefone:</span> {{ therapist.phone_number }}</li>
+                  <li class="d-flex align-items-center mb-3"><i class="bx bx-gender"></i><span class="fw-medium mx-2">Gênero:</span> {{ therapist.get_gender_display }}</li>
+                  <li class="d-flex align-items-center mb-3"><i class="bx bx-id-card"></i><span class="fw-medium mx-2">CRM:</span> {{ therapist.crm }}</li>
+                  <li class="d-flex align-items-center mb-3"><i class="bx bx-calendar-check"></i><span class="fw-medium mx-2">Dias disponiveis:</span>
+                      {% for day in therapist.availability_days.all %}
+                          {{ day.get_day_display }}
+                          {% if not forloop.last %}, {% endif %}
+                      {% endfor %}
+                  </li>
+                  <li class="d-flex align-items-center mb-3"><i class="bx bx-clock"></i><span class="fw-medium mx-2">Horas disponiveis:</span>
+                      {% for hour in therapist.availability_hours.all %}
+                          {{ hour.start_time|time:"H:i" }} - {{ hour.end_time|time:"H:i" }}
+                          {% if not forloop.last %}, {% endif %}
+                      {% endfor %}
+                  </li>
+                  <li class="d-flex align-items-center mb-3"><i class="bx bx-dollar"></i><span class="fw-medium mx-2">Valor:</span> {{ therapist.rate }}</li>
+                  <li class="d-flex align-items-center mb-3"><i class="bx bx-money"></i><span class="fw-medium mx-2">Taxa:</span> {{ therapist.fee }}</li>
+                  <li class="d-flex align-items-center mb-3"><i class="bx bx-file"></i><span class="fw-medium mx-2">Contrato Scaneado:</span>
+                      {% if therapist.contract_scan %}
+                          <a href="{{ therapist.contract_scan.url }}" target="_blank">Ver Contrato</a>
+                      {% else %}
+                          N/A
+                      {% endif %}
+                  </li>
+              </ul>
+            </div>               
+          </div>               
+        </div>                   
       <div class="col-md-6 col-lg-8 mb-4">
         <div class="card">
           <div class="card-body">
@@ -73,7 +59,6 @@
                   <tr>
                     <th>Atendimento</th>
                     <th>Cliente</th>
-                    <th>Horário</th>
                     <th>Status</th>
                   </tr>
                 </thead>
@@ -81,17 +66,17 @@
                   {% for appointment in appointments %}
                   <tr class="table-default">
                     <td>
-                      <a href="{% url 'appointment-detail' appointment.pk %}"
-                      >
-                      <i class="fab fa-sketch fa-lg text-warning me-3"></i>
-                      <strong>{{ appointment.service.name }}</strong>
-                    </a>
+                      <div class="d-flex flex-column">
+                        <a href="{% url 'appointment-detail' appointment.pk %}">
+                          <strong>{{ appointment.service.name }}</strong>
+                        </a>
+                        <small class="text-muted">
+                          {{ appointment.appointment_date|date:"d/m/y" }} - 
+                          {{ appointment.appointment_time_slot }}
+                        </small>
+                      </div>
                     </td>
                     <td>{{ appointment.client.name }}</td>
-                    <td>
-                      {{ appointment.appointment_date_start|date:"d/m/y H:i" }} - 
-                      {{ appointment.appointment_date_end|date:"d/m/y H:i" }}
-                    </td>
                     <td>
                       {% if appointment.status == "PENDING" %}
                       <span class="badge bg-label-warning me-1"
