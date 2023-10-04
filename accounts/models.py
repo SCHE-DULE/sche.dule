@@ -47,7 +47,6 @@ class BaseUser(AbstractUser):
         return f"Name: {self.name}, Email: {self.email}"
 
     def save(self, *args, **kwargs):
-        print(self.username)
         if not self.id:
             if (
                 not BaseUser.objects.filter(email=self.email).exists()
@@ -71,7 +70,7 @@ class SystemUser(BaseUser):
     user_type = models.CharField(
         max_length=15, choices=USER_TYPE, verbose_name="Tipo de Usuário"
     )
-    photo = models.ImageField(upload_to="usuarios/", verbose_name="Foto do Terapeuta", default="foto.jpeg")
+    photo = models.ImageField(upload_to="usuarios/", verbose_name="Foto do Usuário", default="foto.jpeg")
 
     def save(self, *args, **kwargs):
         return super(SystemUser, self).save(*args, **kwargs)

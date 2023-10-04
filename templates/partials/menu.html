@@ -151,7 +151,7 @@
         <div data-i18n="Analytics">Dashboard</div>
       </a>
     </li>
-    <li class="menu-item {% if request.path == '/accounts/systemusers/' %}active{% endif %}">
+    <li class="menu-item {% if request.path == '/treatments/' %}active{% endif %}">
       <a href="{% url 'speciality_list' %}" class="menu-link">
         <div data-i18n="Account">Terapias</div>
       </a>
@@ -196,17 +196,20 @@
         <div data-i18n="Account">Listar Terapeutas</div>
       </a>
     </li>
+    {% if perms.accounts.can_create_therapist %}
     <li class="menu-item {% if request.path == '/accounts/therapist/create/' %}active{% endif %}">
       <a href="{% url 'therapist_create' %}" class="menu-link">
         <div data-i18n="Notifications">Cadastrar Terapeutas</div>
       </a>
     </li>
+    {% endif %}
 
+    {% if perms.accounts.manage_system_users %}
     <!-- Usuários -->
     <li class="menu-header small text-uppercase">
       <span class="menu-header-text">Configurações</span>
     </li>
-    <li class="menu-item">
+    <li class="menu-item {% if request.path == '/accounts/systemusers/' or request.path == '/accounts/systemusers/create/' %}open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <div data-i18n="Account Settings">Usuários</div>
       </a>
@@ -225,23 +228,24 @@
     </li>
 
     <!-- Terapias -->
-    <li class="menu-item">
+    <li class="menu-item {% if request.path == '/treatments/create/' or request.path == '/treatments/treatment_type/create/' %}open{% endif %}">
       <a href="javascript:void(0);" class="menu-link menu-toggle">
         <div data-i18n="Account Settings">Terapias</div>
       </a>
       <ul class="menu-sub">
-        <li class="menu-item {% if request.path == '/accounts/systemusers/' %}active{% endif %}">
+        <li class="menu-item {% if request.path == '/treatments/create/' %}active{% endif %}">
           <a href="{% url 'speciality_create' %}" class="menu-link">
             <div data-i18n="Account">Cadastrar Terapia</div>
           </a>
         </li>
-        <li class="menu-item {% if request.path == '/accounts/systemusers/create/' %}active{% endif %}">
+        <li class="menu-item {% if request.path == '/treatments/treatment_type/create/' %}active{% endif %}">
           <a href="{% url 'treatment_type_create' %}" class="menu-link">
             <div data-i18n="Notifications">Cadastrar Tipo de Terapia</div>
           </a>
         </li>
       </ul>
     </li>
+    {% endif %}
     
   </ul>
 </aside>

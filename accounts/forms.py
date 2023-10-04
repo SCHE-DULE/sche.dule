@@ -46,6 +46,7 @@ class SystemUserForm(forms.ModelForm):
             "phone_number",
             "gender",
             "user_type",
+            "photo",
         ]
 
     name = forms.CharField(
@@ -109,7 +110,6 @@ class SystemUserForm(forms.ModelForm):
 
 
 class PasswordSetForm(forms.Form):
-
     def __init__(self, *args, **kwargs):
         user_username = kwargs.pop("user_username", None)
         super().__init__(*args, **kwargs)
@@ -144,6 +144,7 @@ class ClientForm(forms.ModelForm):
             "street_address",
             "number",
             "complement_address",
+            "photo",
         ]
         widgets = {
             "name": forms.TextInput(
@@ -227,6 +228,12 @@ class ClientForm(forms.ModelForm):
             "complement_address": forms.TextInput(
                 attrs={
                     "class": "form-control",
+                }
+            ),
+            "photo": forms.FileInput(
+                attrs={
+                    "class": "form-control",
+                    "data-buttonText": "Find file",
                 }
             ),
         }

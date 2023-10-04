@@ -15,6 +15,49 @@ from ...models import (
 )
 from faker import Faker
 
+service_names = [
+            "Taxa de Deslocamento",
+            "Psicologia - Consulta",
+            "Psicologia - Sessão",
+            "Avaliação BIA",
+            "Consulta",
+            "Consulta Biomedica",
+            "Consulta Dermatológica",
+            "Consulta Floral",
+            "Consulta Médica",
+            "Consulta ou Atendimento Domiciliar",
+            "Consultas, Emergência e Consultas Nutrição",
+            "Escaneamento Corporal",
+            "Ozonoterapia - Avaliação",
+            "Ryodoraku",
+            "Tratamento Dermatológico",
+            "Drenagem Linfática Facial",
+            "Drenagem Linfática Manual Corporal",
+            "Massagem com Pedras Quentes",
+            "Massagem Modeladora",
+            "Massagem Relaxante",
+            "Massagens",
+            "Barras de Access",
+            "Acupuntura",
+            "Bioressonancia",
+            "BodyTalk",
+            "Consultas on-line",
+            "Microfisioterapia",
+            "Osteopatia",
+            "Ozonio - Isolada",
+            "Ozônio - Upgrade",
+            "Ozônioterapia",
+            "Quiropraxia",
+            "Reiki",
+            "Terapia Integrativa",
+            "Terapia Manual",
+            "Yoga Restaurativa",
+            "Hidrobiorecuperação",
+            "Consulta Clinica",
+            "Procedimentos cirurgicos",
+            "Fisioterapia",
+        ]
+
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
@@ -25,7 +68,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.WARNING(f"Creating data for SystemUsers"))
 
         user_data = []
-        num_users = random.randint(10, 20)
+        num_users = random.randint(1, 10)
 
         for _ in range(0, num_users):
             profile = fake.profile()
@@ -41,6 +84,7 @@ class Command(BaseCommand):
                 user_type=fake.random_element(
                     elements=[choice[0] for choice in SystemUser.USER_TYPE]
                 ),
+                photo=f"placeholder/terapeutas/{fake.random_element([1,5,6,7])}.png"
             )
             system_user.save()
             user_data.append(system_user)
@@ -49,7 +93,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.WARNING(f"Creating data for Clients"))
 
         client_data = []
-        num_clients = random.randint(10, 30)
+        num_clients = random.randint(5, 10)
 
         for _ in range(num_clients):
             profile = fake.profile()
@@ -74,6 +118,7 @@ class Command(BaseCommand):
                 number=fake.building_number(),
                 complement_address=fake.secondary_address(),
                 observation=fake.paragraph(),
+                photo=f"placeholder/terapeutas/{fake.random_element([1,5,6,7])}.png"
             )
             client.save()
             client_data.append(client)
@@ -98,14 +143,14 @@ class Command(BaseCommand):
         specialities_data = []
         num_specialities = random.randint(10, 15)
 
-        treatment_types = TreatmentType.objects.all()
+        treatment_types = TreatmentType.objects.all().order_by("?")
 
         for _ in range(num_specialities):
             name = fake.unique.word()  
             treatment_type = random.choice(treatment_types)
             
             fake_speciality = Speciality(
-                name=name,
+                name=random.choice(service_names),
                 description=fake.paragraph(),
                 feature_img=f"placeholder/terapias/{fake.random_element([1, 2, 3, 4])}.jpg",
                 treatment_type=treatment_type,

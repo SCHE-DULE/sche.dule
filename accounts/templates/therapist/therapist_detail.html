@@ -116,6 +116,7 @@
     <a href="{% url 'therapist_list' %}" class="btn btn-primary"
       >Voltar para Lista</a
     >
+    {% if perms.accounts.can_create_therapist %}
     <a
       href="{% url 'therapist_update' therapist.pk %}"
       class="btn btn-secondary"
@@ -124,6 +125,7 @@
     <a href="{% url 'therapist_delete' therapist.pk %}" class="btn btn-danger"
       >Deletar</a
     >    
+    {% endif %}
   </div>
 
 {% endblock %}

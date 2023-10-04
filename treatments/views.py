@@ -74,6 +74,9 @@ class SpecialityCreateView(LoginRequiredMixin, CreateView):
     form_class = SpecialityForm
     template_name = "speciality/speciality_form.html"
 
+    def get_success_url(self):
+        return reverse_lazy("speciality_detail", kwargs={"pk": self.object.pk})
+
 
 class SpecialityUpdateView(LoginRequiredMixin, UpdateView):
     model = Speciality
@@ -103,7 +106,9 @@ class TreatmentTypeCreateView(CreateView):
     model = TreatmentType
     form_class = TreatmentTypeForm
     template_name = "treatment_type/treatment_type_form.html"
-    success_url = reverse_lazy("treatment_type_list")
+    
+    def get_success_url(self):
+        return reverse_lazy("treatment_type_update", kwargs={"pk": self.object.pk})
 
 
 class TreatmentTypeUpdateView(UpdateView):
@@ -111,7 +116,9 @@ class TreatmentTypeUpdateView(UpdateView):
     form_class = TreatmentTypeForm
     template_name = "treatment_type/treatment_type_form.html"
     context_object_name = "treatment_type"
-    success_url = reverse_lazy("treatment_type_list")
+    
+    def get_success_url(self):
+        return reverse_lazy("treatment_type_update", kwargs={"pk": self.object.pk})
 
 
 class TreatmentTypeDeleteView(DeleteView):
