@@ -70,7 +70,7 @@ class SystemUserDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteVi
 
 
 class SystemUserDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
-    permission_required = "accounts.manage_system_users"
+    permission_required = "accounts.view_system_users"
     model = SystemUser
     template_name = "systemuser/systemuser_detail.html"
     context_object_name = "systemuser"

@@ -2,6 +2,7 @@ PERMISSIONS_MAP = {
     "RECEPTIONIST": [
         ("can_create_client", "Pode cadastrar Cliente"),
         ("can_view_client_info", "Pode ver informações de Cliente"),
+        ("view_system_users", "Pode ver as próprias informações"),
         ("can_view_client_list", "Pode ver lista de Cliente"),
         ("can_create_appointment", "Pode criar agendamento"),
         ("can_view_appointment_list", "Pode ver lista de agendamento"),
