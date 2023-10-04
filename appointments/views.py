@@ -1,3 +1,4 @@
+from datetime import timedelta
 from typing import Any
 from django.http import HttpRequest
 from django.core.paginator import Paginator
@@ -6,6 +7,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.db.models import Q
 
 from django.views.generic import (
     ListView,
@@ -85,11 +87,14 @@ class AppointmentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteV
 def dashboard(request):
     current_datetime = timezone.now()
     
+    tomorrow = current_datetime + timedelta(days=1)
+
     upcoming_appointments = Appointment.objects.filter(
-        appointment_date__gte=current_datetime.date(),
-        appointment_time_slot__start_time__gte=current_datetime.time()
+        Q(appointment_date=current_datetime.date(), appointment_time_slot__start_time__gte=current_datetime.time()) |
+        Q(appointment_date__gt=current_datetime.date()) |
+        Q(appointment_date=tomorrow)
     ).order_by('appointment_date', 'appointment_time_slot__start_time')
-    
+        
     extra_context = {
         'page_section': 'Próximos Atendimentos',
         'appointments': upcoming_appointments
