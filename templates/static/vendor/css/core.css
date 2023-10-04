@@ -64,6 +64,154 @@
   }
 }
 
+/* Custom Colors */
+.luz-azul {
+    background-color: #20c997;  /* Azul primário */
+}
+.luz-indigo {
+    background-color: #b3e0ff;  /* Tom mais claro para indigo */
+}
+.luz-roxo {
+    background-color: #c4b0ff;  /* Tom mais claro para roxo */
+}
+.luz-rosa {
+    background-color: #ffb3d9;  /* Tom mais claro para rosa */
+}
+.luz-vermelho {
+    background-color: #ff99a7;  /* Tom mais claro para vermelho */
+}
+.luz-laranja {
+    background-color: #ffdcb3;  /* Tom mais claro para laranja */
+}
+.luz-amarelo {
+    background-color: #ffe680;  /* Tom mais claro para amarelo */
+}
+.luz-verde {
+    background-color: #b3ffc4;  /* Tom mais claro para verde */
+}
+.luz-teal {
+    background-color: #99ffd9;  /* Tom mais claro para teal */
+}
+.luz-ciano {
+    background-color: #99e0ff;  /* Tom mais claro para ciano */
+}
+.luz-branco {
+    background-color: #ffffff;  /* Tom mais claro para branco */
+}
+
+/* Cores Personalizadas */
+.azul {
+    background-color: #007bff;
+}
+
+.indigo {
+    background-color: #6610f2;
+}
+
+.roxo {
+    background-color: #696cff;
+}
+
+.rosa {
+    background-color: #e83e8c;
+}
+
+.vermelho {
+    background-color: #ff3e1d;
+}
+
+.laranja {
+    background-color: #fd7e14;
+}
+
+.amarelo {
+    background-color: #ffab00;
+}
+
+.verde {
+    background-color: #71dd37;
+}
+
+.teal {
+    background-color: #20c997;
+}
+
+.ciano {
+    background-color: #03c3ec;
+}
+
+.branco {
+    background-color: #fff;
+}
+
+/* Badge Styles */
+.badge-custom {
+    display: inline-block;
+    padding: 0.25em 0.5em;
+    font-size: 0.8125em;
+    font-weight: 500;
+    text-transform: uppercase;
+    border-radius: 0.25rem;
+}
+
+/* Badge classes with luz as background and primaria as text color */
+.badge-luz-azul {
+    background-color: #20c997; /* Luz Azul Primário */
+    color: white; /* Primaria */
+}
+
+.badge-luz-indigo {
+    background-color: #b3e0ff; /* Luz Indigo Primário */
+    color: #007bff; /* Primaria */
+}
+
+.badge-luz-roxo {
+    background-color: #c4b0ff; /* Luz Roxo Primário */
+    color: #696cff; /* Primaria */
+}
+
+.badge-luz-rosa {
+    background-color: #ffb3d9; /* Luz Rosa Primário */
+    color: #e83e8c; /* Primaria */
+}
+
+.badge-luz-vermelho {
+    background-color: #ff99a7; /* Luz Vermelho Primário */
+    color: #ff3e1d; /* Primaria */
+}
+
+.badge-luz-laranja {
+    background-color: #ffdcb3; /* Luz Laranja Primário */
+    color: #fd7e14; /* Primaria */
+}
+
+.badge-luz-amarelo {
+    background-color: #ffe680; /* Luz Amarelo Primário */
+    color: #ffab00; /* Primaria */
+}
+
+.badge-luz-verde {
+    background-color: #b3ffc4; /* Luz Verde Primário */
+    color: #71dd37; /* Primaria */
+}
+
+.badge-luz-teal {
+    background-color: #99ffd9; /* Luz Teal Primário */
+    color: #20c997; /* Primaria */
+}
+
+.badge-luz-ciano {
+    background-color: #99e0ff; /* Luz Ciano Primário */
+    color: #03c3ec; /* Primaria */
+}
+
+.badge-luz-branco {
+    background-color: #ffffff; /* Luz Branco Primário */
+    color: #fff; /* Primaria */
+}
+
+
+
 body {
   margin: 0;
   font-family: var(--bs-body-font-family);

@@ -8,7 +8,6 @@ from .models import (
     Client,
     SystemUser,
     Therapist,
-    Speciality,
     TimeSlot,
     DayOfWeek,
 )
@@ -252,12 +251,6 @@ class TherapistAdmin(UserAdmin):
 
     # Exclude the following fields
     exclude = ("groups", "user_permissions")
-
-
-@admin.register(Speciality)
-class SpecialityAdmin(admin.ModelAdmin):
-    list_display = ["name"]
-    search_fields = ["name"]
 
 
 @admin.register(TimeSlot)

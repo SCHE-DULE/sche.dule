@@ -4,6 +4,7 @@ import random
 from django.core.management.base import BaseCommand
 
 from appointments.models import Appointment
+from treatments.models import Speciality
 from ...models import (
     BaseUser,
     Client,
@@ -11,7 +12,6 @@ from ...models import (
     SystemUser,
     Therapist,
     TimeSlot,
-    Speciality,
 )
 from faker import Faker
 

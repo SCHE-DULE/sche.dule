@@ -2,7 +2,9 @@ from datetime import datetime, timedelta, time
 from pprint import pprint
 import random
 from django.core.management.base import BaseCommand
-from ...models import DayOfWeek, TimeSlot, Speciality
+
+from treatments.models import Speciality
+from ...models import DayOfWeek, TimeSlot
 
 
 class Command(BaseCommand):

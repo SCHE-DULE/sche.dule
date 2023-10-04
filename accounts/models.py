@@ -7,6 +7,8 @@ from django.dispatch import receiver
 
 from unidecode import unidecode
 
+from treatments.models import Speciality
+
 
 from .permissions import PERMISSIONS_MAP
 
@@ -89,7 +91,7 @@ def assign_groups_and_permissions_system_user(sender, instance, created, **kwarg
 
 
 class Therapist(BaseUser):
-    specialities = models.ManyToManyField("Speciality", verbose_name="Especialidades")
+    specialities = models.ManyToManyField(Speciality, verbose_name="Especialidades")
     crm = models.CharField(
         max_length=20, verbose_name="Cadastro do Órgão de Registro (ex: CRM)"
     )
@@ -168,22 +170,6 @@ class Client(BaseUser):
     class Meta:
         verbose_name = "Cliente"
         verbose_name_plural = "Clientes"
-
-
-class Speciality(models.Model):
-    name = models.CharField(
-        max_length=50,
-        verbose_name="Speciality Name",
-        blank=False,
-        null=False,
-    )
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = "Speciality"
-        verbose_name_plural = "Specialities"
 
 
 class TimeSlot(models.Model):

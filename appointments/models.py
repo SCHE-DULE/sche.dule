@@ -1,5 +1,6 @@
 from django.db import models
-from accounts.models import Client, Therapist, Speciality, TimeSlot
+from accounts.models import Client, Therapist, TimeSlot
+from treatments.models import Speciality
 
 
 class Appointment(models.Model):

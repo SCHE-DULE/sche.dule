@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "contas",
     "appointments",
     "accounts",
+    "treatments",
     "sass_processor",
     # "compressor",
 ]
