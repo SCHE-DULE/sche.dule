@@ -90,17 +90,6 @@ class Command(BaseCommand):
             time_slot_saved_data = TimeSlot.objects.bulk_create(time_slots_data)
             pprint(time_slot_saved_data)
             self.stdout.write(self.style.SUCCESS("TimeSlot Populated!!"))
-
-            speciality_data = []
-            for service in service_names:
-                speciality = Speciality(
-                    name=service
-                )
-                speciality_data.append(speciality)
-
-            speciality_saved_data = Speciality.objects.bulk_create(speciality_data)
-            pprint(speciality_saved_data)
-            self.stdout.write(self.style.SUCCESS("DayOfWeek Populated!!"))
         
         except KeyboardInterrupt:
             self.stdout.write(self.style.WARNING(f"Operation Cancelled"))

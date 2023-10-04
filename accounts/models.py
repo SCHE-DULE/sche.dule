@@ -71,6 +71,7 @@ class SystemUser(BaseUser):
     user_type = models.CharField(
         max_length=15, choices=USER_TYPE, verbose_name="Tipo de Usuário"
     )
+    photo = models.ImageField(upload_to="usuarios/", verbose_name="Foto do Terapeuta", default="foto.jpeg")
 
     def save(self, *args, **kwargs):
         return super(SystemUser, self).save(*args, **kwargs)
@@ -166,6 +167,7 @@ class Client(BaseUser):
         max_length=100, blank=True, null=True, verbose_name="Complemento"
     )
     observation = models.TextField(blank=True, null=True, verbose_name="Observação")
+    photo = models.ImageField(upload_to="clientes/", verbose_name="Foto do Cliente", default="foto.jpeg")
 
     class Meta:
         verbose_name = "Cliente"

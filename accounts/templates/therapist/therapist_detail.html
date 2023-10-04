@@ -9,11 +9,13 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">{{ therapist.name }}</h5>
-            <h6 class="card-subtitle text-muted">
+            <div class="d-flex flex-wrap align-items-center justify-content-center my-3 gap-2">
               {% for speciality in therapist.specialities.all %}
-                {{ speciality.name }}{% if not forloop.last %}, {% endif %}
+                <a href="{% url 'speciality_list_filtered' speciality.treatment_type.pk %}">
+                  <span class="badge-custom badge-luz-{{speciality.treatment_type.color}}">{{speciality.name}}</span>
+                </a>
               {% endfor %}
-            </h6>
+            </div>
           </div>
             <img class="img-fluid d-flex mx-auto" src="{{ therapist.photo.url }}" alt="Foto do Terapeuta">
             <div class="card-body">
@@ -22,7 +24,7 @@
                   <li class="d-flex align-items-center mb-3"><i class="bx bx-envelope"></i><span class="fw-medium mx-2">Email:</span> {{ therapist.email }}</li>
                   <li class="d-flex align-items-center mb-3"><i class="bx bx-calendar"></i><span class="fw-medium mx-2">Aniversario:</span> {{ therapist.birthday }}</li>
                   <li class="d-flex align-items-center mb-3"><i class="bx bx-phone"></i><span class="fw-medium mx-2">Numero de telefone:</span> {{ therapist.phone_number }}</li>
-                  <li class="d-flex align-items-center mb-3"><i class="bx bx-gender"></i><span class="fw-medium mx-2">Gênero:</span> {{ therapist.get_gender_display }}</li>
+                  <li class="d-flex align-items-center mb-3"><i class="bx bx-user"></i><span class="fw-medium mx-2">Gênero:</span> {{ therapist.get_gender_display }}</li>
                   <li class="d-flex align-items-center mb-3"><i class="bx bx-id-card"></i><span class="fw-medium mx-2">CRM:</span> {{ therapist.crm }}</li>
                   <li class="d-flex align-items-center mb-3"><i class="bx bx-calendar-check"></i><span class="fw-medium mx-2">Dias disponiveis:</span>
                       {% for day in therapist.availability_days.all %}
@@ -30,7 +32,7 @@
                           {% if not forloop.last %}, {% endif %}
                       {% endfor %}
                   </li>
-                  <li class="d-flex align-items-center mb-3"><i class="bx bx-clock"></i><span class="fw-medium mx-2">Horas disponiveis:</span>
+                  <li class="d-flex align-items-center mb-3"><i class="bx bx-time-five"></i><span class="fw-medium mx-2">Horas disponiveis:</span>
                       {% for hour in therapist.availability_hours.all %}
                           {{ hour.start_time|time:"H:i" }} - {{ hour.end_time|time:"H:i" }}
                           {% if not forloop.last %}, {% endif %}

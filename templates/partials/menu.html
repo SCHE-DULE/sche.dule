@@ -104,7 +104,7 @@
           <div class="flex-shrink-0 me-3">
             <div class="avatar">
               <img
-                src="{% static 'img/avatars/1.png' %}"
+                src="{{ logged_user.photo.url }}"
                 alt
                 class="w-px-40 h-auto rounded-circle"
               />
@@ -149,6 +149,11 @@
       <a href="/" class="menu-link">
         <i class="menu-icon tf-icons bx bx-home-circle"></i>
         <div data-i18n="Analytics">Dashboard</div>
+      </a>
+    </li>
+    <li class="menu-item {% if request.path == '/accounts/systemusers/' %}active{% endif %}">
+      <a href="{% url 'speciality_list' %}" class="menu-link">
+        <div data-i18n="Account">Terapias</div>
       </a>
     </li>
 
@@ -199,17 +204,44 @@
 
     <!-- Usuários -->
     <li class="menu-header small text-uppercase">
-      <span class="menu-header-text">Usuários</span>
+      <span class="menu-header-text">Configurações</span>
     </li>
-    <li class="menu-item {% if request.path == '/accounts/systemusers/' %}active{% endif %}">
-      <a href="{% url 'systemuser_list' %}" class="menu-link">
-        <div data-i18n="Account">Listar Usuários</div>
+    <li class="menu-item">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <div data-i18n="Account Settings">Usuários</div>
       </a>
+      <ul class="menu-sub">
+        <li class="menu-item {% if request.path == '/accounts/systemusers/' %}active{% endif %}">
+          <a href="{% url 'systemuser_list' %}" class="menu-link">
+            <div data-i18n="Account">Listar Usuários</div>
+          </a>
+        </li>
+        <li class="menu-item {% if request.path == '/accounts/systemusers/create/' %}active{% endif %}">
+          <a href="{% url 'systemuser_create' %}" class="menu-link">
+            <div data-i18n="Notifications">Cadastrar Usuários</div>
+          </a>
+        </li>
+      </ul>
     </li>
-    <li class="menu-item {% if request.path == '/accounts/systemusers/create/' %}active{% endif %}">
-      <a href="{% url 'systemuser_create' %}" class="menu-link">
-        <div data-i18n="Notifications">Cadastrar Usuários</div>
+
+    <!-- Terapias -->
+    <li class="menu-item">
+      <a href="javascript:void(0);" class="menu-link menu-toggle">
+        <div data-i18n="Account Settings">Terapias</div>
       </a>
+      <ul class="menu-sub">
+        <li class="menu-item {% if request.path == '/accounts/systemusers/' %}active{% endif %}">
+          <a href="{% url 'speciality_create' %}" class="menu-link">
+            <div data-i18n="Account">Cadastrar Terapia</div>
+          </a>
+        </li>
+        <li class="menu-item {% if request.path == '/accounts/systemusers/create/' %}active{% endif %}">
+          <a href="{% url 'treatment_type_create' %}" class="menu-link">
+            <div data-i18n="Notifications">Cadastrar Tipo de Terapia</div>
+          </a>
+        </li>
+      </ul>
     </li>
+    
   </ul>
 </aside>

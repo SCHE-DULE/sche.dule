@@ -30,7 +30,7 @@ class SystemUserAdmin(UserAdmin):
         ),
         (
             "Personal Info",
-            {"fields": ("name", "email", "birthday", "phone_number", "gender")},
+            {"fields": ("name", "email", "birthday", "phone_number", "gender", "photo")},
         ),
         ("Type of User", {"fields": ("user_type",)}),
     )
@@ -38,7 +38,7 @@ class SystemUserAdmin(UserAdmin):
         (None, {"fields": ("username", "password")}),
         (
             "Personal Info",
-            {"fields": ("name", "email", "birthday", "phone_number", "gender")},
+            {"fields": ("name", "email", "birthday", "phone_number", "gender", "photo")},
         ),
         ("Permissions", {"fields": ("is_active",)}),
         ("Type of User", {"fields": ("user_type",)}),
@@ -102,6 +102,7 @@ class ClientAdmin(UserAdmin):
                 "fields": (
                     "cpf",
                     "rg_or_rne",
+                    "photo",
                 )
             },
         ),
@@ -141,6 +142,7 @@ class ClientAdmin(UserAdmin):
                 "fields": (
                     "cpf",
                     "rg_or_rne",
+                    "photo",
                 )
             },
         ),

@@ -21,6 +21,7 @@
           <option value="{{ treatment.pk }}" {% if treatment.pk == selected_treatment_type_pk %}selected{% endif %}>{{ treatment.name }}</option>
           {% endfor %}
         </select>
+      </div>
     </div>
   </div>
   <div class="card-body">
@@ -48,7 +49,7 @@
                         <span>Mais...</span>
                     </a>
                     <a class="btn btn-outline-primary d-flex align-items-center"
-                        href="#">
+                        href="{% url "appointment-create-treatment" service_pk=speciality.pk %}">
                         <span class="me-2">Agendar</span><i class="bx bx-calendar lh-1 scaleX-n1-rtl"></i>
                     </a>
                 </div>

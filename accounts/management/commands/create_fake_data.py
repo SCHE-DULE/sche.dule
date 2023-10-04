@@ -4,7 +4,7 @@ import random
 from django.core.management.base import BaseCommand
 
 from appointments.models import Appointment
-from treatments.models import Speciality
+from treatments.models import COLOR_CHOICES, Benefit, Speciality, TreatmentType
 from ...models import (
     BaseUser,
     Client,
@@ -76,8 +76,54 @@ class Command(BaseCommand):
                 observation=fake.paragraph(),
             )
             client.save()
+            client_data.append(client)
 
         print(f"Clients created: {len(client_data)}")
+        self.stdout.write(self.style.WARNING(f"Creating data for Treatment Types"))
+
+        treatment_type_data = []
+        num_treatment_type = random.randint(3, 8)
+
+        for _ in range(num_treatment_type):
+            name = fake.unique.word()
+            color = random.choice(COLOR_CHOICES)[0]  # Choose a random color from COLOR_CHOICES
+            
+            fake_treatment_type = TreatmentType(name=name, color=color)
+            fake_treatment_type.save()
+            treatment_type_data.append(fake_treatment_type)
+
+        print(f"Treatment Types created: {len(treatment_type_data)}")
+        self.stdout.write(self.style.WARNING(f"Creating data for Specialities"))
+
+        specialities_data = []
+        num_specialities = random.randint(10, 15)
+
+        treatment_types = TreatmentType.objects.all()
+
+        for _ in range(num_specialities):
+            name = fake.unique.word()  
+            treatment_type = random.choice(treatment_types)
+            
+            fake_speciality = Speciality(
+                name=name,
+                description=fake.paragraph(),
+                feature_img=f"placeholder/terapias/{fake.random_element([1, 2, 3, 4])}.jpg",
+                treatment_type=treatment_type,
+            )
+            fake_speciality.save()
+
+            num_fake_benefits = random.randint(2, 5)
+            for _ in range(num_fake_benefits):
+                benefit = Benefit(
+                    speciality=fake_speciality,
+                    title=fake.unique.word(),
+                    description=fake.paragraph(),
+                )
+                benefit.save()
+
+            specialities_data.append(fake_speciality)
+
+        print(f"Specialities created: {len(specialities_data)}")
         self.stdout.write(self.style.WARNING(f"Creating data for Therapists"))
 
         therapist_data = []
@@ -145,7 +191,7 @@ class Command(BaseCommand):
             random_time_slot = TimeSlot.objects.all().order_by("?")[random_index]
 
             current_date = date.today()
-            one_year_from_now = current_date + timedelta(days=365)
+            one_year_from_now = current_date + timedelta(days=30)
             appointment_date = fake.date_between_dates(
                 date_start=current_date, date_end=one_year_from_now
             )

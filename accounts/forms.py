@@ -100,6 +100,13 @@ class SystemUserForm(forms.ModelForm):
         label="Tipo de Usuário",
     )
 
+    photo = forms.ImageField(
+        widget=forms.FileInput(
+            attrs={"class": "form-control", "data-buttonText": "Find file"}
+        ),
+        label="Foto",
+    )
+
 
 class PasswordSetForm(forms.Form):
 

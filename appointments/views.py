@@ -54,7 +54,7 @@ class AppointmentCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateV
         }
 
     def get_success_url(self):
-        return reverse_lazy("appointment-detail", kwargs={"pk": self.object.pk})
+        return reverse_lazy("appointment-detail", kwargs={"pk": self.object.pk}) # type: ignore
 
 
 class AppointmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -68,7 +68,7 @@ class AppointmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateV
         }
 
     def get_success_url(self):
-        return reverse_lazy("client_detail", kwargs={"pk": self.object.pk})
+        return reverse_lazy("client_detail", kwargs={"pk": self.object.pk}) # type: ignore
 
 
 class AppointmentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -92,7 +92,7 @@ def dashboard(request):
     
     extra_context = {
         'page_section': 'Próximos Atendimentos',
-        'upcoming_appointments': upcoming_appointments
+        'appointments': upcoming_appointments
     }
     
     return render(request, 'dashboard/dashboard.html', {**extra_context})

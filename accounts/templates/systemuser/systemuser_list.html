@@ -8,7 +8,7 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <th>Nome</th>
+            <th>Colaborador</th>
             <th>Email</th>
             <th>Tipo de Perfil</th>
           </tr>
@@ -17,14 +17,21 @@
           {% for systemuser in systemusers %}
           <tr class="table-default">
             <td>
-              <div class="d-flex flex-column">
-                <a href="{% url 'systemuser_detail' systemuser.pk %}">
-                  <strong>{{ systemuser.name }}</strong>
-                </a>
-                <small class="text-muted">
-                  {{ systemuser.username }}
-                </small>
-              </div>
+              <div class="d-flex">
+                <div class="avatar me-3">
+                  <img src="{{ systemuser.photo.url }}" alt="Avatar" class="rounded-circle">
+                </div>
+                <div class="d-flex flex-column">
+                  <div>
+                    <a href="{% url 'systemuser_detail' systemuser.pk %}">
+                      <strong>{{ systemuser.name }}</strong>
+                    </a>
+                  </div>
+                  <div>
+                    <small class="text-muted">{{ systemuser.username }}</small>
+                  </div>
+                </div>
+              </div>              
             </td>
             <td>{{ systemuser.email }}</td>
             <td>{{ systemuser.get_user_type_display }}</td>
