@@ -2,7 +2,7 @@ sudo su << ROOT
 # Now you are in a root shell
 
 eval $(ssh-agent -s)
-
+export SSH_PASSPHRASE="$SSH_PASSPHRASE"
 expect ssh-add-passphrase.exp
 
 # Perform Git commands

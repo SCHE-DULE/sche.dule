@@ -6,10 +6,6 @@ on:
 env:
     SQL_ENGINE: django.db.backends.sqlite3
     SECRET_KEY: 094b1ce318f7283699d6d978bad7671d8419bf4a
-    ACCESS_KEY: ${{ secrets.TEST_EC2_KEY }}
-    SSH_USER: ${{ vars.HOMOLOG_SSH_USER }} 
-    SSH_HOST: ${{ vars.HOMOLOG_SSH_HOST }}
-    GIT_REPO_PATH: ${{ vars.HOMOLOG_GIT_REPO_PATH }}
 
 jobs:
   test:
@@ -22,8 +18,25 @@ jobs:
     - name: Install Dependencies and Sqlite3 Migrations
       run: |
         apt-get update && \
-        apt-get install -y openssh-client
+        apt-get install -y openssh-client libgirepository1.0-dev libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0 && \
+        apt-get clean && \
+        rm -rf /var/lib/apt/lists/  
+
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        python manage.py makemigrations --noinput
+        python manage.py migrate --noinput
+  
+    - name: Run Tests
+      run: |
+        python manage.py test
     
     - name: Deploy Changes to Homolog Env
       run: |
         ./deploy.sh
+      env:
+        ACCESS_KEY: ${{ secrets.TEST_EC2_KEY }}
+        SSH_PASSPHRASE: ${{ secrets.SSH_PASSPHRASE }}
+        SSH_USER: ${{ vars.HOMOLOG_SSH_USER }}
+        SSH_HOST: ${{ vars.HOMOLOG_SSH_HOST }}
+        GIT_REPO_PATH: ${{ vars.HOMOLOG_GIT_REPO_PATH }}  

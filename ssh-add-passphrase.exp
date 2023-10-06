@@ -1,7 +1,7 @@
 #!/usr/bin/expect
 
 # Specify the passphrase
-set passphrase "New5man!0"
+set passphrase "$SSH_PASSPHRASE"
 
 spawn ssh-add /root/.ssh/id_rsa
 expect "Enter passphrase for /root/.ssh/id_rsa:"
