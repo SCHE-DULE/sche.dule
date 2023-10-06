@@ -20,9 +20,8 @@ SSH_HOST=${SSH_HOST}
 GIT_REPO_PATH=${GIT_REPO_PATH}
 
 #SSH into the remote server and run Git commands
-ssh -o StrictHostKeyChecking=no -i "$TMP_SSH_KEY_FILE" "$SSH_USER@$SSH_HOST" 
-
-cd "$GIT_REPO_PATH"
-export SSH_PRIVATE_KEY="$SSH_PRIVATE_KEY"
-export SSH_PASSPHRASE="$SSH_PASSPHRASE"
-./git_pull_script.sh
+ssh -o StrictHostKeyChecking=no -i "$TMP_SSH_KEY_FILE" "$SSH_USER@$SSH_HOST" << EOF
+  cd "$GIT_REPO_PATH"
+  export SSH_PASSPHRASE="$SSH_PASSPHRASE"
+  ./git_pull_script.sh
+EOF
