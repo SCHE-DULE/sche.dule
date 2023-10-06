@@ -21,6 +21,10 @@ GIT_REPO_PATH=${GIT_REPO_PATH}
 SSH into the remote server and run Git commands
 ssh -o StrictHostKeyChecking=no -i "$TMP_SSH_KEY_FILE" "$SSH_USER@$SSH_HOST" << EOF
   cd "$GIT_REPO_PATH"
+  sudo su
+  eval $(ssh-agent -s)
+  ./ssh-add-passphrase.exp
   git fetch
   git pull
+  chown ubuntu:ubuntu . -R
 EOF
