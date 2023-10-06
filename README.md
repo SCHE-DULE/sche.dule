@@ -86,3 +86,4 @@ O sistema é destinado a auxiliar na administração e organização das ativida
 ### Super User
 
 - Gerenciar e adicionar novas funcionalidades, adaptando o sistema de acordo com as necessidades específicas do consultório.
+
