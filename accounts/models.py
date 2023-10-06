@@ -87,8 +87,6 @@ def assign_groups_and_permissions_system_user(sender, instance, created, **kwarg
     instance.groups.clear()
     instance.groups.add(group)
 
-    print("Groups (After Adding):", instance.groups.all())
-
 
 class Therapist(BaseUser):
     specialities = models.ManyToManyField(Speciality, verbose_name="Especialidades")
@@ -141,8 +139,6 @@ def assign_groups_and_permissions_therapist(sender, instance, created, **kwargs)
 
     instance.groups.clear()
     instance.groups.add(group)
-
-    print("Groups (After Adding):", instance.groups.all())
 
 
 class Client(BaseUser):

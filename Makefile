@@ -45,6 +45,9 @@ start:
 stop:
 	docker-compose -f docker-compose-dev.yaml stop 
 
+test:
+	docker exec -ti therapy_scheduler python manage.py test 
+
 clearmigrations:
 	docker exec -ti therapy_scheduler find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 

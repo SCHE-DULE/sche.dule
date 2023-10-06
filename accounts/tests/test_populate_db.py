@@ -2,9 +2,6 @@ from datetime import date, datetime, timedelta, time
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Group
-from django.utils import timezone
-from django.shortcuts import get_object_or_404
-from pprint import pprint
 import random
 
 from django.test import TestCase
@@ -160,8 +157,6 @@ class SystemUserCreationTestCase(TestCase):
 
             appointment.save()
             appointments.append(appointment)
-
-        pprint(appointments)
 
         self.assertEqual(Appointment.objects.count(), len(appointments))
 

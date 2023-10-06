@@ -226,11 +226,12 @@ class Command(BaseCommand):
             random_index = random.randint(0, Client.objects.count() - 1)
             random_client = Client.objects.all().order_by("?")[random_index]
 
-            random_index = random.randint(0, Therapist.objects.count() - 1)
-            random_therapist = Therapist.objects.all().order_by("?")[random_index]
-
             random_index = random.randint(0, Speciality.objects.count() - 1)
             random_service = Speciality.objects.all().order_by("?")[random_index]
+
+            print(random_service)
+            random_therapist = Therapist.objects.filter(specialities=random_service).all()
+            print(random_therapist[0])
 
             random_index = random.randint(0, TimeSlot.objects.count() - 1)
             random_time_slot = TimeSlot.objects.all().order_by("?")[random_index]
@@ -243,7 +244,7 @@ class Command(BaseCommand):
 
             appointment = Appointment(
                 client=random_client,
-                therapist=random_therapist,
+                therapist=random_therapist[0],
                 service=random_service,
                 appointment_date=appointment_date,
                 appointment_time_slot=random_time_slot,
