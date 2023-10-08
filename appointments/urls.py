@@ -5,6 +5,8 @@ from .views import (
     AppointmentCreateView,
     AppointmentUpdateView,
     AppointmentDeleteView,
+    get_appointment_data,
+    get_dashboard_calendar,
 )
 
 urlpatterns = [
@@ -14,4 +16,6 @@ urlpatterns = [
     path('create/<int:service_pk>/', AppointmentCreateView.as_view(), name='appointment-create-treatment'),
     path('<int:pk>/update/', AppointmentUpdateView.as_view(), name='appointment-update'),
     path('<int:pk>/delete/', AppointmentDeleteView.as_view(), name='appointment-delete'),
+    path('get_dashboard_calendar/', get_dashboard_calendar, name='get_dashboard_calendar'),
+    path('get_appointment_data/', get_appointment_data, name='get_appointment_data'),
 ]

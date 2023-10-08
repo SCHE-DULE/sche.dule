@@ -210,6 +210,69 @@
     color: #fff; /* Primaria */
 }
 
+/* Event Styles */
+.event-azul {
+    background-color: #20c997; /* Taken from .luz-azul */
+    border-color: #007bff; /* Corresponding border color */
+}
+
+.event-indigo {
+    background-color: #b3e0ff; /* Taken from .luz-indigo */
+    border-color: #6610f2; /* Corresponding border color */
+}
+
+.event-roxo {
+    background-color: #c4b0ff; /* Taken from .luz-roxo */
+    border-color: #696cff; /* Corresponding border color */
+}
+
+.event-rosa {
+    background-color: #ffb3d9; /* Taken from .luz-rosa */
+    border-color: #e83e8c; /* Corresponding border color */
+}
+
+.event-vermelho {
+    background-color: #ff99a7; /* Taken from .luz-vermelho */
+    border-color: #ff3e1d; /* Corresponding border color */
+}
+
+.event-laranja {
+    background-color: #ffdcb3; /* Taken from .luz-laranja */
+    border-color: #fd7e14; /* Corresponding border color */
+}
+
+.event-amarelo {
+    background-color: #ffe680; /* Taken from .luz-amarelo */
+    border-color: #ffab00; /* Corresponding border color */
+}
+
+.event-verde {
+    background-color: #b3ffc4; /* Taken from .luz-verde */
+    border-color: #71dd37; /* Corresponding border color */
+}
+
+.event-teal {
+    background-color: #99ffd9; /* Taken from .luz-teal */
+    border-color: #20c997; /* Corresponding border color */
+}
+
+.event-ciano {
+    background-color: #99e0ff; /* Taken from .luz-ciano */
+    border-color: #03c3ec; /* Corresponding border color */
+}
+
+.event-branco {
+    background-color: #ffffff; /* Taken from .luz-branco */
+    border-color: #fff; /* Corresponding border color */
+}
+
+.now-indicator {
+  position: absolute;
+  width: 100%;
+  height: 2px; /* Adjust the height as needed */
+  background-color: rgba(255, 0, 0, 0.5); /* Choose a color for the indicator */
+  z-index: 999; /* Make sure it's above other elements */
+}
 
 
 body {
