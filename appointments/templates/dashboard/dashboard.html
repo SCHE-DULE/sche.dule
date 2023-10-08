@@ -184,6 +184,13 @@
   }
 
   function load_appointment_detail(appointmentId){
+    $('#appointment_detail_error').removeClass('show');
+    $('#appointment_detail_error').addClass('d-none');
+    $('#appointment_detail').removeClass('show');
+    $('#appointment_detail').addClass('d-none');
+
+    $('#appointment_detail_loading').removeClass('d-none');
+    $('#appointment_detail_loading').addClass('show');
     $.ajax({
       url: 'appointments/get_appointment_data/',
       data: { 'id': appointmentId},
@@ -251,7 +258,11 @@
 
           $('#appointment_detail_error').removeClass('d-none');
           $('#appointment_detail_error').addClass('show');
-      }
+      },
+      complete: function () {
+        $('#appointment_detail_loading').removeClass('show');
+        $('#appointment_detail_loading').addClass('d-none');
+    }
   });
   }
 
