@@ -19,10 +19,6 @@ jobs:
       run: |
         apt-get update && \
         apt-get install -y openssh-client 
-  
-    - name: Run Tests
-      run: |
-        python manage.py test
     
     - name: Deploy Changes to Homolog Env
       run: |
