@@ -1,4 +1,5 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+from pprint import pprint
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.shortcuts import render
@@ -19,7 +20,7 @@ from django.views.generic import (
 
 from .forms import AppointmentForm
 
-from .models import Appointment
+from .models import Appointment, Room
 
 
 class AppointmentListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
@@ -70,8 +71,21 @@ class AppointmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateV
         "page_section": "Atualizar",
     }
 
+    def get_initial(self):
+        initial = super().get_initial()
+        time_start = self.object.time_start # type: ignore
+        time_end = self.object.time_end # type: ignore
+
+        if time_start and time_end:
+            time_end = datetime.combine(self.object.appointment_date, time_end) # type: ignore
+            duration = time_end - timedelta(hours=time_start.hour, minutes=time_start.minute, seconds=time_start.second)
+            initial['time_start'] = time_start
+            initial['duration'] = duration.strftime("%H:%M") # type: ignore
+
+        return initial
+
     def get_success_url(self):
-        return reverse_lazy("client_detail", kwargs={"pk": self.object.pk})  # type: ignore
+        return reverse_lazy("appointment-detail", kwargs={"pk": self.object.pk})  # type: ignore
 
 
 class AppointmentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
@@ -87,13 +101,18 @@ class AppointmentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteV
 
 @login_required
 def dashboard(request):
+    
+    rooms = Room.objects.all()
     extra_context = {
         "page_section": "Próximos Atendimentos",
+        "rooms" : rooms,
     }
 
     return render(request, "dashboard/dashboard.html", {**extra_context})
 
 
+@ajax_required
+@require_http_methods(["GET"])
 @login_required
 def get_appointment_data(request):
     id = request.GET.get("id")
@@ -102,6 +121,33 @@ def get_appointment_data(request):
     serializer = AppointmentSerializer(appointment)
 
     return JsonResponse({"appointment": serializer.data})
+
+
+@ajax_required
+@require_http_methods(["GET"])
+@login_required
+def update_appointment_data(request):
+    id = request.GET.get("id")
+    start = request.GET.get("start")
+    end = request.GET.get("end")
+    column = request.GET.get("column")
+
+    try:
+        appointment = Appointment.objects.get(pk=id)
+        room = int(column) + 1
+
+        appointment.time_start = datetime.strptime(start, "%Y-%m-%dT%H:%M:%S").time()
+        appointment.time_end = datetime.strptime(end, "%Y-%m-%dT%H:%M:%S").time()
+        appointment.room = Room.objects.get(pk=room)  # type: ignore 
+        appointment.save()
+
+        serializer = AppointmentSerializer(appointment)
+        
+        return JsonResponse({"appointment": serializer.data})
+    except Appointment.DoesNotExist:
+        return JsonResponse({"error": "Appointment not found"}, status=404)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 
 @login_required
@@ -113,7 +159,7 @@ def get_dashboard_calendar(request):
 
     upcoming_appointments = Appointment.objects.filter(
         appointment_date=date_obj
-    ).order_by("appointment_date", "appointment_time_slot__start_time")
+    ).order_by("appointment_date", "time_start")
 
     serializer = AppointmentSerializer(upcoming_appointments, many=True)
 

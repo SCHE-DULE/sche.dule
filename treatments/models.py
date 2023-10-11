@@ -29,6 +29,13 @@ class Speciality(models.Model):
     feature_img = models.ImageField(
         upload_to="terapias/", verbose_name="Imagem de Destaque da Terapia"
     )
+    duration = models.DecimalField(
+        max_digits=3,
+        decimal_places=1,
+        verbose_name="Duração (em horas)",
+        default=0.5,  # Default to 0.5 hours (30 minutes) # type: ignore
+    )
+
 
     def __str__(self):
         return self.name

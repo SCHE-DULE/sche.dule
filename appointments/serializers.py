@@ -13,7 +13,6 @@ class AppointmentSerializer(serializers.ModelSerializer):
     client = ClientSerializer()
     therapist = TherapistSerializer()
     service = SpecialitySerializer()
-    appointment_time_slot = TimeSlotSerializer()
     appointment_service_color = serializers.CharField(
         source="service.treatment_type.color", read_only=True
     )

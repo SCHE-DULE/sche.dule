@@ -25,6 +25,15 @@
     <div class="event-ciano"></div>
   </div>
 </div>
+<div class="bs-toast toast toast-placement-ex m-3 fade bg-danger top-0 end-0 hide" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+  <div class="toast-header">
+    <i class="bx bx-bell me-2"></i>
+    <div class="me-auto fw-semibold" id="toast_title">Bootstrap</div>
+    <!-- <small class="hide">11 mins ago</small> -->
+    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+  <div class="toast-body" id="toast_message">Fruitcake chocolate bar tootsie roll gummies gummies jelly beans cake.</div>
+</div>
 <a href="{% url 'appointment-create' %}" class="btn btn-primary"
   >Criar Agendamento</a
 >
@@ -47,7 +56,13 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.js'></script>
 <script src="{% static 'js/calendar/pt-br.js' %}"></script>
 <script src="{% static 'js/calendar/fullcalendar-columns.js' %}"></script>
+<script src="{% static 'js/ui-toasts.js' %}"></script>
 <script>
+
+  var events_source = {
+    id: 0,
+    events: []
+  };
 
 	$(document).ready(function() {
 		
@@ -61,23 +76,12 @@
           multiColAgendaDay: {
               type: 'multiColAgenda',
               duration: { days: 1 },
-              numColumns: 15,
+              numColumns: {{rooms.count}},
               columnHeaders: [
-              'Sala 01', 
-              'Sala 02', 
-              'Sala 03', 
-              'Sala 04', 
-              'Sala 05', 
-              'Sala 06', 
-              'Sala 07', 
-              'Sala 08', 
-              'Sala 09', 
-              'Sala 10', 
-              'Sala 11', 
-              'Sala 12', 
-              'Sala 13', 
-              'Sala 14', 
-              'Sala 15'
+              {% for room in rooms  %}
+              '{{ room.name }}'
+              {% if not forloop.last %}, {% endif %}
+              {% endfor %}
               ],
               axisFormat: 'HH:mm',
               minTime: '08:00:00',
@@ -105,6 +109,73 @@
         load_appointment_detail(calEvent.id);
     
       },
+      eventDrop: function(event, delta, revertFunc, jsEvent, ui, view) {
+
+        if (moment(event.end).format('HH:mm:ss') > '19:00:00') {
+          revertFunc();
+          showToast('Não é possível marcar horário para após o fechamento.','Por favor, escolha outro horário.');
+          return
+        }
+
+        var isOverlapping = false;
+        var droppedEventStart = event.start;
+        var droppedEventEnd = event.end;
+    
+        for (var i = 0; i < events_source.events.length; i++) {
+            var sourceEvent = events_source.events[i];
+    
+            if (event.id !== sourceEvent.id) { 
+              var sourceEventStart = moment(sourceEvent.start);
+              var sourceEventEnd = moment(sourceEvent.end);
+
+              if (
+                  droppedEventStart.isBefore(sourceEventEnd) &&
+                  droppedEventEnd.isAfter(sourceEventStart)    
+                ) {
+                    if (event.column == sourceEvent.column){
+                      isOverlapping = true;
+                      break;
+                    }
+                }  
+            }
+        }
+        if (isOverlapping) {
+            revertFunc();
+            alert('O horário já está ocupado por outro agendamento.\nPor favor, escolha outro.');
+        } else {
+          var data = {
+            id: event.id,
+            start: event.start.format(), // Format the moment to a string
+            end: event.end.format(),
+            column: event.column // Assuming this is the room column
+          };
+
+          $.ajax({
+            type: 'GET',
+            url: 'appointments/update_appointment_data/',
+            data: data,
+            success: function(response) {
+
+                if (response.appointment) {
+                    for (var i = 0; i < events_source.events.length; i++) {
+                        if (events_source.events[i].id === event.id) {
+                            events_source.events[i].start = response.appointment.appointment_date + 'T' + response.appointment.time_start;
+                            events_source.events[i].end = response.appointment.appointment_date + 'T' + response.appointment.time_end;
+                            events_source.events[i].column = response.appointment.room - 1;
+                            break;
+                        }
+                    }
+                }
+            },
+            error: function(xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                revertFunc();
+                console.log(err)
+                console.log(error)
+            }
+          });
+        }
+      },
       eventRender: function (event, element) {
         //element.find('.fc-title').html("<h5>" + event.title + "</h5>");
         var customSelectors = {
@@ -119,7 +190,7 @@
         }
       }
   });
-  
+
   function updateNowIndicator() {
       var now = moment();
       var calendar = $('#calendar');
@@ -163,23 +234,29 @@
       data: { 'date': date },
       dataType: 'json',
       success: function (data) {
-          $.each(data.appointments, function (index, appointment) {
-            var elementWithColor = document.querySelector('.event-' + appointment.appointment_service_color);
+        events_source.events = [];
+        $.each(data.appointments, function (index, appointment) {
+          var elementWithColor = document.querySelector('.event-' + appointment.appointment_service_color);
 
-            var backgroundColor = getComputedStyle(elementWithColor).backgroundColor;
-            var borderColor = getComputedStyle(elementWithColor).borderColor;
-            $('#calendar').fullCalendar('renderEvent', {
-              id: appointment.id,
-              title: appointment.service.name,
-              start: appointment.appointment_date+'T'+appointment.appointment_time_slot.start_time,
-              end: appointment.appointment_date+'T'+appointment.appointment_time_slot.end_time,
-              backgroundColor: backgroundColor,
-              textColor: borderColor,
-              borderColor: "transparent",
-              column: 0
-            });
+          var backgroundColor = getComputedStyle(elementWithColor).backgroundColor;
+          var borderColor = getComputedStyle(elementWithColor).borderColor;
+
+          events_source.events.push({
+            id: appointment.id,
+            title: appointment.service.name,
+            start: appointment.appointment_date + 'T' + appointment.time_start,
+            end: appointment.appointment_date + 'T' + appointment.time_end,
+            backgroundColor: backgroundColor,
+            textColor: borderColor,
+            borderColor: "transparent",
+            column: (appointment.room - 1)
           });
-        }
+
+        });
+        $('#calendar').fullCalendar('removeEvents');
+        $('#calendar').fullCalendar('addEventSource', events_source);
+        $('#calendar').fullCalendar('refetchEvents');
+      }
     });
   }
 
@@ -197,7 +274,6 @@
       type: 'GET',
       dataType: 'json',
       success: function (data) {
-        console.log(data)
           $('#appointment_detail_error').removeClass('show');
           $('#appointment_detail_error').addClass('d-none');
 
@@ -209,7 +285,9 @@
           $('#appointment_service').text(data.appointment.service.name);
           // Format the date and time as needed
           $('#appointment_date').text(moment(data.appointment.appointment_date).format('DD/MM/YYYY'));
-          $('#appointment_time_slot').text(moment(data.appointment.appointment_time_slot.start_time, 'HH:mm:ss').format('HH:mm') + " - " + moment(data.appointment.appointment_time_slot.end_time, 'HH:mm:ss').format('HH:mm'));
+          $('#appointment_time_slot').text(moment(data.appointment.time_start, 'HH:mm:ss').format('HH:mm') + " - " + moment(data.appointment.time_end, 'HH:mm:ss').format('HH:mm'));
+          $('#appointment_detail_link').attr('href', 'appointments/'+data.appointment.id);
+          $('#appointment_delete_link').attr('href', 'appointments/'+data.appointment.id+"/delete/");
 
           var statusBadgeClass = "";
           switch (data.appointment.status) {

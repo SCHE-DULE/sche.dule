@@ -33,7 +33,7 @@ class Command(BaseCommand):
 
             start_time = time(8, 0)
             end_time = time(18, 0)
-            time_interval = timedelta(hours=1)
+            time_interval = timedelta(minutes=30)
 
             current_time = datetime.combine(datetime.today(), start_time)
 

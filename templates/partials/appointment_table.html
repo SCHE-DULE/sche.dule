@@ -35,7 +35,7 @@
               </a>
               <small class="text-muted">
                 {{ appointment.appointment_date|date:"d/m/y" }} - 
-                {{ appointment.appointment_time_slot }}
+                {{ appointment.time_start|time:"H:i" }} - {{ appointment.time_end|time:"H:i" }}
               </small>
             </div>
           </td>

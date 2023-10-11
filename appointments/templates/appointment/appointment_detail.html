@@ -12,7 +12,7 @@
     </a>
   </div></p>
   <p><strong>Dia:</strong> {{ appointment.appointment_date|date:"d/m/y" }}</p>
-  <p><strong>Horário:</strong> {{ appointment.appointment_time_slot }}</p>
+  <p><strong>Horário:</strong> {{ appointment.time_start|time:"H:i" }} - {{ appointment.time_end|time:"H:i" }}</p>
   <p><strong>Status:</strong> {{ appointment.get_status_display }}</p>
   <p><strong>Cliente:</strong> {{ appointment.client }}</p>
   <p><strong>Terapeuta:</strong> {{ appointment.therapist }}</p>

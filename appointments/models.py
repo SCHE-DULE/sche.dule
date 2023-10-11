@@ -1,3 +1,5 @@
+from collections.abc import Iterable
+from datetime import datetime
 from django.db import models
 from accounts.models import Client, Therapist, TimeSlot
 from treatments.models import Speciality
@@ -10,7 +12,6 @@ class Appointment(models.Model):
         ("CANCELLED", "Cancelada"),
         ("COMPLETED", "Concluída"),
     )
-
     client = models.ForeignKey(
         Client,
         on_delete=models.CASCADE,
@@ -31,21 +32,29 @@ class Appointment(models.Model):
         related_name="service_appointments",
         verbose_name="Tipo de Tratamento",
     )
-
     appointment_date = models.DateField(
         verbose_name="Data do Atendimento",
         blank=False,
         null=False,
     )
-    appointment_time_slot = models.ForeignKey(
-        TimeSlot,
+    time_start = models.TimeField(
+        verbose_name="Hora de Início",
+        blank=False,
+        null=False,
+    )
+    time_end = models.TimeField(
+        verbose_name="Hora de Fim",
+        blank=False,
+        null=False,
+    )
+    room = models.ForeignKey(
+        "Room",
         on_delete=models.CASCADE,
         blank=False,
         null=False,
-        related_name="time_slot_appointments",
-        verbose_name="Horário do Atendimento",
+        related_name="room_appointments",
+        verbose_name="Sala",
     )
-
     status = models.CharField(
         max_length=10,
         choices=STATUS_CHOICES,
@@ -57,7 +66,7 @@ class Appointment(models.Model):
     notes = models.TextField(blank=True, null=True, verbose_name="Observações")
 
     def __str__(self):
-        return f"Atendimento para {self.client.name} com {self.therapist.name} ({self.service.name}) em {self.appointment_date} às {self.appointment_time_slot}"
+        return f"Atendimento para {self.client.name} com {self.therapist.name} ({self.service.name}) em {self.appointment_date} de {self.time_start} às {self.time_end} na sala {self.room.name}"
 
     class Meta:
         verbose_name = "Atendimento"
@@ -100,3 +109,10 @@ class AppointmentPackage(models.Model):
     class Meta:
         verbose_name = "Appointment Package"
         verbose_name_plural = "Appointment Packages"
+
+
+class Room(models.Model):
+    name = models.CharField(max_length=255, unique=True, verbose_name="Nome da Sala")
+
+    def __str__(self):
+        return self.name
