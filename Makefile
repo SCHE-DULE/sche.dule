@@ -20,6 +20,7 @@ endif
 	docker-compose -f docker-compose-dev.yaml --env-file=.env.dev up -d --build
 
 bash:
+	docker-compose -f docker-compose-dev.yaml start
 	docker exec -ti therapy_scheduler bash
 
 makemigrations:
@@ -40,7 +41,7 @@ create_fake_data:
 
 start:
 	docker-compose -f docker-compose-dev.yaml start
-	docker exec -ti therapy_scheduler python manage.py runserver 0.0.0.0:8000
+	docker exec -ti therapy_scheduler python manage.py runserver_plus 0.0.0.0:8000
 
 stop:
 	docker-compose -f docker-compose-dev.yaml stop 
