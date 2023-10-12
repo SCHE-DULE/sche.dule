@@ -32,4 +32,3 @@ jobs:
         SSH_USER: ${{ vars.HOMOLOG_SSH_USER }}
         SSH_HOST: ${{ vars.HOMOLOG_SSH_HOST }}
         GIT_REPO_PATH: ${{ vars.HOMOLOG_GIT_REPO_PATH }}
-        
