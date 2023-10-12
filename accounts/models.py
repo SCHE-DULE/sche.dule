@@ -1,3 +1,4 @@
+import random
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User, AbstractUser, Group, Permission
@@ -5,6 +6,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from unidecode import unidecode
+
+from treatments.models import Speciality
 
 
 from .permissions import PERMISSIONS_MAP
@@ -44,13 +47,12 @@ class BaseUser(AbstractUser):
         return f"Name: {self.name}, Email: {self.email}"
 
     def save(self, *args, **kwargs):
-        print(self.username)
         if not self.id:
             if (
                 not BaseUser.objects.filter(email=self.email).exists()
                 or BaseUser.objects.filter(name=self.name).exists()
             ):
-                if self.username is None:
+                if self.username == "":
                     self.username = unidecode(self.name).lower().replace(" ", "")
 
         super().save(*args, **kwargs)
@@ -68,6 +70,7 @@ class SystemUser(BaseUser):
     user_type = models.CharField(
         max_length=15, choices=USER_TYPE, verbose_name="Tipo de Usuário"
     )
+    photo = models.ImageField(upload_to="usuarios/", verbose_name="Foto do Usuário", default="foto.jpeg")
 
     def save(self, *args, **kwargs):
         return super(SystemUser, self).save(*args, **kwargs)
@@ -84,11 +87,9 @@ def assign_groups_and_permissions_system_user(sender, instance, created, **kwarg
     instance.groups.clear()
     instance.groups.add(group)
 
-    print("Groups (After Adding):", instance.groups.all())
-
 
 class Therapist(BaseUser):
-    specialities = models.ManyToManyField("Speciality", verbose_name="Especialidades")
+    specialities = models.ManyToManyField(Speciality, verbose_name="Especialidades")
     crm = models.CharField(
         max_length=20, verbose_name="Cadastro do Órgão de Registro (ex: CRM)"
     )
@@ -139,8 +140,6 @@ def assign_groups_and_permissions_therapist(sender, instance, created, **kwargs)
     instance.groups.clear()
     instance.groups.add(group)
 
-    print("Groups (After Adding):", instance.groups.all())
-
 
 class Client(BaseUser):
     cpf = models.CharField(
@@ -163,26 +162,11 @@ class Client(BaseUser):
         max_length=100, blank=True, null=True, verbose_name="Complemento"
     )
     observation = models.TextField(blank=True, null=True, verbose_name="Observação")
+    photo = models.ImageField(upload_to="clientes/", verbose_name="Foto do Cliente", default="foto.jpeg")
 
     class Meta:
         verbose_name = "Cliente"
         verbose_name_plural = "Clientes"
-
-
-class Speciality(models.Model):
-    name = models.CharField(
-        max_length=50,
-        verbose_name="Speciality Name",
-        blank=False,
-        null=False,
-    )
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = "Speciality"
-        verbose_name_plural = "Specialities"
 
 
 class TimeSlot(models.Model):

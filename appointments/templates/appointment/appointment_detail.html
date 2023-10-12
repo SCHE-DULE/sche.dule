@@ -5,12 +5,17 @@
 {% block content %}
 <div class="card">
   <div class="card-body">
+  
+  <p><strong>Tratamento:</strong> <div class="d-flex justify-content-between align-items-center mb-3">
+    <a href="{% url 'speciality_list_filtered' appointment.service.treatment_type.pk %}">
+      <span class="badge-custom badge-luz-{{appointment.service.treatment_type.color}}">{{appointment.service.name}}</span>
+    </a>
+  </div></p>
+  <p><strong>Dia:</strong> {{ appointment.appointment_date|date:"d/m/y" }}</p>
+  <p><strong>Horário:</strong> {{ appointment.time_start|time:"H:i" }} - {{ appointment.time_end|time:"H:i" }}</p>
+  <p><strong>Status:</strong> {{ appointment.get_status_display }}</p>
   <p><strong>Cliente:</strong> {{ appointment.client }}</p>
   <p><strong>Terapeuta:</strong> {{ appointment.therapist }}</p>
-  <p><strong>Servico:</strong> {{ appointment.service }}</p>
-  <p><strong>Dia & Hora:</strong> {{ appointment.appointment_date_start }}</p>
-  <p><strong>Dia & Hora:</strong> {{ appointment.appointment_date_end }}</p>
-  <p><strong>Status:</strong> {{ appointment.get_status_display }}</p>
   <p><strong>Notas:</strong> {{ appointment.notes }}</p>
 
   <a href="{% url 'appointment-update' appointment.pk %}" class="btn btn-primary">Editar</a>

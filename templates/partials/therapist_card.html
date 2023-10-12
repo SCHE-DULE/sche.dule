@@ -1,0 +1,26 @@
+
+      <div class="card">
+        <div class="card-body text-center">
+          <div class="row g-4">
+            <div class="mx-auto mb-3">
+              <img src="{{ therapist.photo.url }}" alt="Avatar Image" class="rounded my-4 img-fluid" height="180" width="180"> 
+            </div>
+          </div>
+          <a href="{% url 'therapist_detail' therapist.pk %}" class="text-body text-truncate">
+            <h5 class="mb-1 card-title">{{ therapist.name }}</h5>
+          </a>
+          <small class="text-muted">
+            <div class="align-items-center">
+              <i class="bx bx-id-card"></i><span class="fw-medium mx-2">CRM: {{therapist.crm}}</span>
+            </div>
+          </small>
+          <div class="d-flex flex-wrap align-items-center justify-content-center my-3 gap-2">
+            {% for speciality in therapist.specialities.all %}
+                <span class="badge-custom badge-luz-{{speciality.treatment_type.color}}">{{speciality.name}}</span>
+            {% endfor %}
+          </div>
+          <div class="d-flex align-items-center justify-content-center">
+            <a href="{% url 'therapist_detail' therapist.pk %}" class="btn btn-outline-primary d-flex align-items-center me-3"><i class="bx bx-user-check me-1"></i>Ver Perfil</a>
+          </div>
+        </div>
+      </div>

@@ -7,7 +7,7 @@
     <p><strong>Nome:</strong> {{ client.name }}</p>
     <p><strong>Email:</strong> {{ client.email }}</p>
     <p><strong>Número de telefone:</strong> {{ client.phone_number }}</p>
-    {% if perms.accounts.can_view_client_info %}
+    {% if perms.accounts.can_view_full_client_info %}
         <p><strong>CPF:</strong> {{ client.cpf }}</p>
         <p><strong>RG or RNE:</strong> {{ client.rg_or_rne }}</p>
         <p><strong>País:</strong> {{ client.country }}</p>
@@ -20,8 +20,10 @@
         <p><strong>Complemento de endereço:</strong> {{ client.complement_address }}</p>
     {% endif %}
     <a href="{% url 'client_list' %}" class="btn btn-primary">Voltar</a>
+    {% if perms.accounts.modify_patient_information %}
     <a href="{% url 'client_update' client.pk %}" class="btn btn-secondary">Editar</a>
     <a href="{% url 'client_delete' client.pk %}" class="btn btn-danger">Deletar</a>
+    {% endif %}
     </div>
 </div>
 {% endblock %}

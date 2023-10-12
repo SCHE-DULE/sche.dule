@@ -1,0 +1,30 @@
+{% extends 'bases/index.html' %}
+{% load static %} 
+{% block 'title' %}Cadastrar Terapia{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %} 
+      {% for field in form %}
+      {% if field.errors %}
+        {% for error in field.errors %}
+              {{field.label}}: {{ error|escape }}
+        {% endfor %}
+      {% endif %}
+      <div class="row mb-3 form-group">
+        <label for="{{ field.id_for_label }}" 
+        class="col-sm-3 col-form-label">{{ field.label }}</label>
+        <div class="col-sm-9">{{ field }}</div>
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary">Salvar</button>
+      <a
+        href="{% if form.instance.pk %}{% url 'appointment-detail' form.instance.pk %}{% else %}{% url 'appointment-list' %}{% endif %}"
+        class="btn btn-secondary"
+        >Cancelar</a
+      >
+    </form>
+  </div>
+</div>
+{% endblock %}

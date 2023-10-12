@@ -8,24 +8,9 @@
 
 <div class="row mb-5">
   {% for therapist in therapists %}
-  <div class="col-md-6 col-lg-4 mb-3">
-    <a href="{% url 'therapist_detail' therapist.pk %}">
-      <div class="card h-100">
-        <div class="card-body">
-          <h5 class="card-title">{{ therapist.name }}</h5>
-        </div>
-        <img class="img-fluid" src="{{ therapist.photo.url }}" alt="Card image cap" />
-        <div class="card-body">
-          <p class="card-text">
-            {% for speciality in therapist.specialities.all %}
-                {{ speciality.name }}
-                {% if not forloop.last %}, {% endif %}
-            {% endfor %}
-          </p>
-        </div>
-      </div>
-    </a>
-  </div>
+    <div class="col-xl-4 col-lg-6 mb-3">
+      {% include "partials/therapist_card.html" %}
+    </div>
   {% empty %}
       <p>Não há Terapeutas cadastrados.</p>
   {% endfor %} 

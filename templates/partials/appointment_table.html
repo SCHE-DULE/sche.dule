@@ -1,0 +1,130 @@
+<div class="table-responsive text-nowrap">
+    <table 
+    class="table table-hover datatables-basic dataTable" 
+    aria-describedby="DataTables_Table_0_info"
+    id="DataTables_Table_0"
+    >
+      <thead>
+        <tr>
+{% comment %}             <th
+            class="sorting"
+            tabindex="0"
+            aria-controls="DataTables_Table_0"
+            rowspan="1"
+            colspan="1"
+            style="width: 216px"
+            aria-label="Customer: activate to sort column ascending"
+            aria-sort="descending"
+          > {% endcomment %}
+          <th>
+            Atendimento
+          </th>
+          <th>Cliente</th>
+          <th>Terapeuta</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody class="table-border-bottom-0">
+        {% for appointment in appointments %}
+        <tr class="table-default">
+          <td class="sorting_1">
+            <div class="d-flex flex-column">
+              <a href="{% url 'appointment-detail' appointment.pk %}">
+                <strong>{{ appointment.service.name }}</strong>
+              </a>
+              <small class="text-muted">
+                {{ appointment.appointment_date|date:"d/m/y" }} - 
+                {{ appointment.time_start|time:"H:i" }} - {{ appointment.time_end|time:"H:i" }}
+              </small>
+            </div>
+          </td>
+          <td>
+            <div class="d-flex flex-column">
+              <span class="emp_name text-truncate">{{ appointment.client.name }}</span>
+              <small class="text-muted">
+                {{ appointment.client.phone_number }}
+              </small>
+            </div>
+          </td>
+          <td>
+            <ul
+              class="list-unstyled users-list m-0 avatar-group d-flex align-items-center"
+            >
+              <li
+                data-bs-toggle="tooltip"
+                data-popup="tooltip-custom"
+                data-bs-placement="top"
+                class="avatar avatar-lg pull-up"
+                title="{{ appointment.therapist.name }}"
+              >
+                <a
+                  href="{% url 'therapist_detail' appointment.therapist.pk %}"
+                >
+                  <img
+                    src="{{ appointment.therapist.photo.url }}"
+                    alt="Avatar"
+                    class="rounded-circle"
+                  />
+                </a>
+              </li>
+            </ul>
+          </td>
+          <td>
+            {% if appointment.status == "PENDING" %}
+            <span class="badge bg-label-warning me-1"
+              >{{ appointment.get_status_display }}</span
+            >
+            {% elif appointment.status == "CONFIRMED" %}
+            <span class="badge bg-label-success me-1"
+              >{{ appointment.get_status_display }}</span
+            >
+            {% elif appointment.status == "CANCELLED" %}
+            <span class="badge bg-label-secondary me-1"
+              >{{ appointment.get_status_display }}</span
+            >
+            {% elif appointment.status == "COMPLETED" %}
+            <span class="badge bg-label-primary me-1"
+              >{{ appointment.get_status_display }}</span
+            >
+            {% endif %}
+          </td>
+          <td>
+
+            <div class="d-inline-block text-nowrap">
+            <button class="btn btn-sm btn-icon">
+              <a href="{% url 'appointment-update' appointment.pk %}" data-bs-toggle="tooltip" class="text-body" data-bs-placement="top" aria-label="Editar" data-bs-original-title="Editar">
+                <i class="bx bx-edit"></i>
+              </a>
+            </button>
+            <div class="dropdown-menu">
+              <a
+                class="dropdown-item"
+                href="{% url 'appointment-update' appointment.pk %}"
+                ><i class="bx bx-edit-alt me-1"></i> Editar</a
+              >
+              {% if perms.accounts.can_remove_appointment %}
+              <a
+                class="dropdown-item"
+                href="{% url 'appointment-delete' appointment.pk %}"
+              >
+                <i class="bx bx-trash me-1"></i> Deletar
+              </a>
+            </button>
+            {% endif %}
+            <button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+              <i class="bx bx-dots-vertical-rounded me-2"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end m-0">
+              <a href="app-user-view-account.html" class="dropdown-item">View</a>
+              <a href="javascript:;" class="dropdown-item">Suspend</a>
+            </div>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr class="table-default"><p>Sem agendamentos disponivel.</p></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

@@ -12,9 +12,13 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+dotenv_path = os.path.join(BASE_DIR, '.env')
+load_dotenv(dotenv_path)
 
 
 # Quick-start development settings - unsuitable for production
@@ -44,8 +48,9 @@ INSTALLED_APPS = [
     "contas",
     "appointments",
     "accounts",
+    "treatments",
     "sass_processor",
-    "compressor",
+    # "compressor",
 ]
 
 MIDDLEWARE = [
@@ -56,8 +61,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'django.middleware.cache.UpdateCacheMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
+    # 'django.middleware.cache.UpdateCacheMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -147,19 +152,19 @@ STATIC_ROOT = os.path.join('staticfiles')
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
+    #'compressor.finders.CompressorFinder',
 )
 
-COMPRESS_ENABLED = False
-COMPRESS_URL = '/static/'
-COMPRESS_CSS_FILTERS = [
-    'compressor.filters.css_default.CssAbsoluteFilter',
-    'compressor.filters.cssmin.CSSMinFilter',
-]
-COMPRESS_JS_FILTERS = [
-    'compressor.filters.jsmin.JSMinFilter',
-]
-COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage'
+# COMPRESS_ENABLED = False
+# COMPRESS_URL = '/static/'
+# COMPRESS_CSS_FILTERS = [
+#     'compressor.filters.css_default.CssAbsoluteFilter',
+#     'compressor.filters.cssmin.CSSMinFilter',
+# ]
+# COMPRESS_JS_FILTERS = [
+#     'compressor.filters.jsmin.JSMinFilter',
+# ]
+# COMPRESS_STORAGE = 'compressor.storage.GzipCompressorFileStorage'
 
 
 SASS_PROCESSOR_ROOT = os.path.join(BASE_DIR, 'static/scss')

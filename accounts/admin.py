@@ -8,7 +8,6 @@ from .models import (
     Client,
     SystemUser,
     Therapist,
-    Speciality,
     TimeSlot,
     DayOfWeek,
 )
@@ -31,7 +30,7 @@ class SystemUserAdmin(UserAdmin):
         ),
         (
             "Personal Info",
-            {"fields": ("name", "email", "birthday", "phone_number", "gender")},
+            {"fields": ("name", "email", "birthday", "phone_number", "gender", "photo")},
         ),
         ("Type of User", {"fields": ("user_type",)}),
     )
@@ -39,7 +38,7 @@ class SystemUserAdmin(UserAdmin):
         (None, {"fields": ("username", "password")}),
         (
             "Personal Info",
-            {"fields": ("name", "email", "birthday", "phone_number", "gender")},
+            {"fields": ("name", "email", "birthday", "phone_number", "gender", "photo")},
         ),
         ("Permissions", {"fields": ("is_active",)}),
         ("Type of User", {"fields": ("user_type",)}),
@@ -103,6 +102,7 @@ class ClientAdmin(UserAdmin):
                 "fields": (
                     "cpf",
                     "rg_or_rne",
+                    "photo",
                 )
             },
         ),
@@ -142,6 +142,7 @@ class ClientAdmin(UserAdmin):
                 "fields": (
                     "cpf",
                     "rg_or_rne",
+                    "photo",
                 )
             },
         ),
@@ -252,12 +253,6 @@ class TherapistAdmin(UserAdmin):
 
     # Exclude the following fields
     exclude = ("groups", "user_permissions")
-
-
-@admin.register(Speciality)
-class SpecialityAdmin(admin.ModelAdmin):
-    list_display = ["name"]
-    search_fields = ["name"]
 
 
 @admin.register(TimeSlot)

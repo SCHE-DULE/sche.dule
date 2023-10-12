@@ -1,0 +1,107 @@
+{% load static %} 
+<div
+    class="offcanvas offcanvas-end"
+    tabindex="-1"
+    id="offcanvasBackdrop"
+    aria-labelledby="offcanvasBackdropLabel"
+>
+    <div class="offcanvas-header border-bottom">
+    <h5 id="offcanvasBackdropLabel" class="offcanvas-title">Agendamento</h5>
+    <button
+        type="button"
+        class="btn-close text-reset"
+        data-bs-dismiss="offcanvas"
+        aria-label="Close"
+    ></button>
+    </div>
+    <div class="offcanvas-body mx-0 flex-grow-0">
+        <div id="appointment_detail" class="show">
+            <div class="d-flex">
+                <div class="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
+                    <img class="img-fluid rounded my-3" src="{% static 'img/avatars/foto.jpeg' %}" height="110" width="110" alt="User avatar" id="client_img">
+                </div>
+                <div class="d-flex align-items-center mx-3">
+                    <div class="customer-info flex-grow-1 align-items-center">
+                    <h4 class="mb-1" id="client_name">Lorine Hischke</h4>
+                    <div class="d-flex">
+                        <span class="fw-medium me-2">Email:</span>
+                        <span id="client_email" class="text-muted text-nowrap"></span>
+                    </div>
+                    <div class="d-flex">
+                        <span class="fw-medium me-2">Contact:</span>
+                        <span id="client_phone" class="text-muted text-nowrap">(123) 456-7890</span>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-container border-bottom pb-4">
+                <small class="d-block pt-4 border-top fw-normal text-uppercase text-muted my-3">DETALHES DO ATENDIMENTO</small>
+                <ul class="list-unstyled">
+                    <li class="mb-3">
+                    <span class="fw-medium me-2">Serviço:</span>
+                    <span id="appointment_service">Consulta de Pedreiro</span>
+                    </li>
+                    <li class="mb-3">
+                    <span class="fw-medium me-2">Data:</span>
+                    <span id="appointment_date">23/10/2023</span>
+                    </li>
+                    <li class="mb-3">
+                    <span class="fw-medium me-2">Horário:</span>
+                    <span id="appointment_time_slot"></span>
+                    </li>
+                    <li class="mb-3">
+                    <span class="fw-medium me-2" id="appointment_status_badge">Status:</span>
+                    <span class="badge bg-label-success" id="status">Active</span>
+                    </li>
+                </ul>
+                <small class="d-block pt-1 fw-normal text-uppercase text-muted my-3">TERAPEUTA</small>
+                <div class="d-flex justify-content-start align-items-center customer-name">
+                    <div class="avatar-wrapper">
+                        <div class="avatar me-2">
+                            <img src="{% static 'img/avatars/foto.jpeg' %}" alt="Avatar" class="rounded-circle" id="therapist_img">
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <a href="app-ecommerce-customer-details-overview.html" id="therapist_url">
+                            <span class="fw-medium" id="therapist_name">Gisela Leppard</span>
+                        </a>
+                        <small class="text-muted text-nowrap" id="therapist_email">gleppard8@yandex.ru</small>
+                    </div>
+                </div>
+            </div>
+            <div id="notes_session">
+                <small class="d-block fw-normal text-uppercase text-muted my-3">NOTAS</small>
+                <div class="bg-lighter rounded p-3">
+                    <p class="mb-2" id="appointment_notes">Gift wrap and personalized message on card, Only for $2.</p>
+                </div>
+            </div>
+            <div class="mb-3 d-flex justify-content-sm-between justify-content-start my-4">
+                <div>
+                    <a href="#" id="appointment_detail_link" type="submit" class="btn btn-primary me-sm-3 me-1 btn-update-event">Detalhes</a>
+                    <button type="reset" class="btn btn-outline-secondary me-sm-0 me-1" data-bs-dismiss="offcanvas">Cancelar</button>
+                </div>
+                <div><a id="appointment_delete_link" href="#" class="btn btn-outline-danger">Remover</a></div>
+            </div>
+        </div>
+        <div id="appointment_detail_error" class="d-none">
+            <div class="mb-3 col-12 mb-0">
+                <div class="alert alert-warning">
+                  <h6 class="alert-heading fw-bold mb-1">Não foi possível carregar os detalhes do agendamento</h6>
+                  <p class="mb-0">Tentar novamente?</p>
+                  <div class="mb-3 d-flex justify-content-sm-between justify-content-start my-4">
+                    <div>
+                        <button type="submit" class="btn btn-primary me-sm-3 me-1 btn-update-event">Carregar</button>
+                        <button type="reset" class="btn btn-outline-secondary me-sm-0 me-1" data-bs-dismiss="offcanvas">Cancelar</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div id="appointment_detail_loading" class="d-none d-flex my-auto">
+            <div class="spinner-border spinner-border-lg text-primary align-self-center my-auto mx-auto" role="status">
+                <span class="visually-hidden">Carregando...</span>
+              </div>
+        </div>
+    </div>
+</div>
