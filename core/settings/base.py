@@ -48,13 +48,13 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "perfil",
-    "extrato",
-    "planejamento",
-    "contas",
-    "appointments",
-    "accounts",
-    "treatments",
+    "finance.perfil",
+    "finance.extrato",
+    "finance.planejamento",
+    "finance.contas",
+    "schedule.appointments",
+    "schedule.accounts",
+    "schedule.treatments",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -82,7 +82,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "accounts.context_processors.menu_context",
+                "schedule.accounts.context_processors.menu_context",
             ],
         },
     },
