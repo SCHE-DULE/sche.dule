@@ -3,17 +3,17 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from appointments.views import dashboard
+from schedule.appointments.views import dashboard
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', dashboard, name='dashboard'),
-    path('perfil/', include('perfil.urls')),
-    path('extrato/', include('extrato.urls')),
-    path('planejamento/', include('planejamento.urls')),
-    path('contas/', include('contas.urls')),
-    path('accounts/', include('accounts.urls')),
-    path('appointments/', include('appointments.urls')),
-    path('treatments/', include('treatments.urls'))
+    path('perfil/', include('finance.perfil.urls')),
+    path('extrato/', include('finance.extrato.urls')),
+    path('planejamento/', include('finance.planejamento.urls')),
+    path('contas/', include('finance.contas.urls')),
+    path('accounts/', include('schedule.accounts.urls')),
+    path('appointments/', include('schedule.appointments.urls')),
+    path('treatments/', include('schedule.treatments.urls'))
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
