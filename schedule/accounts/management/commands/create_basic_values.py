@@ -3,7 +3,7 @@ from pprint import pprint
 import random
 from django.core.management.base import BaseCommand
 
-from treatments.models import Speciality
+from schedule.treatments.models import Speciality
 from ...models import DayOfWeek, TimeSlot
 
 
