@@ -34,12 +34,13 @@ djangorestframework = "^3.14.0"
 python-decouple = "^3.8"
 dj-database-url = "^2.1.0"
 psycopg2-binary = "^2.9.9"
-werkzeug = "^3.0.1"
+django-tenants = "^3.5.0"
 
 [tool.poetry.group.dev]
 optional = true
 [tool.poetry.group.dev.dependencies]
 django-extensions = "^3.2.3"
+werkzeug = "^3.0.1"
 
 [tool.poetry.group.homolog]
 optional = true

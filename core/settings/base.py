@@ -32,23 +32,31 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
-
 # Application definition
 
 DJANGO_APPS = [
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
     "django.contrib.staticfiles",
+]
+
+BASE_APPS = [
+    "django_tenants",
+    "organizations",
 ]
 
 THIRD_PARTY_APPS = [
     "sass_processor",
 ]
 
-LOCAL_APPS = [
+PG_EXTRA_SEARCH_PATHS = []
+
+TENANT_APPS = [
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.admin",
+    "django.contrib.auth",
     "finance.perfil",
     "finance.extrato",
     "finance.planejamento",
@@ -58,9 +66,14 @@ LOCAL_APPS = [
     "schedule.treatments",
 ]
 
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+SHARED_APPS = BASE_APPS + DJANGO_APPS + THIRD_PARTY_APPS
+
+INSTALLED_APPS = list(SHARED_APPS) + [
+    app for app in TENANT_APPS if app not in SHARED_APPS
+]
 
 MIDDLEWARE = [
+    "django_tenants.middleware.main.TenantMainMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -91,18 +104,42 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "core.wsgi.application"
 
+# Tenats
+# https://django-tenants.readthedocs.io/en/latest/index.html
+
+TENANT_MODEL = "organizations.Organization"
+
+TENANT_DOMAIN_MODEL = "organizations.Domain"
+
+ROOT_URLCONF = "core.urls_tenants"
+PUBLIC_SCHEMA_URLCONF = "core.urls_public"
+
+# CACHES = {
+#     "default": {
+#         "KEY_FUNCTION": "django_tenants.cache.make_key",
+#         "REVERSE_KEY_FUNCTION": "django_tenants.cache.reverse_key",
+#         "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+#         "LOCATION": "schedule_cache",
+#     },
+# }
+
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+db_config = dj_database_url.config(
+    conn_max_age=600,
+    conn_health_checks=True,
+    test_options={"NAME": BASE_DIR / "db.sqlite3"},
+)
+
+db_config["ENGINE"] = "django_tenants.postgresql_backend"
+
 DATABASES = {
-    'default': dj_database_url.config(
-        conn_max_age=600,
-        conn_health_checks=True,
-        test_options={'NAME': BASE_DIR / 'db.sqlite3'},
-    )
+    "default": db_config,
 }
 
+DATABASE_ROUTERS = ("django_tenants.routers.TenantSyncRouter",)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
