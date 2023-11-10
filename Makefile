@@ -17,7 +17,7 @@ ifeq ("$(wildcard .env)","")
 	cp .env.dev-example .env
 	@echo "New file .env created" 		
 endif
-	docker-compose -f docker-compose-dev.yaml --env-file=.env up -d --build
+	docker-compose -f docker-compose-dev.yaml up -d --build
 
 bash:
 	docker-compose -f docker-compose-dev.yaml start

@@ -4,8 +4,8 @@ from pprint import pprint
 import random
 from django.core.management.base import BaseCommand
 
-from appointments.models import Appointment, Room
-from treatments.models import COLOR_CHOICES, Benefit, Speciality, TreatmentType
+from schedule.appointments.models import Appointment, Room
+from schedule.treatments.models import COLOR_CHOICES, Benefit, Speciality, TreatmentType
 from ...models import (
     BaseUser,
     Client,
@@ -15,6 +15,7 @@ from ...models import (
     TimeSlot,
 )
 from faker import Faker
+from django_tenants.utils import get_tenant_model, schema_context
 
 service_names = [
     "Taxa de Deslocamento",
@@ -60,61 +61,84 @@ service_names = [
 
 
 class Command(BaseCommand):
+    def add_arguments(self, parser):
+        parser.add_argument("--schema", type=str, help="Schema name of the tenant")
+
     def handle(self, *args, **options):
+        tenant_schema_name = options["schema"]
+
         locales = ["en_US", "pt_BR", "fr_FR", "es_ES"]
 
         fake = Faker()
 
         try:
-            self.stdout.write(
-                self.style.WARNING(f"Populate de DB with fake random data and quantities automatically?")
-            )
-            y_or_N = input(f"Confirm? [y/N]:")
-            if y_or_N.strip().upper() == "N" or y_or_N.strip().upper() == "":
-                qtd = int(input(f"How many System Users do you want to create: "))
-                if qtd > 0:
-                    self.create_system_users(fake, qtd)
-
-                qtd = int(input(f"How many Clients do you want to create: "))
-                if qtd > 0:
-                    self.create_clients(fake, qtd)
-
-                qtd = int(input(f"How many Treatment Types do you want to create: "))
-                if qtd > 0:
-                    self.create_treatment_types(fake, qtd)
-
-                qtd = int(input(f"How many Specialities do you want to create: "))
-                if qtd > 0:
-                    self.create_specialities(fake, qtd)
-
-                qtd = int(input(f"How many Therapists do you want to create: "))
-                if qtd > 0:
-                    self.create_therapists(fake, qtd)
-
-                qtd = int(input(f"How many Appointments do you want to create: "))
-                if qtd > 0:
-                    self.create_appointments(fake, qtd)
-            elif y_or_N.strip().upper() == "Y":
-                self.create_system_users(fake, random.randint(1, 10))
-
-                self.create_clients(fake, random.randint(10, 20))
-
-                self.create_treatment_types(fake, random.randint(3, 8))
-
-                self.create_specialities(fake, random.randint(10, 15))
-
-                self.create_therapists(fake, random.randint(10, 20))
-
-                self.create_appointments(fake, random.randint(10, 20))
+            if not tenant_schema_name:
+                self.action(fake)
             else:
-                raise Exception("Operation Cancelled")
-        
+                Tenant = get_tenant_model()
+
+                tenant = Tenant.objects.get(schema_name=tenant_schema_name)
+                with schema_context(tenant.schema_name):
+                    self.action(fake)
+
         except KeyboardInterrupt:
             self.stdout.write(self.style.WARNING(f"Operation Cancelled"))
         except Exception as e:
             self.stdout.write(self.style.ERROR(str(e)))
+        except Tenant.DoesNotExist:
+            self.stderr.write(
+                self.style.ERROR(
+                    f'Tenant with schema name "{tenant_schema_name}" does not exist'
+                )
+            )
         else:
             self.stdout.write(self.style.SUCCESS("Fake data created successfully!!"))
+
+    def action(self, fake):
+        self.stdout.write(
+            self.style.WARNING(
+                f"Populate de DB with fake random data and quantities automatically?"
+            )
+        )
+        y_or_N = input(f"Confirm? [y/N]:")
+        if y_or_N.strip().upper() == "N" or y_or_N.strip().upper() == "":
+            qtd = int(input(f"How many System Users do you want to create: "))
+            if qtd > 0:
+                self.create_system_users(fake, qtd)
+
+            qtd = int(input(f"How many Clients do you want to create: "))
+            if qtd > 0:
+                self.create_clients(fake, qtd)
+
+            qtd = int(input(f"How many Treatment Types do you want to create: "))
+            if qtd > 0:
+                self.create_treatment_types(fake, qtd)
+
+            qtd = int(input(f"How many Specialities do you want to create: "))
+            if qtd > 0:
+                self.create_specialities(fake, qtd)
+
+            qtd = int(input(f"How many Therapists do you want to create: "))
+            if qtd > 0:
+                self.create_therapists(fake, qtd)
+
+            qtd = int(input(f"How many Appointments do you want to create: "))
+            if qtd > 0:
+                self.create_appointments(fake, qtd)
+        elif y_or_N.strip().upper() == "Y":
+            self.create_system_users(fake, random.randint(1, 10))
+
+            self.create_clients(fake, random.randint(10, 20))
+
+            self.create_treatment_types(fake, random.randint(3, 8))
+
+            self.create_specialities(fake, random.randint(10, 15))
+
+            self.create_therapists(fake, random.randint(10, 20))
+
+            self.create_appointments(fake, random.randint(10, 20))
+        else:
+            raise Exception("Operation Cancelled")
 
     def create_system_users(self, fake, num_users):
         self.stdout.write(self.style.WARNING(f"Creating data for SystemUsers"))
@@ -128,7 +152,7 @@ class Command(BaseCommand):
                 name=profile["name"],
                 email=profile["mail"],
                 birthday=profile["birthdate"],
-                phone_number=fake.phone_number(),
+                phone_number=self.get_fake_phone_number(fake),
                 gender=fake.random_element(
                     elements=[choice[0] for choice in BaseUser.GENDER_CHOICES]
                 ),
@@ -154,12 +178,12 @@ class Command(BaseCommand):
                 name=profile["name"],
                 email=profile["mail"],
                 birthday=profile["birthdate"],
-                phone_number=fake.phone_number(),
+                phone_number=self.get_fake_phone_number(fake),
                 gender=fake.random_element(
                     elements=[choice[0] for choice in BaseUser.GENDER_CHOICES]
                 ),
                 cpf=fake.unique.random_int(min=10000000000, max=99999999999),
-                rg_or_rne=profile["ssn"],
+                rg_or_rne=f"{profile['ssn'][:19]}",
                 country=fake.country(),
                 state=fake.state(),
                 city=fake.city(),
@@ -182,7 +206,7 @@ class Command(BaseCommand):
 
         for _ in range(num_treatment_type):
             name = fake.unique.word()
-            color = random.choice(COLOR_CHOICES)[
+            color = random.choice(COLOR_CHOICES[:-1])[
                 0
             ]  # Choose a random color from COLOR_CHOICES
 
@@ -234,11 +258,11 @@ class Command(BaseCommand):
                 name=profile["name"],
                 email=profile["mail"],
                 birthday=profile["birthdate"],
-                phone_number=fake.phone_number(),
+                phone_number=self.get_fake_phone_number(fake),
                 gender=fake.random_element(
                     elements=[choice[0] for choice in BaseUser.GENDER_CHOICES]
                 ),
-                crm=fake.random_int(min=100000, max=999999),
+                crm=f"{fake.random_int(min=100000, max=999999):20d}",
                 rate=fake.pydecimal(left_digits=2, right_digits=2, positive=True),
                 fee=fake.pydecimal(
                     left_digits=2,
@@ -351,3 +375,6 @@ class Command(BaseCommand):
         )
 
         return appointment
+
+    def get_fake_phone_number(self, fake):
+        return f"{fake.phone_number()[:19]}"
