@@ -13,11 +13,11 @@ default:
 	@echo "make clearmigrations 			- Limpa todas as migrations"@echo "make export_requirements 		- Exporta as dependencias do Poetry para um arquivo requirements.txt"
 
 build:
-ifeq ("$(wildcard .env.dev)","") 
-	cp .env.dev-example .env.dev
-	@echo "New file .env.dev created" 		
+ifeq ("$(wildcard .env)","") 
+	cp .env.dev-example .env
+	@echo "New file .env created" 		
 endif
-	docker-compose -f docker-compose-dev.yaml --env-file=.env.dev up -d --build
+	docker-compose -f docker-compose-dev.yaml up -d --build
 
 bash:
 	docker-compose -f docker-compose-dev.yaml start

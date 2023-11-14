@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "sche"}]
 
 [tool.poetry.dependencies]
-python = "^3.8.2"
+python = "^3.8"
 django = "^4.2.6"
 pillow = "^10.1.0"
 asgiref = "^3.7.2"
@@ -32,11 +32,15 @@ django-sass-processor = "^1.2.2"
 faker = "^19.10.0"
 djangorestframework = "^3.14.0"
 python-decouple = "^3.8"
+dj-database-url = "^2.1.0"
+psycopg2-binary = "^2.9.9"
+django-tenants = "^3.5.0"
 
 [tool.poetry.group.dev]
 optional = true
 [tool.poetry.group.dev.dependencies]
 django-extensions = "^3.2.3"
+werkzeug = "^3.0.1"
 
 [tool.poetry.group.homolog]
 optional = true

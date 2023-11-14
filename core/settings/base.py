@@ -13,11 +13,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from decouple import config
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-
-# config = config(os.path.join(BASE_DIR, ".env"))
 
 
 # Quick-start development settings - unsuitable for production
@@ -31,15 +30,11 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
-
 # Application definition
 
 DJANGO_APPS = [
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
 
@@ -47,7 +42,14 @@ THIRD_PARTY_APPS = [
     "sass_processor",
 ]
 
-LOCAL_APPS = [
+PG_EXTRA_SEARCH_PATHS = []
+
+TENANT_APPS = [
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.admin",
+    "django.contrib.auth",
     "finance.perfil",
     "finance.extrato",
     "finance.planejamento",
@@ -56,8 +58,6 @@ LOCAL_APPS = [
     "schedule.accounts",
     "schedule.treatments",
 ]
-
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -68,8 +68,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
-ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
     {
@@ -94,13 +92,11 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": config("SQL_ENGINE", default="django.db.backends.sqlite3"),
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
+db_config = dj_database_url.config(
+    conn_max_age=600,
+    conn_health_checks=True,
+    test_options={"NAME": BASE_DIR / "db.sqlite3"},
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
