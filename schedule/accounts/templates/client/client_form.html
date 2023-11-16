@@ -28,7 +28,10 @@
 </div>
 <a href="{% url 'client_list' %}" class="btn btn-secondary">Voltar</a>
 {% endblock %}
-
+{% block js %}
+  <script src="{% static 'js/cep.js' %}"></script>
+{% endblock %}
 <div id="defaultFormControlHelp" class="form-text">
   Nós nunca compartilharemos suas informações pessoais.
 </div>
+

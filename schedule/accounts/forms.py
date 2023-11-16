@@ -136,11 +136,11 @@ class ClientForm(forms.ModelForm):
             "gender",
             "cpf",
             "rg_or_rne",
+            "zip_code",
             "country",
             "state",
             "city",
             "neighborhood",
-            "zip_code",
             "street_address",
             "number",
             "complement_address",
@@ -213,6 +213,7 @@ class ClientForm(forms.ModelForm):
             "zip_code": forms.TextInput(
                 attrs={
                     "class": "form-control",
+                    "id": "zip_code",
                 }
             ),
             "street_address": forms.TextInput(
