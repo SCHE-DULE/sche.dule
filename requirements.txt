@@ -1,4 +1,4 @@
-django==4.2.7
+django==4.2.3
 pillow==10.0.1
 asgiref==3.7.2
 cffi==1.15.1
