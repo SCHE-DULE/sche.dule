@@ -90,7 +90,7 @@ def assign_groups_and_permissions_system_user(sender, instance, created, **kwarg
 
 class Therapist(BaseUser):
     specialities = models.ManyToManyField(Speciality, verbose_name="Especialidades")
-    crm = models.CharField(
+    council = models.CharField(
         max_length=20, verbose_name="Cadastro do Órgão de Registro (ex: CRM)"
     )
 
