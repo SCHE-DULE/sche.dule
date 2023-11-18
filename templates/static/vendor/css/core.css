@@ -64,6 +64,24 @@
   }
 }
 
+/* Menu Logo */
+
+.menu .app-brand.demo {
+  height: 64px;
+  margin-top: 12px;
+}
+
+.app-brand-logo.demo svg {
+  width: 42px;
+  height: 42px;
+}
+
+.app-brand-text.demo {
+  font-size: 1.75rem;
+  letter-spacing: -0.5px;
+  text-transform: lowercase;
+}
+
 /* Custom Colors */
 .luz-azul {
     background-color: #20c997;  /* Azul primário */
@@ -15887,8 +15905,8 @@ html:not(.layout-footer-fixed) .content-wrapper {
 }
 
 .menu-vertical .app-brand {
-  padding-right: 2rem;
-  padding-left: 2rem;
+  padding-right: 1.2rem;
+  padding-left: 1.2rem;
 }
 
 .menu-horizontal .app-brand,
