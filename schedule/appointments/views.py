@@ -6,7 +6,13 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_http_methods, require_POST
+from django.views.decorators.csrf import csrf_exempt
+from django.middleware.csrf import get_token
+import json
+
+from schedule.accounts.models import TimeSlot
+from schedule.treatments.models import Speciality
 from .serializers import AppointmentSerializer
 from helpers.decorators import ajax_required
 
@@ -73,14 +79,18 @@ class AppointmentUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateV
 
     def get_initial(self):
         initial = super().get_initial()
-        time_start = self.object.time_start # type: ignore
-        time_end = self.object.time_end # type: ignore
+        time_start = self.object.time_start  # type: ignore
+        time_end = self.object.time_end  # type: ignore
 
         if time_start and time_end:
-            time_end = datetime.combine(self.object.appointment_date, time_end) # type: ignore
-            duration = time_end - timedelta(hours=time_start.hour, minutes=time_start.minute, seconds=time_start.second)
-            initial['time_start'] = time_start
-            initial['duration'] = duration.strftime("%H:%M") # type: ignore
+            time_end = datetime.combine(self.object.appointment_date, time_end)  # type: ignore
+            duration = time_end - timedelta(
+                hours=time_start.hour,
+                minutes=time_start.minute,
+                seconds=time_start.second,
+            )
+            initial["time_start"] = time_start
+            initial["duration"] = duration.strftime("%H:%M")  # type: ignore
 
         return initial
 
@@ -101,11 +111,14 @@ class AppointmentDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteV
 
 @login_required
 def dashboard(request):
-    
     rooms = Room.objects.all()
+    time_slots = TimeSlot.objects.all()
+    specialities = Speciality.objects.all()
     extra_context = {
         "page_section": "Próximos Atendimentos",
-        "rooms" : rooms,
+        "rooms": rooms,
+        "time_slots": time_slots,
+        "specialities": specialities,
     }
 
     return render(request, "dashboard/dashboard.html", {**extra_context})
@@ -120,30 +133,46 @@ def get_appointment_data(request):
     appointment = Appointment.objects.get(pk=id)
     serializer = AppointmentSerializer(appointment)
 
-    return JsonResponse({"appointment": serializer.data})
+    response = JsonResponse({"appointment": serializer.data})
+    response["X-CSRFToken"] = get_token(request)
+
+    return response
 
 
 @ajax_required
-@require_http_methods(["GET"])
+@require_POST
 @login_required
 def update_appointment_data(request):
-    id = request.GET.get("id")
-    start = request.GET.get("start")
-    end = request.GET.get("end")
-    column = request.GET.get("column")
-
     try:
-        appointment = Appointment.objects.get(pk=id)
-        room = int(column) + 1
+        data = json.loads(request.body)
+        pprint(data)
+        id = data.get("id")
+        start = data.get("start")
+        end = data.get("end")
+        roomId = data.get("roomId")
+        serviceId = data.get("serviceId")
+        date = data.get("date")
 
-        appointment.time_start = datetime.strptime(start, "%Y-%m-%dT%H:%M:%S").time()
-        appointment.time_end = datetime.strptime(end, "%Y-%m-%dT%H:%M:%S").time()
-        appointment.room = Room.objects.get(pk=room)  # type: ignore 
+        appointment = Appointment.objects.get(pk=id)
+        room = int(roomId)
+
+        appointment.time_start = datetime.strptime(start, "%H:%M:%S").time()
+        appointment.time_end = datetime.strptime(end, "%H:%M:%S").time()
+        appointment.room = Room.objects.get(pk=room)
+
+        if date:
+            appointment.appointment_date = datetime.strptime(date, "%d/%m/%Y").date()
+        if serviceId:
+            appointment.service = Speciality.objects.get(pk=serviceId)
+
         appointment.save()
 
         serializer = AppointmentSerializer(appointment)
-        
-        return JsonResponse({"appointment": serializer.data})
+
+        response = JsonResponse({"appointment": serializer.data})
+        response["X-CSRFToken"] = get_token(request)
+
+        return response
     except Appointment.DoesNotExist:
         return JsonResponse({"error": "Appointment not found"}, status=404)
     except Exception as e:
@@ -163,4 +192,7 @@ def get_dashboard_calendar(request):
 
     serializer = AppointmentSerializer(upcoming_appointments, many=True)
 
-    return JsonResponse({"appointments": serializer.data})
+    response = JsonResponse({"appointments": serializer.data})
+    response["X-CSRFToken"] = get_token(request)
+
+    return response

@@ -6,13 +6,22 @@ from schedule.accounts.serializers import (
     TimeSlotSerializer,
 )
 from schedule.treatments.serializers import SpecialitySerializer
-from .models import Appointment
+from .models import Appointment, Room
+
+class RoomSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Room
+        fields = "__all__"
+
 
 
 class AppointmentSerializer(serializers.ModelSerializer):
     client = ClientSerializer()
     therapist = TherapistSerializer()
     service = SpecialitySerializer()
+    room = RoomSerializer()
+    
     appointment_service_color = serializers.CharField(
         source="service.treatment_type.color", read_only=True
     )

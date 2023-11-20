@@ -1,10 +1,13 @@
 {% extends 'bases/index.html' %} 
 {% load static %} 
+{% load custom_filters %}
 {% block 'title'%}Dashboard{% endblock%} 
 {% block head %} 
 <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.css' rel='stylesheet' />
 <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.js'></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" />
+
+<link rel="stylesheet" href="{% static 'vendor/css/flatpickr.css' %}"/>
+
 
 <script src="https://kit.fontawesome.com/da186c5afa.js" crossorigin="anonymous"></script>
 {% endblock %} 
@@ -52,14 +55,14 @@
           </div>
           <div class="col-12 col-md-auto mx-md-auto text-md-center mt-2 mt-md-0">
               <span class="d-flex align-items-center" style="cursor: pointer;">
-                <i class="bx bx-calendar me-0 me-sm-1 btn btn-outline-primary borderless-button mb-sm-3" id="datepicker-trigger"></i>
+                <i class="bx bx-calendar me-0 me-sm-1 btn btn-outline-primary borderless-button mb-sm-3" id="flatpickr-trigger" ></i>
                 <span class="h2 d-none d-sm-inline-block" id="date-title"></span>
               </span>
           </div>
           <div class="col-12 col-md-auto justify-content-end mt-2 mt-md-0">
               <span class="d-flex align-items-center" style="cursor: pointer;">
                 <a href="{% url 'appointment-create' %}" class="btn btn-outline-primary borderless-button mb-sm-3">
-                  <i class="bx bx-plus me-0 me-sm-1" id="datepicker-trigger"></i>
+                  <i class="bx bx-plus me-0 me-sm-1"></i>
                   <span>Atendimento</span>
                 </a>
               </span>
@@ -93,9 +96,6 @@
   </div>
   <div class="toast-body" id="toast_message"></div>
 </div>
-<a href="{% url 'appointment-create' %}" class="btn btn-primary"
-  >Criar Agendamento</a
->
 {% include "partials/appointment_detail_panel.html" %}
 {% endblock %}
 {% block jquery_script %}
@@ -133,7 +133,7 @@
 <script src="{% static 'js/calendar/fullcalendar-columns.js' %}"></script>
 <script src="{% static 'js/ui-toasts.js' %}"></script>
 <script src="https://unpkg.com/@popperjs/core@2"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="{% static 'vendor/js/flatpickr.js' %}"></script>
 
 <script>
 
@@ -143,6 +143,7 @@
   };
 
   var activePopover; 
+  var Y3NyZnRva2Vu;
 
 	$(document).ready(function() {
 		
@@ -164,8 +165,8 @@
               {% endfor %}
               ],
               axisFormat: 'HH:mm',
-              minTime: '08:00:00',
-              maxTime: '21:00:00',
+              minTime: '{% with first_time_slot=time_slots|first_item %}{{ first_time_slot.start_time }}{% endwith %}',
+              maxTime: '{% with last_time_slot=time_slots|last_item %}{{ last_time_slot.end_time }}{% endwith %}',
               slotLabelFormat: 'HH:mm'
           }
       },
@@ -193,7 +194,6 @@
         var date_title = moment(view.start).format('DD [de] MMMM [de] YYYY');
         $('#date-title').text(date_title);
         
-        $('#datepicker-trigger').datepicker('setDate', date.format('MM/DD/YYYY'));
       },
       eventClick: function(calEvent, jsEvent, view) {
 
@@ -238,16 +238,18 @@
         } else {
           var data = {
             id: event.id,
-            start: event.start.format(), // Format the moment to a string
-            end: event.end.format(),
-            column: event.column // Assuming this is the room column
+            start: event.start.format('HH:mm:ss'),
+            end: event.end.format('HH:mm:ss'),
+            roomId: parseInt(event.column) + 1 
           };
 
           $.ajax({
-            type: 'GET',
+            type: 'POST',
             url: 'appointments/update_appointment_data/',
-            data: data,
-            success: function(response) {
+            data: JSON.stringify(data),
+            headers: { "X-CSRFToken": Y3NyZnRva2Vu },
+            success: function(response, status, xhr) {
+                Y3NyZnRva2Vu = xhr.getResponseHeader('X-CSRFToken');
 
                 if (response.appointment) {
                     for (var i = 0; i < events_source.events.length; i++) {
@@ -270,7 +272,6 @@
         }
       },
       eventRender: function (event, element) {
-        //element.find('.fc-title').html("<h5>" + event.title + "</h5>");
         var customSelectors = {
           'data-bs-toggle': 'offcanvas',
           'data-bs-target': '#offcanvasBackdrop',
@@ -289,7 +290,6 @@
           moment(event.appointment.time_end, 'HH:mm:ss').format('HH:mm') +
           "</span>");
     
-  
       },
       eventMouseover: function (event, jsEvent) { 
 
@@ -312,14 +312,13 @@
     });
 
     function hideActivePopover() {
-      // Hide the active popover if there is one
       if (activePopover) {
           activePopover.popover('hide');
           activePopover = null;
       }
     }
 
-  function updateNowIndicator() {
+    function updateNowIndicator() {
       var now = moment();
       var calendar = $('#calendar');
       var timeCol = calendar.find('.fc-time-grid');
@@ -335,17 +334,14 @@
             var percentage = (minutesDiff / timeColEnd.diff(timeColStart, 'minutes')) * 100;
             var indicatorTop = (timeColHeight * percentage / 100);
             
-            // Create or update the "now" indicator element
             var nowIndicator = calendar.find('.now-indicator');
             if (nowIndicator.length === 0) {
                 nowIndicator = $('<div class="now-indicator"></div>');
                 timeCol.append(nowIndicator);
             }
             
-            // Position the indicator
             nowIndicator.css('top', indicatorTop);
           } else {
-              // Hide the indicator if current time is outside of business hours
               calendar.find('.now-indicator').remove();
           }
       
@@ -361,7 +357,8 @@
       url: "appointments/get_dashboard_calendar/",
       data: { 'date': date },
       dataType: 'json',
-      success: function (data) {
+      success: function (data, status, xhr) {
+        Y3NyZnRva2Vu = xhr.getResponseHeader('X-CSRFToken');
         events_source.events = [];
         $.each(data.appointments, function (index, appointment) {
           var elementWithColor = document.querySelector('.event-' + appointment.appointment_service_color);
@@ -400,7 +397,6 @@
 
           var descriptionHtml =
                     '<div class="justify-content-start">' +
-                  //  '<small class="d-block border-top fw-normal text-uppercase text-muted">DETALHES DO ATENDIMENTO</small>' +
                     '     <div class="d-flex flex-shrink-0 mx-auto py-sm-1 align-items-center">' +
                     '     <i class="fa-regular fa-clock me-sm-3"></i>' +
                     '     <span>' + moment(appointment.time_start, 'HH:mm:ss').format('HH:mm') + " - " + moment(appointment.time_end, 'HH:mm:ss').format('HH:mm') + '</span>' +
@@ -434,7 +430,7 @@
             backgroundColor: backgroundColor,
             textColor: '#333',
             borderColor: borderColor,
-            column: (appointment.room - 1),
+            column: (appointment.room.id - 1),
             description: descriptionHtml
           });
 
@@ -447,6 +443,7 @@
   }
 
   function load_appointment_detail(appointmentId){
+    
     $('#appointment_detail_error').removeClass('show');
     $('#appointment_detail_error').addClass('d-none');
     $('#appointment_detail').removeClass('show');
@@ -459,19 +456,40 @@
       data: { 'id': appointmentId},
       type: 'GET',
       dataType: 'json',
-      success: function (data) {
+      success: function (data, status, xhr) {
+        Y3NyZnRva2Vu = xhr.getResponseHeader('X-CSRFToken');
         $('#appointment_detail_error').removeClass('show');
         $('#appointment_detail_error').addClass('d-none');
 
-        // Populate the modal content with the data received
+        $('#appointment_detail_id').val(data.appointment.id);
         $('#client_name').text(data.appointment.client.name);
         $('#client_img').attr('src', data.appointment.client.photo);
         $('#client_email').text(data.appointment.client.email);
         $('#client_phone').text(data.appointment.client.phone_number);
         $('#appointment_service').text(data.appointment.service.name);
-        // Format the date and time as needed
+        $('#select_speciality').val(data.appointment.service.id).change();
+
         $('#appointment_date').text(moment(data.appointment.appointment_date).format('DD/MM/YYYY'));
-        $('#appointment_time_slot').text(moment(data.appointment.time_start, 'HH:mm:ss').format('HH:mm') + " - " + moment(data.appointment.time_end, 'HH:mm:ss').format('HH:mm'));
+        $("#flatpickr-date").flatpickr({
+          dateFormat: "d/m/Y",
+          defaultDate: moment(data.appointment.appointment_date).format('DD/MM/YYYY')
+        });
+
+        var startTime = moment(data.appointment.time_start, 'HH:mm:ss');
+        $('#appointment_time_slot').text(startTime.format('HH:mm'));
+
+        var optionToSelect =  $('#select_time_slot').find('option:contains("' + startTime.format('HH:mm') + '")');
+        optionToSelect.prop('selected', true);
+        $('#select_time_slot').change();
+        
+        var endTime = moment(data.appointment.time_end, 'HH:mm:ss');
+        var duration = moment.duration(endTime.diff(startTime));
+        $('#appointment_time_duration').text(moment.utc(duration.as('milliseconds')).format('HH:mm'));
+        $('#select_duration').val(duration.asMinutes()).change();
+        
+
+        $('#appointment_room').text(data.appointment.room.name);
+        $('#select_room').val(data.appointment.room.id).change();
         $('#appointment_detail_link').attr('href', 'appointments/'+data.appointment.id);
         $('#appointment_delete_link').attr('href', 'appointments/'+data.appointment.id+"/delete/");
 
@@ -507,9 +525,14 @@
         }
         
         $('#therapist_name').text(data.appointment.therapist.name);
-        $('#therapist_email').text(data.appointment.therapist.email);
+        $('#therapist_phone').text(data.appointment.therapist.phone_number);
         $('#therapist_img').attr('src', data.appointment.therapist.photo);
         $('#therapist_url').attr('href', '/accounts/therapist/' + data.appointment.therapist.id);
+
+        $('.display-info').find('.display-field').hide();
+        $('.display-info').find('.editable').show();
+
+        $('#save_button').hide();
         
         $('#appointmentModal').modal('show');
 
@@ -530,6 +553,63 @@
     });
   }
 
+  $('#save_button').on('click', function() {
+    // TODO alguma indicação de carregando
+    var appointmentId = $('#appointment_detail_id').val();
+    var serviceId = $('#select_speciality').val();
+    var date = $('#flatpickr-date').val();
+
+    var time_start_selected =  $('#select_time_slot option:selected').text();
+    var duration = $('#select_duration').val();
+
+    var start_time = moment(time_start_selected, 'HH:mm');
+    var end_time = start_time.clone().add(duration, 'minutes');
+
+    var roomId = $('#select_room').val();
+
+    var data = {
+        id: appointmentId,
+        serviceId: serviceId,
+        date: date,
+        start: start_time.format('HH:mm:ss'),
+        end: end_time.format('HH:mm:ss'),
+        roomId: roomId
+    };
+
+    $.ajax({
+      type: 'POST',
+      url: 'appointments/update_appointment_data/',
+      data: JSON.stringify(data),
+      headers: { "X-CSRFToken": Y3NyZnRva2Vu },
+      success: function(response, status, xhr) {
+        Y3NyZnRva2Vu = xhr.getResponseHeader('X-CSRFToken');
+
+        if (response.appointment) {
+          for (var i = 0; i < events_source.events.length; i++) {
+            var eventToUpdate = events_source.events[i];
+            if (eventToUpdate.id === response.appointment.id) {
+                eventToUpdate.start = response.appointment.appointment_date + 'T' + response.appointment.time_start;
+                eventToUpdate.end = response.appointment.appointment_date + 'T' + response.appointment.time_end;
+                eventToUpdate.column = response.appointment.room.id - 1;
+                eventToUpdate.title = response.appointment.service.name;
+                eventToUpdate.appointment = response.appointment;
+                break;
+            }
+          }
+        }
+
+        $('#calendar').fullCalendar('removeEventSource', events_source);
+        $('#calendar').fullCalendar('addEventSource', events_source);
+        $('#calendar').fullCalendar('rerenderEvents');
+        // TODO: Voltar os campos para os estados anteriores de estilo, como leitura
+      },
+      error: function(error) {
+          console.error('Error updating appointment', error);
+          // TODO: Voltar os campos para os dados anteriores
+      }
+    });
+  });
+
   $('#prev-date').on('click', function() {
     $('#calendar').fullCalendar('prev');
   });
@@ -542,15 +622,27 @@
     $('#calendar').fullCalendar('today');
   });
 
-  $('#datepicker-trigger').datepicker({
-    format: 'mm/dd/yyyy', 
-    autoclose: true
-  }).on('changeDate', function (e) {
+  $('#flatpickr-trigger').flatpickr({
+    dateFormat: "d/m/Y",
+    defaultDate: "today",
+    allowInput: true,
+    onClose: function (selectedDates, dateStr, instance) {
+        var selectedDate = instance.selectedDates[0];
+        $('#calendar').fullCalendar('gotoDate', selectedDate);
+    }
+  });
+  
+  $("#flatpickr-date").flatpickr({
+    dateFormat: "d/m/Y",
+    defaultDate: "today"
+  });
 
-    var selectedDate = e.date;
-    $('#calendar').fullCalendar('gotoDate', selectedDate);
-
-  }); 
+  $(".display-info").click(function () {
+    if ($(this).find(".display-field").is(":hidden")) {
+      $(this).find(".editable, .display-field").toggle();
+    }
+    $('#save_button').show();
+  });
 
 </script>
 {% endblock %}

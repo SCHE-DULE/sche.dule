@@ -59,7 +59,7 @@ class Command(BaseCommand):
         time_slots_data = []
 
         start_time = time(8, 0)
-        end_time = time(18, 0)
+        end_time = time(21, 0)
         time_interval = timedelta(minutes=30)
 
         current_time = datetime.combine(datetime.today(), start_time)
