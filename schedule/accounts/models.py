@@ -87,7 +87,6 @@ def assign_groups_and_permissions_system_user(sender, instance, created, **kwarg
     instance.groups.clear()
     instance.groups.add(group)
 
-
 class Council(models.Model):
     # Defina os tipos de conselho como constantes
     CRAD_DF = "CRAD-DF"
@@ -114,7 +113,7 @@ class Council(models.Model):
         (CRTADF, "Conselho Regional de Terapeutas Alternativos do Distrito Federal (CRTADF)"),
     ]
 
-    # Campo do modelo para armazenar o tipo de conselho
+    
     type_of_council = models.CharField(
         max_length=10,
         choices=COUNCIL_CHOICES,
@@ -125,17 +124,11 @@ class Council(models.Model):
     def __str__(self):
         return dict(self.COUNCIL_CHOICES)[self.type_of_council]
 
-
 class Therapist(BaseUser):
     specialities = models.ManyToManyField(Speciality, verbose_name="Especialidades")
-    council = models.ForeignKey(
-        Council,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        verbose_name="Conselho de Registro",
+    council = models.CharField(
+        max_length=20, verbose_name="Cadastro do Órgão de Registro (ex: CRM)"
     )
-
     availability_hours = models.ManyToManyField(
         "TimeSlot",
         verbose_name="Horários de Consulta",
@@ -148,7 +141,6 @@ class Therapist(BaseUser):
         blank=True,
         default=None,
     )
-
     rate = models.DecimalField(
         max_digits=10, decimal_places=2, verbose_name="Valor Cobrado"
     )
@@ -166,6 +158,13 @@ class Therapist(BaseUser):
         blank=True,
         null=True,
     )
+    council = models.ForeignKey(
+        Council,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Conselho de Registro",
+    )
 
     def __str__(self):
         return f"Terapeuta: {self.name}, Especialidades: {', '.join([speciality.name for speciality in self.specialities.all()])}, Registro: {self.council}"
@@ -173,6 +172,7 @@ class Therapist(BaseUser):
     class Meta:
         verbose_name = "Terapeuta"
         verbose_name_plural = "Terapeutas"
+
 
 
 @receiver(post_save, sender=Therapist)
