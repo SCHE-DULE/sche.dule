@@ -88,10 +88,52 @@ def assign_groups_and_permissions_system_user(sender, instance, created, **kwarg
     instance.groups.add(group)
 
 
+class Council(models.Model):
+    # Defina os tipos de conselho como constantes
+    CRAD_DF = "CRAD-DF"
+    COBRA = "COBRA"
+    CHM_DF = "CHM-DF"
+    COMIBRA = "COMIBRA"
+    CRTCD_DF = "CRTCD-DF"
+    CQBRA = "CQBRA"
+    CHDF = "CHDF"
+    CRMTCB_DF = "CRMTCB-DF"
+    CTH_DF = "CTH-DF"
+    CRTADF = "CRTADF"
+
+    COUNCIL_CHOICES = [
+        (CRAD_DF, "Conselho Regional de Acupuntura do Distrito Federal (CRAD-DF)"),
+        (COBRA, "Conselho de Osteopatia de Brasília (COBRA)"),
+        (CHM_DF, "Conselho de Hipnose Médica do Distrito Federal (CHM-DF)"),
+        (COMIBRA, "Conselho de Medicina Integrativa de Brasília (COMIBRA)"),
+        (CRTCD_DF, "Conselho Regional de Terapias Complementares do DF (CRTCD-DF)"),
+        (CQBRA, "Conselho de Quiropraxia de Brasília (CQBRA)"),
+        (CHDF, "Conselho de Homeopatia do Distrito Federal (CHDF)"),
+        (CRMTCB_DF, "Conselho Regional de Medicina Tradicional Chinesa em Brasília (CRMTCB-DF)"),
+        (CTH_DF, "Conselho de Terapias Holísticas do DF (CTH-DF)"),
+        (CRTADF, "Conselho Regional de Terapeutas Alternativos do Distrito Federal (CRTADF)"),
+    ]
+
+    # Campo do modelo para armazenar o tipo de conselho
+    type_of_council = models.CharField(
+        max_length=10,
+        choices=COUNCIL_CHOICES,
+        default=CRAD_DF,
+        verbose_name="Tipo de Conselho",
+    )
+
+    def __str__(self):
+        return dict(self.COUNCIL_CHOICES)[self.type_of_council]
+
+
 class Therapist(BaseUser):
     specialities = models.ManyToManyField(Speciality, verbose_name="Especialidades")
-    council = models.CharField(
-        max_length=20, verbose_name="Cadastro do Órgão de Registro (ex: CRM)"
+    council = models.ForeignKey(
+        Council,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="Conselho de Registro",
     )
 
     availability_hours = models.ManyToManyField(
@@ -126,7 +168,7 @@ class Therapist(BaseUser):
     )
 
     def __str__(self):
-        return f"Terapeuta: {self.name}, Especialidades: {', '.join([speciality.name for speciality in self.specialities.all()])}, Registro: {self.crm}"
+        return f"Terapeuta: {self.name}, Especialidades: {', '.join([speciality.name for speciality in self.specialities.all()])}, Registro: {self.council}"
 
     class Meta:
         verbose_name = "Terapeuta"
