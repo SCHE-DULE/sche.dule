@@ -3,7 +3,7 @@ pillow==10.0.1
 asgiref==3.7.2
 cffi==1.15.1
 cssselect2==0.7.0
-fonttools==4.42.1
+fonttools==4.43.0
 html5lib==1.1
 pip==23.3
 pycparser==2.21
