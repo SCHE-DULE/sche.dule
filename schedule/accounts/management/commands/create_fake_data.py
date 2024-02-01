@@ -353,9 +353,9 @@ class Command(BaseCommand):
             date_start=current_date, date_end=one_year_from_now
         )
 
-        start_time = time(fake.random_int(min=8, max=16), (fake.random_int(min=0, max=1) * 30))  # type: ignore
+        start_time = time(fake.random_int(min=8, max=20), (fake.random_int(min=0, max=1) * 30))  # type: ignore
 
-        time_difference = timedelta(minutes=random.randint(0, 3) * 30)
+        time_difference = timedelta(minutes=random.randint(1, 3) * 30)
         end_time = (
             datetime.combine(appointment_date, start_time) + time_difference
         ).time()

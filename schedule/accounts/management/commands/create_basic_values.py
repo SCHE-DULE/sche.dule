@@ -26,12 +26,6 @@ class Command(BaseCommand):
                 with schema_context(tenant.schema_name):
                     self.action()
 
-        except Tenant.DoesNotExist:
-            self.stderr.write(
-                self.style.ERROR(
-                    f'Tenant with schema name "{tenant_schema_name}" does not exist'
-                )
-            )
         except KeyboardInterrupt:
             self.stdout.write(self.style.WARNING(f"Operation Cancelled"))
         except Exception as e:

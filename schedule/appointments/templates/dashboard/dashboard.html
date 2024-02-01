@@ -4,14 +4,69 @@
 {% block head %} 
 <link href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.css' rel='stylesheet' />
 <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.js'></script>
-<link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
-<script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" />
+
+<script src="https://kit.fontawesome.com/da186c5afa.js" crossorigin="anonymous"></script>
 {% endblock %} 
 {% block content %}
 
 <div class="card">
   <div class="card-body">
     {% comment %} {% include "partials/appointment_table.html" %} {% endcomment %}
+    {% comment %} <div class="d-flex justify-content-between bd-highlight mb-3">
+      <div>
+        <div class="btn-group" role="group" aria-label="Basic toggle button group">
+          <label class="btn btn-outline-primary" id="prev-date"><span class="fa-solid fa-chevron-left"></span></label>
+          <label class="btn btn-outline-primary" id="next-date"><span class="fa-solid fa-chevron-right"></span></label>
+        </div>
+        <label type="button" class="btn btn-outline-primary mx-3" id="today-date">Hoje</label>
+      </div>
+  
+      <div class="calendar-center"><h2 id="date-title"></h2></div>
+      <div></div>
+    </div> {% endcomment %}
+
+    {% comment %} <div class="mb-5">
+      <div class="position-relative">
+        <div class="position-absolute top-0 start-0">
+          <div class="btn-group" role="group" aria-label="Basic toggle button group">
+            <label class="btn btn-outline-primary" id="prev-date"><span class="fa-solid fa-chevron-left"></span></label>
+            <label class="btn btn-outline-primary" id="next-date"><span class="fa-solid fa-chevron-right"></span></label>
+          </div>
+          <label type="button" class="btn btn-outline-primary mx-3" id="today-date">Hoje</label>
+        </div>
+        <div class="position-absolute top-50 start-50 translate-middle-x">
+          <div class="calendar-center"><h2 id="date-title"></h2></div>
+        </div>
+      </div>
+    </div> {% endcomment %}
+
+    <div class="mb-1">
+      <div class="row">
+          <div class="col-12 col-md-auto">
+              <div class="btn-group" role="group" aria-label="Basic toggle button group">
+                  <label class="btn btn-outline-primary" id="prev-date"><span class="fa-solid fa-chevron-left"></span></label>
+                  <label class="btn btn-outline-primary" id="next-date"><span class="fa-solid fa-chevron-right"></span></label>
+              </div>
+              <label type="button" class="btn btn-outline-primary mx-3 mt-2 mt-md-0" id="today-date">Hoje</label>
+          </div>
+          <div class="col-12 col-md-auto mx-md-auto text-md-center mt-2 mt-md-0">
+              <span class="d-flex align-items-center" style="cursor: pointer;">
+                <i class="bx bx-calendar me-0 me-sm-1 btn btn-outline-primary borderless-button mb-sm-3" id="datepicker-trigger"></i>
+                <span class="h2 d-none d-sm-inline-block" id="date-title"></span>
+              </span>
+          </div>
+          <div class="col-12 col-md-auto justify-content-end mt-2 mt-md-0">
+              <span class="d-flex align-items-center" style="cursor: pointer;">
+                <a href="{% url 'appointment-create' %}" class="btn btn-outline-primary borderless-button mb-sm-3">
+                  <i class="bx bx-plus me-0 me-sm-1" id="datepicker-trigger"></i>
+                  <span>Atendimento</span>
+                </a>
+              </span>
+          </div>
+      </div>
+    </div>
+  
     <div id="calendar"></div>
     <div class="event-azul"></div>
     <div class="event-indigo"></div>
@@ -23,16 +78,20 @@
     <div class="event-verde"></div>
     <div class="event-teal"></div>
     <div class="event-ciano"></div>
+    <div class="bg-label-success"></div>
+    <div class="bg-label-primary"></div>
+    <div class="bg-label-secondary"></div>
+    <div class="bg-label-warning"></div>
   </div>
 </div>
 <div class="bs-toast toast toast-placement-ex m-3 fade bg-danger top-0 end-0 hide" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
   <div class="toast-header">
     <i class="bx bx-bell me-2"></i>
-    <div class="me-auto fw-semibold" id="toast_title">Bootstrap</div>
+    <div class="me-auto fw-semibold" id="toast_title"></div>
     <!-- <small class="hide">11 mins ago</small> -->
     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
   </div>
-  <div class="toast-body" id="toast_message">Fruitcake chocolate bar tootsie roll gummies gummies jelly beans cake.</div>
+  <div class="toast-body" id="toast_message"></div>
 </div>
 <a href="{% url 'appointment-create' %}" class="btn btn-primary"
   >Criar Agendamento</a
@@ -51,12 +110,31 @@
   .fc-time-grid .fc-slats td {
     height: 2.5em; /* Adjust the height as needed */
   }
+  .fce-cols-day-header {
+    color: rgba(0, 0, 0, 0); 
+  }
+  .fc-toolbar {
+    text-align: center;
+    margin-bottom: -2em;
+  }
+
+  .borderless-button {
+    border: 1px solid rgba(0, 0, 0, 0);
+    background-color: transparent;
+    cursor: pointer;
+  }
+  .popover-header {
+    border-bottom: 1px solid #d9dee3 !important;
+  }
 </style>
 <script src="{% static 'vendor/libs/popper/popper.js' %}"></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.js'></script>
+<script src="{% static 'js/calendar/fullcalendar/2.3.1/fullcalendar.js' %}"></script>
 <script src="{% static 'js/calendar/pt-br.js' %}"></script>
 <script src="{% static 'js/calendar/fullcalendar-columns.js' %}"></script>
 <script src="{% static 'js/ui-toasts.js' %}"></script>
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
 <script>
 
   var events_source = {
@@ -64,12 +142,14 @@
     events: []
   };
 
+  var activePopover; 
+
 	$(document).ready(function() {
 		
 		$('#calendar').fullCalendar({
       header: {
-          left: 'prev,next today',
-          center: 'title',
+          left: '',
+          center: '',
           right: ''
       },
       views: {
@@ -85,7 +165,8 @@
               ],
               axisFormat: 'HH:mm',
               minTime: '08:00:00',
-              maxTime: '19:00:00'
+              maxTime: '21:00:00',
+              slotLabelFormat: 'HH:mm'
           }
       },
       locale: 'pt-br',
@@ -95,14 +176,24 @@
       editable: true,
       eventDurationEditable: false,
       events: [],
+      selectable: true,
+      selectHelper: true,
+      select: function(startDate, endDate) {
+        alert('selected ' + startDate.format() + ' to ' + endDate.format());
+      },
       viewRender: function( view, element ){
-        var date = moment(view.start).format('YYYY-MM-DD');
-        if (date != moment().format('YYYY-MM-DD')){
+        var date = moment(view.start);
+        var dataFormated = date.format('YYYY-MM-DD');
+        if (dataFormated != moment().format('YYYY-MM-DD')){
           $('#calendar').find('.now-indicator').remove();
         } else {
           updateNowIndicator();
         }
-        get_calendar_data(date);
+        get_calendar_data(dataFormated);
+        var date_title = moment(view.start).format('DD [de] MMMM [de] YYYY');
+        $('#date-title').text(date_title);
+        
+        $('#datepicker-trigger').datepicker('setDate', date.format('MM/DD/YYYY'));
       },
       eventClick: function(calEvent, jsEvent, view) {
 
@@ -111,7 +202,7 @@
       },
       eventDrop: function(event, delta, revertFunc, jsEvent, ui, view) {
 
-        if (moment(event.end).format('HH:mm:ss') > '19:00:00') {
+        if (moment(event.end).format('HH:mm:ss') > '21:00:00') {
           revertFunc();
           showToast('Não é possível marcar horário para após o fechamento.','Por favor, escolha outro horário.');
           return
@@ -133,6 +224,8 @@
                   droppedEventEnd.isAfter(sourceEventStart)    
                 ) {
                     if (event.column == sourceEvent.column){
+                      console.log("event: ", event);
+                      console.log("event: ", sourceEvent);
                       isOverlapping = true;
                       break;
                     }
@@ -141,7 +234,7 @@
         }
         if (isOverlapping) {
             revertFunc();
-            alert('O horário já está ocupado por outro agendamento.\nPor favor, escolha outro.');
+            showToast('O horário já está ocupado por outro agendamento.\nPor favor, escolha outro.');
         } else {
           var data = {
             id: event.id,
@@ -188,8 +281,43 @@
             element.addClass(selector);
             element.attr(selector, customSelectors[selector]);
         }
+
+        element.find('.fc-title').html(event.appointment.service.name);
+        element.find('.fc-time').html(event.appointment.client.name +
+          "<span style='display:block;white-space:pre;'>" +
+          moment(event.appointment.time_start, 'HH:mm:ss').format('HH:mm') + " - " +
+          moment(event.appointment.time_end, 'HH:mm:ss').format('HH:mm') +
+          "</span>");
+    
+  
+      },
+      eventMouseover: function (event, jsEvent) { 
+
+        hideActivePopover();
+
+        activePopover = $(jsEvent.currentTarget).popover({
+            title: event.title,
+            content: event.description, 
+            placement: 'right',
+            trigger: 'manual',
+            container: 'body',
+            html: true
+        }).popover('show');
+      },
+
+      eventMouseout: function (event, jsEvent) {
+        hideActivePopover();
       }
-  });
+
+    });
+
+    function hideActivePopover() {
+      // Hide the active popover if there is one
+      if (activePopover) {
+          activePopover.popover('hide');
+          activePopover = null;
+      }
+    }
 
   function updateNowIndicator() {
       var now = moment();
@@ -239,17 +367,75 @@
           var elementWithColor = document.querySelector('.event-' + appointment.appointment_service_color);
 
           var backgroundColor = getComputedStyle(elementWithColor).backgroundColor;
+          borderColor = "transparent";
           var borderColor = getComputedStyle(elementWithColor).borderColor;
+
+          var statusBadgeClass = "";
+          switch (appointment.status) {
+            case "PENDING":
+                var element = document.querySelector(".bg-label-warning");
+                backgroundColor = getComputedStyle(element).color;
+                borderColor = getComputedStyle(element).backgroundColor;
+                break;
+            case "CONFIRMED":
+                var element = document.querySelector(".bg-label-success");
+                backgroundColor = getComputedStyle(element).color;
+                borderColor = getComputedStyle(element).backgroundColor;
+                break;
+            case "CANCELLED":
+                var element = document.querySelector(".bg-label-secondary");
+                backgroundColor = getComputedStyle(element).color;
+                borderColor = getComputedStyle(element).backgroundColor;
+                break;
+            case "COMPLETED":
+                var element = document.querySelector(".bg-label-primary");
+                backgroundColor = getComputedStyle(element).color;
+                borderColor = getComputedStyle(element).backgroundColor;
+                break;
+            default:
+                var element = document.querySelector(".bg-label-default");
+                backgroundColor = getComputedStyle(element).color;
+                borderColor = getComputedStyle(element).backgroundColor;
+          }
+
+          var descriptionHtml =
+                    '<div class="justify-content-start">' +
+                  //  '<small class="d-block border-top fw-normal text-uppercase text-muted">DETALHES DO ATENDIMENTO</small>' +
+                    '     <div class="d-flex flex-shrink-0 mx-auto py-sm-1 align-items-center">' +
+                    '     <i class="fa-regular fa-clock me-sm-3"></i>' +
+                    '     <span>' + moment(appointment.time_start, 'HH:mm:ss').format('HH:mm') + " - " + moment(appointment.time_end, 'HH:mm:ss').format('HH:mm') + '</span>' +
+                    '     </div>' +
+                    '     <div class="d-flex flex-shrink-0 mx-auto border-bottom py-sm-1 align-items-center">' +
+                    '       <i class="fa-solid fa-user-doctor me-sm-3"></i>' +
+                    '       <img src="' + appointment.client.photo + '" alt="Avatar" class="rounded-circle avatar avatar-xs" />' +
+                    '       <div class="d-flex flex-column mx-sm-1">' +
+                    '         <div class="customer-info flex-grow-1 align-items-center">' +
+                    '           <span class="mb-1">' + appointment.client.name + '</span>' +
+                    '         </div>' +
+                    '       </div>' +
+                    '     </div>' +
+                    '     <div class="d-flex flex-shrink-0 mx-auto my-sm-1 align-items-center">' +
+                    '       <i class="fa-solid fa-user me-sm-3"></i>' +
+                    '       <img src="' + appointment.therapist.photo + '" alt="Avatar" class="rounded-circle avatar avatar-xs" />' +
+                    '       <div class="d-flex flex-column mx-sm-1">' +
+                    '         <div class="customer-info flex-grow-1 align-items-center">' +
+                    '           <span class="mb-1">' + appointment.therapist.name + '</span>' +
+                    '         </div>' +
+                    '       </div>' +
+                    '     </div>' +
+                    '</div>';
 
           events_source.events.push({
             id: appointment.id,
+            appointment: appointment,
             title: appointment.service.name,
             start: appointment.appointment_date + 'T' + appointment.time_start,
             end: appointment.appointment_date + 'T' + appointment.time_end,
             backgroundColor: backgroundColor,
-            textColor: borderColor,
-            borderColor: "transparent",
-            column: (appointment.room - 1)
+            textColor: '#333',
+            borderColor: borderColor,
+            column: (appointment.room - 1),
+            description: descriptionHtml
           });
 
         });
@@ -274,75 +460,97 @@
       type: 'GET',
       dataType: 'json',
       success: function (data) {
-          $('#appointment_detail_error').removeClass('show');
-          $('#appointment_detail_error').addClass('d-none');
+        $('#appointment_detail_error').removeClass('show');
+        $('#appointment_detail_error').addClass('d-none');
 
-          // Populate the modal content with the data received
-          $('#client_name').text(data.appointment.client.name);
-          $('#client_img').attr('src', data.appointment.client.photo);
-          $('#client_email').text(data.appointment.client.email);
-          $('#client_phone').text(data.appointment.client.phone);
-          $('#appointment_service').text(data.appointment.service.name);
-          // Format the date and time as needed
-          $('#appointment_date').text(moment(data.appointment.appointment_date).format('DD/MM/YYYY'));
-          $('#appointment_time_slot').text(moment(data.appointment.time_start, 'HH:mm:ss').format('HH:mm') + " - " + moment(data.appointment.time_end, 'HH:mm:ss').format('HH:mm'));
-          $('#appointment_detail_link').attr('href', 'appointments/'+data.appointment.id);
-          $('#appointment_delete_link').attr('href', 'appointments/'+data.appointment.id+"/delete/");
+        // Populate the modal content with the data received
+        $('#client_name').text(data.appointment.client.name);
+        $('#client_img').attr('src', data.appointment.client.photo);
+        $('#client_email').text(data.appointment.client.email);
+        $('#client_phone').text(data.appointment.client.phone_number);
+        $('#appointment_service').text(data.appointment.service.name);
+        // Format the date and time as needed
+        $('#appointment_date').text(moment(data.appointment.appointment_date).format('DD/MM/YYYY'));
+        $('#appointment_time_slot').text(moment(data.appointment.time_start, 'HH:mm:ss').format('HH:mm') + " - " + moment(data.appointment.time_end, 'HH:mm:ss').format('HH:mm'));
+        $('#appointment_detail_link').attr('href', 'appointments/'+data.appointment.id);
+        $('#appointment_delete_link').attr('href', 'appointments/'+data.appointment.id+"/delete/");
 
-          var statusBadgeClass = "";
-          switch (data.appointment.status) {
-              case "PENDING":
-                  statusBadgeClass = "badge bg-label-warning";
-                  break;
-              case "CONFIRMED":
-                  statusBadgeClass = "badge bg-label-success";
-                  break;
-              case "CANCELLED":
-                  statusBadgeClass = "badge bg-label-secondary";
-                  break;
-              case "COMPLETED":
-                  statusBadgeClass = "badge bg-label-primary";
-                  break;
-              default:
-                  statusBadgeClass = "badge bg-label-default";
-          }
-          
-          $('#status').attr('class', statusBadgeClass);
-          $('#status').text(data.appointment.status);
+        var statusBadgeClass = "";
+        switch (data.appointment.status) {
+            case "PENDING":
+                statusBadgeClass = "badge bg-label-warning";
+                break;
+            case "CONFIRMED":
+                statusBadgeClass = "badge bg-label-success";
+                break;
+            case "CANCELLED":
+                statusBadgeClass = "badge bg-label-secondary";
+                break;
+            case "COMPLETED":
+                statusBadgeClass = "badge bg-label-primary";
+                break;
+            default:
+                statusBadgeClass = "badge bg-label-default";
+        }
+        
+        $('#status').attr('class', statusBadgeClass);
+        $('#status').text(data.appointment.status);
 
-          if (data.appointment.notes != ""){
-            $('#notes_session').removeClass('d-none');
-            $('#notes_session').addClass('show');
+        if (data.appointment.notes != ""){
+          $('#notes_session').removeClass('d-none');
+          $('#notes_session').addClass('show');
 
-            $('#appointment_notes').text(data.appointment.notes);
-          } else {
-            $('#notes_session').removeClass('show');
-            $('#notes_session').addClass('d-none');
-          }
-          
-          $('#therapist_name').text(data.appointment.therapist.name);
-          $('#therapist_email').text(data.appointment.therapist.email);
-          $('#therapist_img').attr('src', data.appointment.therapist.photo);
-          $('#therapist_url').attr('href', '/accounts/therapist/' + data.appointment.therapist.id);
-          
-          $('#appointmentModal').modal('show');
+          $('#appointment_notes').text(data.appointment.notes);
+        } else {
+          $('#notes_session').removeClass('show');
+          $('#notes_session').addClass('d-none');
+        }
+        
+        $('#therapist_name').text(data.appointment.therapist.name);
+        $('#therapist_email').text(data.appointment.therapist.email);
+        $('#therapist_img').attr('src', data.appointment.therapist.photo);
+        $('#therapist_url').attr('href', '/accounts/therapist/' + data.appointment.therapist.id);
+        
+        $('#appointmentModal').modal('show');
 
-          $('#appointment_detail').removeClass('d-none');
-          $('#appointment_detail').addClass('show');
+        $('#appointment_detail').removeClass('d-none');
+        $('#appointment_detail').addClass('show');
       },
       error: function () {
-          $('#appointment_detail').removeClass('show');
-          $('#appointment_detail').addClass('d-none');
+        $('#appointment_detail').removeClass('show');
+        $('#appointment_detail').addClass('d-none');
 
-          $('#appointment_detail_error').removeClass('d-none');
-          $('#appointment_detail_error').addClass('show');
+        $('#appointment_detail_error').removeClass('d-none');
+        $('#appointment_detail_error').addClass('show');
       },
       complete: function () {
         $('#appointment_detail_loading').removeClass('show');
         $('#appointment_detail_loading').addClass('d-none');
-    }
-  });
+      }
+    });
   }
+
+  $('#prev-date').on('click', function() {
+    $('#calendar').fullCalendar('prev');
+  });
+
+  $('#next-date').on('click', function() {
+    $('#calendar').fullCalendar('next');
+  });
+
+  $('#today-date').on('click', function() {
+    $('#calendar').fullCalendar('today');
+  });
+
+  $('#datepicker-trigger').datepicker({
+    format: 'mm/dd/yyyy', 
+    autoclose: true
+  }).on('changeDate', function (e) {
+
+    var selectedDate = e.date;
+    $('#calendar').fullCalendar('gotoDate', selectedDate);
+
+  }); 
 
 </script>
 {% endblock %}
