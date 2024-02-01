@@ -150,7 +150,7 @@ class ClientForm(forms.ModelForm):
             "name": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "name@example.com",
+                    "placeholder": "name",
                 },
             ),
             "email": forms.EmailInput(
@@ -188,6 +188,12 @@ class ClientForm(forms.ModelForm):
             "rg_or_rne": forms.TextInput(
                 attrs={
                     "class": "form-control",
+                }
+            ),
+            "zip_code": forms.TextInput(
+                attrs={
+                    "class": "form-control",
+                    "id": "zip_code"
                 }
             ),
             "country": forms.TextInput(
@@ -249,7 +255,8 @@ class TherapistForm(forms.ModelForm):
             "birthday",
             "phone_number",
             "gender",
-            "crm",
+            "type_of_council",
+            "council",
             "availability_hours",
             "availability_days",
             "rate",
@@ -300,28 +307,52 @@ class TherapistForm(forms.ModelForm):
         label="Gênero",
     )
 
-    crm = forms.CharField(
+    councils = [
+        ("CRAD-DF", "Conselho Regional de Acupuntura do Distrito Federal (CRAD-DF)"),
+        ("COBRA", "Conselho de Osteopatia de Brasília (COBRA)"),
+        ("CHM-DF", "Conselho de Hipnose Médica do Distrito Federal (CHM-DF)"),
+        ("COMIBRA", "Conselho de Medicina Integrativa de Brasília (COMIBRA)"),
+        ("CRTCD-DF", "Conselho Regional de Terapias Complementares do DF (CRTCD-DF)"),
+        ("CQBRA", "Conselho de Quiropraxia de Brasília (CQBRA)"),
+        ("CHDF", "Conselho de Homeopatia do Distrito Federal (CHDF)"),
+        ("CRMTCB-DF", "Conselho Regional de Medicina Tradicional Chinesa em Brasília (CRMTCB-DF)"),
+        ("CTH-DF", "Conselho de Terapias Holísticas do DF (CTH-DF)"),
+        ("CRTADF", "Conselho Regional de Terapeutas Alternativos do Distrito Federal (CRTADF)"),
+    ]
+
+    type_of_council = forms.ChoiceField(
+        choices=councils,
+        widget=forms.Select(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Tipo de Conselho",
+            }
+        ),
+        label="Tipo de Conselho",
+    )
+
+    council = forms.CharField(
         widget=forms.TextInput(
             attrs={
                 "class": "form-control",
-                "placeholder": "Número do CRM",
+                "placeholder": "Número do Conselho",
             }
         ),
-        label="CRM",
+        label="Conselho",
     )
 
     availability_hours = forms.ModelMultipleChoiceField(
         queryset=TimeSlot.objects.all(),
         widget=forms.SelectMultiple(attrs={"class": "form-select"}),
         label="Horários de Disponibilidade",
-        help_text='Para selecionar vários, segure a tecla "SHIFT" enquanto seleciona',
+        help_text='Para selecionar vários, segure a tecla "SHIFT" ou "CTRL" enquanto seleciona',
     )
 
     availability_days = forms.ModelMultipleChoiceField(
         queryset=DayOfWeek.objects.all(),
         widget=forms.SelectMultiple(attrs={"class": "form-select"}),
         label="Dias de Disponibilidade",
-        help_text='Para selecionar vários, segure a tecla "SHIFT" enquanto seleciona',
+        help_text='Para selecionar vários, segure a tecla "SHIFT" ou "CTRL" enquanto seleciona',
     )
 
     rate = forms.DecimalField(
@@ -362,5 +393,6 @@ class TherapistForm(forms.ModelForm):
         queryset=Speciality.objects.all(),
         widget=forms.SelectMultiple(attrs={"class": "form-select"}),
         label="Especialidades",
-        help_text='Para selecionar vários, segure a tecla "SHIFT" enquanto seleciona',
+        help_text='Para selecionar vários, segure a tecla "SHIFT" ou "CTRL" enquanto seleciona',
     )
+    

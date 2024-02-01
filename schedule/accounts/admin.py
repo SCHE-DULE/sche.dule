@@ -175,8 +175,8 @@ class ClientAdmin(UserAdmin):
 
 @admin.register(Therapist)
 class TherapistAdmin(UserAdmin):
-    list_display = ["name", "crm"]
-    search_fields = ["name", "crm", "specialities"]
+    list_display = ["name", "council"]
+    search_fields = ["name", "council", "specialities"]
 
     add_fieldsets = (
         (
@@ -200,7 +200,7 @@ class TherapistAdmin(UserAdmin):
             {
                 "fields": (
                     "specialities",
-                    "crm",
+                    "council",
                     "rate",
                     "fee",
                     "photo",
@@ -235,7 +235,7 @@ class TherapistAdmin(UserAdmin):
             {
                 "fields": (
                     "specialities",
-                    "crm",
+                    "council",
                     "rate",
                     "fee",
                     "photo",

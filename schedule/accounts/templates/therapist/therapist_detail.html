@@ -25,7 +25,7 @@
                   <li class="d-flex align-items-center mb-3"><i class="bx bx-calendar"></i><span class="fw-medium mx-2">Aniversario:</span> {{ therapist.birthday }}</li>
                   <li class="d-flex align-items-center mb-3"><i class="bx bx-phone"></i><span class="fw-medium mx-2">Numero de telefone:</span> {{ therapist.phone_number }}</li>
                   <li class="d-flex align-items-center mb-3"><i class="bx bx-user"></i><span class="fw-medium mx-2">Gênero:</span> {{ therapist.get_gender_display }}</li>
-                  <li class="d-flex align-items-center mb-3"><i class="bx bx-id-card"></i><span class="fw-medium mx-2">CRM:</span> {{ therapist.crm }}</li>
+                  <li class="d-flex align-items-center mb-3"><i class="bx bx-id-card"></i><span class="fw-medium mx-2">Conselho:</span> {{ therapist.council }}</li>
                   <li class="d-flex align-items-center mb-3"><i class="bx bx-calendar-check"></i><span class="fw-medium mx-2">Dias disponiveis:</span>
                       {% for day in therapist.availability_days.all %}
                           {{ day.get_day_display }}
