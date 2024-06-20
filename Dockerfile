@@ -12,7 +12,7 @@ ENV PYTHONUNBUFFERED 1
 
 # Instala as dependências de libs externas
 RUN apt-get update \
-  && apt-get install -y libgirepository1.0-dev libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0 \
+  && apt-get install -y libgirepository1.0-dev libpango-1.0-0 libharfbuzz0b libpangoft2-1.0-0 graphviz libgraphviz-dev \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/
 
